@@ -5,7 +5,7 @@ export function convertDriveUrl(url: string): string {
     // Handle Google Drive direct file ID format
     if (url.startsWith('drive://')) {
       const fileId = url.replace('drive://', '');
-      return `https://drive.google.com/uc?export=view&id=${fileId}`;
+      return `https://drive.google.com/uc?export=download&id=${fileId}`;
     }
 
     // Extract file ID from various Google Drive URL formats
@@ -20,7 +20,7 @@ export function convertDriveUrl(url: string): string {
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match && match[1]) {
-        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
       }
     }
 
@@ -113,7 +113,9 @@ export function normalizeImageUrl(url: string): string {
 
     // Detect service and convert accordingly
     if (trimmedUrl.includes('drive.google.com') || trimmedUrl.startsWith('drive://')) {
-      return convertDriveUrl(trimmedUrl);
+      // Use server-side proxy for Drive links to avoid redirect/CORS issues
+      const direct = convertDriveUrl(trimmedUrl);
+      return `/api/proxy/image?url=${encodeURIComponent(direct)}`;
     }
 
     if (trimmedUrl.includes('onedrive.live.com') || 

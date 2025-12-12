@@ -1,10 +1,11 @@
 import type { Metadata } from "next"
 import { Inter, Space_Grotesk } from "next/font/google"
 import { ThemeProvider } from "@/providers/ThemeProvider"
-import Header from "@/components/layout/header"
+
 
 import { Toaster } from "sonner"
 import "./globals.css"
+import Navbar from "@/components/layout/Navbar"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -36,7 +37,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
          
-          <Header />
+         <Navbar />
           <main className="min-h-screen">{children}</main>
           <Toaster />
         </ThemeProvider>

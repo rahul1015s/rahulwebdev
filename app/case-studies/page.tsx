@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { GlassBlogCard } from "@/components/cards/glass-blog-card"
+import { GlassBlogCard } from "@/components/cards/blog-card"
 import connectMongoose from "@/lib/mongoose"
 import CaseStudy from "@/models/casestudy"
 

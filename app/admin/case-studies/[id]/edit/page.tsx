@@ -129,7 +129,7 @@ export default function EditCaseStudyPage({ params }: Props) {
           <label htmlFor="published" className="text-sm font-semibold cursor-pointer flex-1">
             Publish on /case-studies
           </label>
-          <span className={`text-xs font-medium px-2 py-1 rounded ${published ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+          <span className={`text-xs font-medium px-2 py-1 rounded ${published ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'}`}>
             {published ? 'Published' : 'Draft'}
           </span>
         </div>

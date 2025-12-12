@@ -1,6 +1,8 @@
 "use client"
 
 import React from 'react'
+import { normalizeImageUrl } from '@/utils/url-utils'
+import Image from 'next/image'
 
 interface PostContentProps {
   content: any
@@ -104,9 +106,38 @@ case 'listItem':
         </blockquote>
       )
 
+    case 'image':
+      return renderImageNode(node, index)
+
     default:
       return null
   }
+}
+
+// Render image node (ProseMirror image node)
+function renderImageNode(node: any, index: number) {
+  const key = `image-${index}`
+  const src = normalizeImageUrl(node?.attrs?.src || '')
+  const alt = node?.attrs?.alt || ''
+
+  if (!src) return null
+
+  const isExternal = src.startsWith('http')
+
+  return (
+    <div key={key} className="my-6">
+      <div className="w-full rounded-xl shadow-md overflow-hidden">
+        <Image
+          src={src}
+          alt={alt}
+          width={1200}
+          height={675}
+          className="object-cover w-full h-auto"
+          unoptimized={isExternal}
+        />
+      </div>
+    </div>
+  )
 }
 
 export default function PostContent({ content }: PostContentProps) {

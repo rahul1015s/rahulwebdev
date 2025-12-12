@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import connectMongoose from '@/lib/mongoose'
 import Post from '@/models/post'
+import { normalizeImageUrl } from '@/utils/url-utils'
 
 export async function GET() {
   try {
@@ -15,7 +16,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { title, slug: incomingSlug, content, published = false } = body
+    const { title, slug: incomingSlug, content, image, published = false } = body
     if (!title) return NextResponse.json({ ok: false, error: 'title required' }, { status: 400 })
 
     // Auto-generate slug from title when not provided
@@ -41,7 +42,8 @@ export async function POST(req: Request) {
       // very unlikely to collide twice; if it does, let save fail and return error
     }
 
-    const doc = new Post({ title, slug, content, published })
+    const normImage = image ? normalizeImageUrl(String(image)) : undefined
+    const doc = new Post({ title, slug, content, image: normImage, published })
     await doc.save()
     return NextResponse.json({ ok: true, post: doc })
   } catch (err: any) {

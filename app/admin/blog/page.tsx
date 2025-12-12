@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import PostRow from '@/components/admin/PostRow'
 
 export const metadata = { title: 'Blog Management — Rahul Verma' }
 
@@ -27,15 +28,7 @@ export default async function BlogManagementPage() {
         ) : (
           <ul className="space-y-3">
             {posts.map((p) => (
-              <li key={p._id} className="border rounded p-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="font-medium">{p.title}</div>
-                    <div className="text-sm text-muted-foreground">{p.slug}</div>
-                  </div>
-                  <div className="text-sm text-muted-foreground">{new Date(p.createdAt).toLocaleString()}</div>
-                </div>
-              </li>
+              <PostRow key={p._id} post={p} />
             ))}
           </ul>
         )}

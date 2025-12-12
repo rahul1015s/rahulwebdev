@@ -6,6 +6,7 @@ export default function NewPostPage() {
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [content, setContent] = useState('')
+  const [image, setImage] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
@@ -18,7 +19,7 @@ export default function NewPostPage() {
       const res = await fetch('/api/admin/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, slug, content, published: false })
+        body: JSON.stringify({ title, slug, content, image, published: false })
       })
       const data = await res.json()
       if (data.ok) {
@@ -74,6 +75,17 @@ export default function NewPostPage() {
         <div>
           <label className="block text-sm font-semibold mb-2">Content *</label>
           <NovelEditor key={resetKey} value={content} onChange={setContent} />
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold mb-2">Image URL (optional)</label>
+          <input
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            placeholder="https://... or drive://fileId"
+            className="w-full rounded-lg border border-border/50 px-4 py-2.5 text-sm"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Optional cover image or featured image URL</p>
         </div>
 
         <div className="flex items-center gap-4 pt-6">

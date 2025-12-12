@@ -18,7 +18,5 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {
-    "@uitripled": "https://ui.tripled.work/r/{name}.json"
-  }
+  "registries": {}
 }

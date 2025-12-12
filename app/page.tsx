@@ -1,17 +1,23 @@
 
-import AboutUsSection from '@/components/sections/about-us-section'
-import { HeroBlock } from '@/components/sections/hero-block'
-import { TestimonialsBlock } from '@/components/sections/testimonials-block'
-import { ServicesGridBlock } from '@/components/sections/services-grid-block'
+import ProjectsSection from '@/components/sections/ProjectsSection'
+import HeroSection from '@/components/sections/HeroSection'
+import ProofOfWork from '@/components/sections/ProofOfWork'
+import SkillsSection from '@/components/sections/SkillSection'
+import AboutSection from '@/components/sections/AboutSection'
+import ContactSection from '@/components/sections/ContactSection'
+import BlogSection from '@/components/sections/BlogSection'
 
 
 const page = () => {
   return (
     <div>
-      <HeroBlock />
-      <AboutUsSection />
-      <ServicesGridBlock />
-      <TestimonialsBlock />
+     <HeroSection />
+    <ProofOfWork />
+     <ProjectsSection />
+     <SkillsSection />
+     <AboutSection />
+     <BlogSection />
+     <ContactSection />
     </div>
   )
 }

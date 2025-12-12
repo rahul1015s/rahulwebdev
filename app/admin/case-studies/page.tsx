@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import connectMongoose from '@/lib/mongoose'
 import CaseStudy from '@/models/casestudy'
 import DeleteCaseStudyButton from './delete-button'
@@ -21,8 +22,9 @@ export default async function CaseStudiesAdminPage() {
           <div key={s._id} className="flex items-center justify-between gap-4 rounded-lg border border-border/50 p-4">
             <div className="flex items-center gap-4">
               {s.coverImage ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={s.coverImage} alt={s.title} className="h-16 w-28 object-cover rounded-md" />
+                <div className="h-16 w-28 relative rounded-md overflow-hidden">
+                  <Image src={s.coverImage} alt={s.title} width={280} height={160} className="object-cover" unoptimized={String(s.coverImage).startsWith('http')} />
+                </div>
               ) : (
                 <div className="h-16 w-28 rounded-md bg-muted/40" />
               )}
