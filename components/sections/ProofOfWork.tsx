@@ -147,7 +147,7 @@ function ProjectCard({
         {/* Image */}
         <div className="relative h-52 overflow-hidden bg-muted">
           {!loaded && (
-            <div className="absolute inset-0 animate-pulse bg-gradient-to-br from-muted to-background" />
+            <div className="absolute inset-0 animate-pulse bg-linear-to-br from-muted to-background" />
           )}
 
           <Image
