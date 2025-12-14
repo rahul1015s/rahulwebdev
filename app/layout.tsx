@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Inter, Space_Grotesk } from "next/font/google"
 import { ThemeProvider } from "@/providers/ThemeProvider"
-
+import { AuthProvider } from "@/providers/AuthProvider"
 
 import { Toaster } from "sonner"
 import "./globals.css"
@@ -36,10 +36,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-         
-         <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <Toaster />
+          <AuthProvider>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <Toaster />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

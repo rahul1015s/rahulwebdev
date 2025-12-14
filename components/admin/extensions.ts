@@ -63,7 +63,7 @@ export const defaultExtensions = [
             const attributes = {}
             const { tr } = state
             const start = range.from
-            let end = range.to
+            const end = range.to
             tr.insert(start - 1, this.type.create(attributes)).delete(
               tr.mapping.map(start),
               tr.mapping.map(end)

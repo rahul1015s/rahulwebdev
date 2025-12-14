@@ -1,9 +1,12 @@
-import { getMongoClient } from '../lib/mongodb'
+import { config } from 'dotenv'
+config({ path: '.env.local' })
+
+import { connectDB } from '../lib/mongodb'
 
 async function main() {
   try {
-    const client = await getMongoClient()
-    const admin = client.db().admin()
+    const mongoose = await connectDB()
+    const admin = mongoose.connection.db!.admin()
     const info = await admin.serverStatus()
     console.log('Connected to MongoDB. Server info:')
     console.log(JSON.stringify({ version: info.version, process: info.process }, null, 2))

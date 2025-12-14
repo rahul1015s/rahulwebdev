@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import connectMongoose from '@/lib/mongoose'
+import { connectDB } from '@/lib/mongodb'
 import CaseStudy from '@/models/casestudy'
 import { normalizeImageUrl } from '@/utils/url-utils'
 
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const all = searchParams.get('all') === 'true'
 
-    await connectMongoose()
+    await connectDB()
 
     const query = all ? {} : { published: true }
     const caseStudies = await CaseStudy.find(query).sort({ order: 1, createdAt: -1 }).lean()
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ ok: false, error: 'Missing required fields: name/title' }, { status: 400 })
       }
 
-    await connectMongoose()
+    await connectDB()
 
     const slugify = (s: string) =>
       s
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     
     // Check for existing slug and generate unique one if needed
     let counter = 1
-    let originalSlug = slug
+    const originalSlug = slug
     let existing = await CaseStudy.findOne({ slug })
     
     while (existing) {

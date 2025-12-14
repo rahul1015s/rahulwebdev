@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import connectMongoose from '@/lib/mongoose'
+import { connectDB } from '@/lib/mongodb'
 import CaseStudy from '@/models/casestudy'
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectMongoose()
+    await connectDB()
     const { id } = await params
     // Only use _id lookup when id looks like a 24-char hex ObjectId
     const isObjectId = /^[0-9a-fA-F]{24}$/.test(id)
@@ -35,7 +35,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectMongoose()
+    await connectDB()
     const { id } = await params
     const updates = await request.json()
     const isObjectId = /^[0-9a-fA-F]{24}$/.test(id)
@@ -82,7 +82,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await connectMongoose()
+    await connectDB()
     const { id } = await params
     const isObjectId = /^[0-9a-fA-F]{24}$/.test(id)
     const query: any = isObjectId ? { $or: [{ _id: id }, { slug: id }] } : { slug: id }

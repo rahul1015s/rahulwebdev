@@ -2,6 +2,7 @@
 import React, { useEffect, useState, use as reactUse } from 'react'
 import { useRouter } from 'next/navigation'
 import NovelEditor from '@/components/admin/NovelEditor'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export default function EditPostPage({ params }: any) {
   const resolvedParams = reactUse(params as Promise<any>)
@@ -13,6 +14,7 @@ export default function EditPostPage({ params }: any) {
   const [slug, setSlug] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
+  const [published, setPublished] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function EditPostPage({ params }: any) {
           setSlug(data.post.slug || '')
           setContent(data.post.content || '')
           setImage(data.post.image || '')
+          setPublished(data.post.published || false)
         } else {
           setMessage('Failed to load post')
         }
@@ -45,7 +48,7 @@ export default function EditPostPage({ params }: any) {
       const res = await fetch(`/api/admin/posts/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, slug, content, image })
+        body: JSON.stringify({ title, slug, content, image, published })
       })
       let data: any = null
       try { data = await res.json() } catch (e) { console.error('Save: failed to parse JSON', e) }
@@ -96,6 +99,20 @@ export default function EditPostPage({ params }: any) {
         <div>
           <label className="block text-sm font-semibold mb-2">Content *</label>
           <NovelEditor value={content} onChange={setContent} />
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-lg border border-border/50 bg-muted/30">
+          <Checkbox
+            id="published"
+            checked={published}
+            onCheckedChange={(checked) => setPublished(checked as boolean)}
+          />
+          <label htmlFor="published" className="text-sm font-semibold cursor-pointer flex-1">
+            Publish this post
+          </label>
+          <span className={`text-xs font-medium px-2 py-1 rounded ${published ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'}`}>
+            {published ? 'Published' : 'Draft'}
+          </span>
         </div>
 
         <div className="flex items-center gap-4 pt-6">

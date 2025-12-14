@@ -1,36 +1,63 @@
-import { MongoClient } from 'mongodb'
+import mongoose from "mongoose";
 
-const globalForMongo = globalThis as unknown as { _mongoClient?: MongoClient }
+const MONGODB_URI = process.env.MONGODB_URI as string;
 
-function getMongoUri() {
-  // Prefer explicit production URI if set (e.g., in Vercel env vars)
-  if (process.env.MONGODB_URI_PROD && (process.env.VERCEL === '1' || process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production')) {
-    return process.env.MONGODB_URI_PROD
+if (!MONGODB_URI) {
+  throw new Error("Please add your MongoDB URI to .env");
+}
+
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
+
+const globalWithMongoose = global as typeof globalThis & {
+  mongoose?: MongooseCache;
+};
+
+const cached: MongooseCache = globalWithMongoose.mongoose || {
+  conn: null,
+  promise: null,
+};
+
+if (!globalWithMongoose.mongoose) {
+  globalWithMongoose.mongoose = cached;
+}
+
+export async function connectDB() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  // Fallback to local/dev URI
-  if (process.env.MONGODB_URI) return process.env.MONGODB_URI
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: 10, // Increased pool size
+      minPoolSize: 5, // Maintain minimum connections
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 30000, // Reduced from 45s to 30s
+      maxIdleTimeMS: 30000,
+      retryWrites: true,
+      retryReads: true,
+    };
 
-  // Last-resort: check older variable names
-  if (process.env.MONGODB_URI_LOCAL) return process.env.MONGODB_URI_LOCAL
+    cached.promise = mongoose.connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        console.log("MongoDB connected with optimized settings");
+        return mongoose;
+      })
+      .catch((error) => {
+        cached.promise = null;
+        console.error("❌ MongoDB connection failed:", error);
+        throw error;
+      });
+  }
 
-  return undefined
-}
-
-export async function getMongoClient() {
-  const uri = getMongoUri()
-  if (!uri) throw new Error('MONGODB_URI not configured. Set MONGODB_URI (local) and MONGODB_URI_PROD (production).')
-
-  if (globalForMongo._mongoClient) return globalForMongo._mongoClient
-
-  const client = new MongoClient(uri)
-  await client.connect()
-  globalForMongo._mongoClient = client
-  return client
-}
-
-export async function getPostsCollection() {
-  const client = await getMongoClient()
-  const dbName = process.env.MONGODB_DB || 'rahulwebdev'
-  return client.db(dbName).collection('posts')
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch (error) {
+    cached.promise = null;
+    throw error;
+  }
 }

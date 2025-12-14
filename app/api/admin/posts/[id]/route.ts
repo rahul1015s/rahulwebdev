@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import connectMongoose from '@/lib/mongoose'
+import { connectDB } from '@/lib/mongodb'
 import Post from '@/models/post'
 import { normalizeImageUrl } from '@/utils/url-utils'
 
 export async function GET(req: Request, { params }: { params: any }) {
   try {
     const { id } = await params
-    await connectMongoose()
+    await connectDB()
     const post = await Post.findById(id).lean()
     if (!post) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
     return NextResponse.json({ ok: true, post })
@@ -26,7 +26,7 @@ export async function PATCH(req: Request, { params }: { params: any }) {
     if (body.published !== undefined) update.published = body.published
     if (body.image !== undefined) update.image = body.image ? normalizeImageUrl(String(body.image)) : undefined
 
-    await connectMongoose()
+    await connectDB()
     const updated = await Post.findByIdAndUpdate(id, update, { new: true })
     if (!updated) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
     return NextResponse.json({ ok: true, post: updated })
@@ -38,7 +38,7 @@ export async function PATCH(req: Request, { params }: { params: any }) {
 export async function DELETE(req: Request, { params }: { params: any }) {
   try {
     const { id } = await params
-    await connectMongoose()
+    await connectDB()
     const deleted = await Post.findByIdAndDelete(id)
     if (!deleted) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
     return NextResponse.json({ ok: true })

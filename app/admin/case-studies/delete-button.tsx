@@ -1,8 +1,11 @@
 "use client"
 
+import { Trash2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+
 export default function DeleteCaseStudyButton({ id }: { id: string }) {
   async function handleDelete() {
-    if (!confirm('Delete this case study?')) return
+    if (!confirm('Delete this case study? This action cannot be undone.')) return
 
     try {
       const res = await fetch(`/api/admin/case-studies/${id}`, {
@@ -21,11 +24,9 @@ export default function DeleteCaseStudyButton({ id }: { id: string }) {
   }
 
   return (
-    <button
-      onClick={handleDelete}
-      className="text-sm text-red-600 hover:text-red-700"
-    >
+    <Button variant="destructive" size="sm" onClick={handleDelete}>
+      <Trash2 className="w-4 h-4 mr-2" />
       Delete
-    </button>
+    </Button>
   )
 }

@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import connectMongoose from "@/lib/mongoose"
+import { connectDB } from "@/lib/mongodb"
 import CaseStudy from "@/models/casestudy"
 import PostContent from "@/components/blog/PostContent"
 
@@ -8,7 +8,7 @@ export const revalidate = 60 // ISR: Revalidate every 60 seconds
 
 async function getCaseStudy(slug: string) {
   try {
-    await connectMongoose()
+    await connectDB()
     const study = await CaseStudy.findOne({ slug }).lean()
     
     // Ensure content is properly stored/retrieved

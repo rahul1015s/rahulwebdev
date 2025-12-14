@@ -1,12 +1,34 @@
 import { NextResponse } from 'next/server'
-import connectMongoose from '@/lib/mongoose'
+import { connectDB } from '@/lib/mongodb'
 import Post from '@/models/post'
 import { normalizeImageUrl } from '@/utils/url-utils'
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
-    await connectMongoose()
-    const posts = await Post.find().sort({ createdAt: -1 }).lean()
+    await connectDB()
+    const { searchParams } = new URL(req.url)
+    const search = searchParams.get('search') || ''
+    const status = searchParams.get('status') || 'all'
+
+    let query: any = {}
+
+    // Add search filter
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { slug: { $regex: search, $options: 'i' } },
+        { content: { $regex: search, $options: 'i' } }
+      ]
+    }
+
+    // Add status filter
+    if (status === 'published') {
+      query.published = true
+    } else if (status === 'draft') {
+      query.published = false
+    }
+
+    const posts = await Post.find(query).sort({ createdAt: -1 }).lean()
     return NextResponse.json({ ok: true, posts })
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: String(err.message || err) }, { status: 500 })
@@ -31,7 +53,7 @@ export async function POST(req: Request) {
 
     let slug = incomingSlug && String(incomingSlug).trim() ? String(incomingSlug).trim() : slugify(title)
 
-    await connectMongoose()
+    await connectDB()
 
     // Ensure slug uniqueness — append short suffix if needed
     let existing = await Post.findOne({ slug })
@@ -50,3 +72,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: String(err.message || err) }, { status: 500 })
   }
 }
+

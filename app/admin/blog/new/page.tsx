@@ -1,12 +1,14 @@
 "use client"
 import React, { useState, useRef } from 'react'
 import NovelEditor from '@/components/admin/NovelEditor'
+import { Checkbox } from '@/components/ui/checkbox'
 
 export default function NewPostPage() {
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
+  const [published, setPublished] = useState(false)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)
@@ -19,7 +21,7 @@ export default function NewPostPage() {
       const res = await fetch('/api/admin/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, slug, content, image, published: false })
+        body: JSON.stringify({ title, slug, content, image, published })
       })
       const data = await res.json()
       if (data.ok) {
@@ -28,7 +30,9 @@ export default function NewPostPage() {
         setTitle('')
         setSlug('')
         setContent('')
-        setResetKey(prev => prev + 1)
+        setImage('')
+        setPublished(false)
+        setResetKey((k) => k + 1)
         
         // Clear success message after 3 seconds
         setTimeout(() => setMessage(null), 3000)
@@ -86,6 +90,20 @@ export default function NewPostPage() {
             className="w-full rounded-lg border border-border/50 px-4 py-2.5 text-sm"
           />
           <p className="text-xs text-muted-foreground mt-1">Optional cover image or featured image URL</p>
+        </div>
+
+        <div className="flex items-center gap-3 p-4 rounded-lg border border-border/50 bg-muted/30">
+          <Checkbox
+            id="published"
+            checked={published}
+            onCheckedChange={(checked) => setPublished(checked as boolean)}
+          />
+          <label htmlFor="published" className="text-sm font-semibold cursor-pointer flex-1">
+            Publish immediately
+          </label>
+          <span className={`text-xs font-medium px-2 py-1 rounded ${published ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'}`}>
+            {published ? 'Published' : 'Draft'}
+          </span>
         </div>
 
         <div className="flex items-center gap-4 pt-6">

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
-import { GlassBlogCard } from "@/components/cards/blog-card"
-import connectMongoose from "@/lib/mongoose"
+import { BlogCard } from "@/components/cards/blog-card"
+import { connectDB } from "@/lib/mongodb";
 import CaseStudy from "@/models/casestudy"
 
 export const metadata = {
@@ -13,7 +13,7 @@ export const revalidate = 60 // ISR: Revalidate every 60 seconds
 
 async function getCaseStudies() {
   try {
-    await connectMongoose()
+    await connectDB()
     const studies = await CaseStudy.find({ published: true })
       .sort({ order: 1, createdAt: -1 })
       .lean()
@@ -39,7 +39,7 @@ export default async function CaseStudiesPage() {
       ) : (
         <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {studies.map((study: any) => (
-            <GlassBlogCard
+            <BlogCard
               key={study.slug}
               href={`/case-studies/${study.slug}`}
               title={study.name}
