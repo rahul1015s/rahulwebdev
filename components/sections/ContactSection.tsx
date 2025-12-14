@@ -159,7 +159,7 @@ export default function ContactSection() {
               <Link href="https://wa.me/919135271562?text=Hi%20Rahul,%20I%20saw%20your%20portfolio" target="_blank">
                 {/* Button shine effect */}
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
                   initial={{ x: "-100%" }}
                   animate={{ x: hoveredButton === "whatsapp" ? "100%" : "-100%" }}
                   transition={{ duration: 0.6 }}
@@ -327,7 +327,7 @@ export default function ContactSection() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-10 p-6 bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-2xl border border-emerald-200/50 dark:border-emerald-800/50 max-w-lg mx-auto"
+          className="mt-10 p-6 bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-2xl border border-emerald-200/50 dark:border-emerald-800/50 max-w-lg mx-auto"
         >
           <motion.p 
             className="text-emerald-800 dark:text-emerald-200 font-medium pb-2"

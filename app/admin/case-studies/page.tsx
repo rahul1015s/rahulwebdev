@@ -85,7 +85,7 @@ export default async function CaseStudiesAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-start gap-6">
                   {s.coverImage ? (
-                    <div className="flex-shrink-0">
+                    <div className="shrink-0">
                       <div className="h-20 w-32 relative rounded-md overflow-hidden">
                         <Image
                           src={s.coverImage}
@@ -98,7 +98,7 @@ export default async function CaseStudiesAdminPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="flex-shrink-0 h-20 w-32 rounded-md bg-muted/40 flex items-center justify-center">
+                    <div className="shrink-0 h-20 w-32 rounded-md bg-muted/40 flex items-center justify-center">
                       <Briefcase className="w-8 h-8 text-muted-foreground" />
                     </div>
                   )}

@@ -21,7 +21,7 @@ export default function AboutSection() {
         >
           {/* Animated Background Glow */}
           <motion.div 
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-emerald-400/20 via-cyan-400/15 to-transparent blur-2xl"
+            className="absolute inset-0 rounded-full bg-linear-to-br from-emerald-400/20 via-cyan-400/15 to-transparent blur-2xl"
             animate={{ 
               scale: isHovered ? 1.1 : 1,
               rotate: isHovered ? 180 : 0,
@@ -52,7 +52,7 @@ export default function AboutSection() {
               {[...Array(4)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute w-3 h-3 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-400"
+                  className="absolute w-3 h-3 rounded-full bg-linear-to-br from-emerald-400 to-cyan-400"
                   initial={{ 
                     scale: 0,
                     opacity: 0
@@ -98,7 +98,7 @@ export default function AboutSection() {
           >
             {/* Shine Effect */}
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent z-10"
+              className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent z-10"
               initial={{ x: "-100%" }}
               animate={{ x: isHovered ? "100%" : "-100%" }}
               transition={{ 
@@ -126,7 +126,7 @@ export default function AboutSection() {
             
             {/* Subtle Color Overlay */}
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-emerald-900/15 via-transparent to-transparent z-5"
+              className="absolute inset-0 bg-linear-to-t from-emerald-900/15 via-transparent to-transparent z-5"
               animate={{ opacity: isHovered ? 0.2 : 0 }}
               transition={{ duration: 0.3 }}
             />
@@ -151,7 +151,7 @@ export default function AboutSection() {
             }}
             transition={{ duration: 0.8 }}
           >
-            <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full shadow-lg">
+            <div className="p-2 bg-linear-to-br from-emerald-500 to-emerald-600 rounded-full shadow-lg">
               <motion.div
                 animate={{ 
                   rotate: isHovered ? [0, 10, -10, 0] : 0,
@@ -178,7 +178,7 @@ export default function AboutSection() {
               repeat: isHovered ? Infinity : 0
             }}
           >
-            <div className="px-3 py-1 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white text-xs font-medium rounded-full shadow-lg">
+            <div className="px-3 py-1 bg-linear-to-r from-emerald-600 to-emerald-700 text-white text-xs font-medium rounded-full shadow-lg">
               <motion.span
                 animate={{ opacity: isHovered ? [0.8, 1, 0.8] : 1 }}
                 transition={{ duration: 1.5, repeat: isHovered ? Infinity : 0 }}

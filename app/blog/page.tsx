@@ -79,9 +79,9 @@ export default async function BlogPage({
       {/* HEADER WITH MICRO-INTERACTIONS */}
       <div className="mb-12 relative">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 bg-gradient-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-lg relative group">
+          <div className="p-2 bg-linear-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-lg relative group">
             {/* Animated background */}
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="absolute inset-0 bg-linear-to-r from-emerald-500/10 via-transparent to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <BookOpen className="w-6 h-6 text-emerald-600 relative z-10 group-hover:scale-110 transition-transform duration-200" />
           </div>
           <span className="text-sm font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full">
@@ -112,7 +112,7 @@ export default async function BlogPage({
 
           {/* Stats with hover effects */}
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-gradient-to-br from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl border hover:border-emerald-300 transition-all duration-300 group hover:shadow-lg cursor-pointer">
+            <div className="p-3 bg-linear-to-br from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl border hover:border-emerald-300 transition-all duration-300 group hover:shadow-lg cursor-pointer">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg group-hover:scale-110 transition-transform duration-200">
                   <FileText className="w-4 h-4 text-emerald-600" />
@@ -122,7 +122,7 @@ export default async function BlogPage({
                 </span>
               </div>
             </div>
-            <div className="p-3 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border hover:border-amber-300 transition-all duration-300 group hover:shadow-lg cursor-pointer">
+            <div className="p-3 bg-linear-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border hover:border-amber-300 transition-all duration-300 group hover:shadow-lg cursor-pointer">
               <div className="flex items-center gap-2">
                 <div className="p-1.5 bg-amber-100 dark:bg-amber-900/30 rounded-lg group-hover:rotate-12 transition-transform duration-200">
                   <Zap className="w-4 h-4 text-amber-600" />
@@ -151,7 +151,7 @@ export default async function BlogPage({
                   href={`/blog?tag=${tag}`}
                   className="group relative"
                 >
-                  <div className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gradient-to-r hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-300 rounded-full transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+                  <div className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-linear-to-r hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 text-gray-700 dark:text-gray-300 hover:text-emerald-700 dark:hover:text-emerald-300 rounded-full transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
                     <span className="inline-block group-hover:translate-x-0.5 transition-transform duration-200">
                       {tag}
                     </span>
@@ -201,7 +201,7 @@ export default async function BlogPage({
             <div key={idOrSlug} className="relative group">
               {/* Floating number indicator with animation */}
               <div className="absolute -top-3 -left-3 z-20">
-                <div className="w-7 h-7 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-7 h-7 bg-linear-to-br from-emerald-500 to-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                   {index + 1 + skip}
                 </div>
                 {/* Small star decoration */}
@@ -238,7 +238,7 @@ export default async function BlogPage({
       {/* Empty State */}
       {posts.length === 0 && (
         <div className="text-center py-20">
-          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-full flex items-center justify-center relative group">
+          <div className="w-20 h-20 mx-auto mb-6 bg-linear-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-full flex items-center justify-center relative group">
             {/* Floating pens */}
             <div className="absolute -top-2 -right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <PenTool className="w-5 h-5 text-emerald-600" />
@@ -271,7 +271,7 @@ export default async function BlogPage({
               "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all duration-300 group",
               page <= 1
                 ? "bg-input/30 text-muted-foreground cursor-not-allowed"
-                : "bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 hover:shadow-lg hover:-translate-y-0.5"
+                : "bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 hover:shadow-lg hover:-translate-y-0.5"
             )}
           >
             <span className="group-hover:-translate-x-1 transition-transform duration-300">←</span>
@@ -299,7 +299,7 @@ export default async function BlogPage({
                   className={cn(
                     "w-10 h-10 flex items-center justify-center rounded-xl text-sm font-medium relative transition-all duration-300 hover:scale-110",
                     isActive
-                      ? "bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-lg hover:shadow-emerald-500/30"
+                      ? "bg-linear-to-br from-emerald-500 to-emerald-600 text-white shadow-lg hover:shadow-emerald-500/30"
                       : "bg-gray-100 dark:bg-gray-800 text-muted-foreground hover:bg-emerald-100 dark:hover:bg-emerald-900/20 hover:text-emerald-700 dark:hover:text-emerald-300"
                   )}
                 >
@@ -324,7 +324,7 @@ export default async function BlogPage({
               "px-5 py-2.5 rounded-xl text-sm font-medium flex items-center gap-2 transition-all duration-300 group",
               page >= totalPages
                 ? "bg-input/30 text-muted-foreground cursor-not-allowed"
-                : "bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 hover:shadow-lg hover:-translate-y-0.5"
+                : "bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 hover:from-emerald-100 hover:to-cyan-100 dark:hover:from-emerald-900/30 dark:hover:to-cyan-900/30 hover:shadow-lg hover:-translate-y-0.5"
             )}
           >
             Next
@@ -334,7 +334,7 @@ export default async function BlogPage({
 
         {/* Page indicator */}
         {/* <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-gradient-to-r from-emerald-100 to-cyan-100 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 rounded-full font-medium">
+          <div className="px-4 py-2 bg-linear-to-r from-emerald-100 to-cyan-100 dark:from-emerald-900/20 dark:to-cyan-900/20 text-emerald-700 dark:text-emerald-300 rounded-full font-medium">
             📄 Page {page} of {totalPages}
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">

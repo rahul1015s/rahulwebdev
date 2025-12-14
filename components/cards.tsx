@@ -64,7 +64,7 @@ export function GlassBlogCard({
             alt={title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
+          <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-40" />
 
           <div className="absolute bottom-3 left-3 flex gap-2">
             {tags?.map((tag, index) => (

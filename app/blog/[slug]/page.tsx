@@ -111,7 +111,7 @@ export default async function PostPage({ params }: PostPageProps) {
         {/* Cover Image with hover effect */}
         <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-80 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg group mb-8">
           {/* Loading gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 to-cyan-100/20 animate-pulse" />
+          <div className="absolute inset-0 bg-linear-to-r from-emerald-100/20 to-cyan-100/20 animate-pulse" />
           
           <Image
             src={coverImage}
@@ -124,7 +124,7 @@ export default async function PostPage({ params }: PostPageProps) {
           />
           
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Image corner accent */}
           <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -180,7 +180,7 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Author info */}
-      <div className="bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-10 border border-emerald-200/50 dark:border-emerald-800/50">
+      <div className="bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-10 border border-emerald-200/50 dark:border-emerald-800/50">
         <div className="flex items-start sm:items-center gap-4 sm:gap-6 flex-col sm:flex-row">
           <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
             <User className="w-8 h-8 text-emerald-600" />
@@ -210,7 +210,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </p>
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium rounded-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 group"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium rounded-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 group"
         >
           Explore More Articles
           <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>

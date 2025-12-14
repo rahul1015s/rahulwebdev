@@ -99,7 +99,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="my-10"
         >
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+          <div className="h-px w-full bg-linear-to-r from-transparent via-emerald-500/30 to-transparent" />
         </motion.div>
       )
 
@@ -139,7 +139,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
-          className="border-l-4 border-emerald-500/50 pl-5 md:pl-8 py-4 italic my-8 text-foreground/80 bg-gradient-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
+          className="border-l-4 border-emerald-500/50 pl-5 md:pl-8 py-4 italic my-8 text-foreground/80 bg-linear-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
         >
           <div className="absolute -left-2 top-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             ❝
@@ -341,12 +341,12 @@ function renderImageNode(node: any, index: number) {
             loading="lazy"
           />
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
         
         {/* Image caption */}
         {(alt || title) && (
-          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/80 to-transparent transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
             <p className="text-sm text-white/90 text-center">
               {title || alt}
             </p>

@@ -63,7 +63,7 @@ export default function HeroSection() {
           
           {/* Hover glow effect */}
           <motion.div 
-            className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent"
+            className="absolute inset-0 bg-linear-to-r from-emerald-500/5 to-transparent"
             initial={{ x: "-100%" }}
             animate={{ x: isHoveringBadge ? "100%" : "-100%" }}
             transition={{ duration: 0.6 }}
@@ -241,7 +241,7 @@ export default function HeroSection() {
                 Email
                 {/* Button shine effect */}
                 <motion.div 
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent"
                   initial={{ x: "-100%" }}
                   animate={{ x: hoveredButton === "email" ? "100%" : "-100%" }}
                   transition={{ duration: 0.6 }}

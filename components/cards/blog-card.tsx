@@ -44,7 +44,7 @@ export function BlogCard({
     >
       {/* Glow effect on hover */}
       <motion.div 
-        className="absolute -inset-1 bg-gradient-to-r from-emerald-500/10 via-transparent to-transparent rounded-xl blur-lg -z-10"
+        className="absolute -inset-1 bg-linear-to-r from-emerald-500/10 via-transparent to-transparent rounded-xl blur-lg -z-10"
         animate={{ opacity: isHovered ? 0.5 : 0 }}
         transition={{ duration: 0.3 }}
       />
@@ -65,7 +65,7 @@ export function BlogCard({
             {/* Loading shimmer */}
             {!isImageLoaded && (
               <motion.div 
-                className="absolute inset-0 bg-gradient-to-r from-emerald-100/20 via-gray-200/30 to-emerald-100/20 z-10"
+                className="absolute inset-0 bg-linear-to-r from-emerald-100/20 via-gray-200/30 to-emerald-100/20 z-10"
                 animate={{ 
                   x: ["-100%", "100%"],
                 }}
@@ -100,14 +100,14 @@ export function BlogCard({
 
             {/* Gradient overlay */}
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"
+              className="absolute inset-0 bg-linear-to-t from-black/40 via-transparent to-transparent"
               animate={{ opacity: isHovered ? 0.3 : 0.1 }}
               transition={{ duration: 0.3 }}
             />
 
             {/* Hover overlay */}
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-emerald-900/20 via-transparent to-transparent"
+              className="absolute inset-0 bg-linear-to-r from-emerald-900/20 via-transparent to-transparent"
               initial={{ x: "-100%" }}
               animate={{ x: isHovered ? "100%" : "-100%" }}
               transition={{ duration: 0.8 }}
@@ -172,7 +172,7 @@ export function BlogCard({
                     
                     {/* Tag shine effect */}
                     <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/40 to-transparent"
                       initial={{ x: "-100%" }}
                       animate={{ 
                         x: hoveredTag === tag ? "100%" : "-100%"
@@ -205,7 +205,7 @@ export function BlogCard({
               
               {/* Animated underline */}
               <motion.div 
-                className="h-0.5 bg-gradient-to-r from-emerald-500 to-transparent"
+                className="h-0.5 bg-linear-to-r from-emerald-500 to-transparent"
                 initial={{ width: 0 }}
                 animate={{ width: isHovered ? "100%" : 0 }}
                 transition={{ duration: 0.3 }}

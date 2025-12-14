@@ -107,8 +107,8 @@ export default async function BlogSection() {
         {/* Header with micro-interactions */}
         <div className="mb-12 relative">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-gradient-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-lg relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="p-2 bg-linear-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-lg relative group">
+              <div className="absolute inset-0 bg-linear-to-r from-emerald-500/10 via-transparent to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <FileText className="w-6 h-6 text-emerald-600 relative z-10 group-hover:scale-110 transition-transform duration-200" />
             </div>
             <span className="text-sm font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full">
@@ -132,7 +132,7 @@ export default async function BlogSection() {
 
             {/* Stats */}
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-3 bg-gradient-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 px-4 py-2.5 rounded-xl border">
+              <div className="hidden sm:flex items-center gap-3 bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 px-4 py-2.5 rounded-xl border">
                 <div className="p-1.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
                   <TrendingUp className="w-4 h-4 text-emerald-600" />
                 </div>
@@ -156,7 +156,7 @@ export default async function BlogSection() {
               <div className="w-12 h-12 bg-cyan-500/10 rounded-full blur-lg" />
             </div>
             
-            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <div className="w-16 h-16 mx-auto mb-6 bg-linear-to-br from-emerald-100 to-cyan-100 dark:from-emerald-900/30 dark:to-cyan-900/30 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <FileText className="w-8 h-8 text-emerald-600" />
             </div>
             <h3 className="text-xl font-semibold mb-3">Coming Soon! </h3>
@@ -183,7 +183,7 @@ export default async function BlogSection() {
                 >
                   {/* Number indicator */}
                   <div className="absolute -top-3 -left-3 z-20">
-                    <div className="w-7 h-7 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-7 h-7 bg-linear-to-br from-emerald-500 to-emerald-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
                       {index + 1}
                     </div>
                     {/* Glow effect */}
@@ -196,11 +196,11 @@ export default async function BlogSection() {
             </div>
 
             {/* CTA Section */}
-            <div className="bg-gradient-to-r from-emerald-50/50 via-white to-cyan-50/50 dark:from-emerald-900/20 dark:via-gray-900/20 dark:to-cyan-900/20 rounded-2xl p-8 md:p-10 border border-emerald-200/50 dark:border-emerald-800/50">
+            <div className="bg-linear-to-r from-emerald-50/50 via-white to-cyan-50/50 dark:from-emerald-900/20 dark:via-gray-900/20 dark:to-cyan-900/20 rounded-2xl p-8 md:p-10 border border-emerald-200/50 dark:border-emerald-800/50">
               <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                 <div className="md:w-2/3">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 rounded-lg">
+                    <div className="p-2 bg-linear-to-br from-emerald-500/10 to-cyan-500/10 rounded-lg">
                       <Clock className="w-6 h-6 text-emerald-600" />
                     </div>
                     <span className="text-sm font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full">
@@ -236,7 +236,7 @@ export default async function BlogSection() {
                 <div className="md:w-1/3">
                   <Link
                     href="/blog"
-                    className="inline-flex items-center justify-center gap-3 w-full px-8 py-3.5 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-2xl shadow-lg hover:shadow-emerald-500/25 group/cta"
+                    className="inline-flex items-center justify-center gap-3 w-full px-8 py-3.5 bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-xl transition-all duration-300 hover:shadow-2xl shadow-lg hover:shadow-emerald-500/25 group/cta"
                   >
                     <span>View All Articles</span>
                     {/* <ArrowRight className="w-5 h-5 group-hover/cta:translate-x-1 transition-transform duration-300" /> */}

@@ -46,7 +46,9 @@ export function LoginForm() {
         }
       } else {
         toast.success("Logged in successfully!");
-        router.push("/admin");
+        router.replace("/admin");
+        router.refresh();
+
       }
     } catch (error) {
       toast.error("An error occurred during login");

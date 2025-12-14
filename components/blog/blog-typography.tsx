@@ -90,7 +90,7 @@ function ImageCard({ src, alt, caption }: ImageCardProps) {
       role="figure"
       aria-label={caption || alt}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
+      <div className="absolute inset-0 bg-linear-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
 
       <div className="relative aspect-video overflow-hidden bg-muted">
         <Image src={src} alt={alt} fill className="object-cover" />
@@ -160,7 +160,7 @@ export function BlogTypography() {
             </div>
 
             <h1 className="text-balance text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-6xl">
-              <span className="bg-gradient-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-foreground via-foreground/90 to-foreground/70 bg-clip-text text-transparent">
                 The Art of Beautiful Typography
               </span>
             </h1>
@@ -268,7 +268,7 @@ export function BlogTypography() {
               className="group relative overflow-hidden rounded-2xl border border-border/40 bg-background/60 p-8 backdrop-blur transition-all hover:border-border/60"
               role="blockquote"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
+              <div className="absolute inset-0 bg-linear-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
 
               <Quote
                 className="h-8 w-8 text-primary/40 mb-4"
@@ -305,7 +305,7 @@ export function BlogTypography() {
               whileHover={{ y: -2 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
+              <div className="absolute inset-0 bg-linear-to-br from-foreground/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 -z-10" />
 
               <div className="flex items-center gap-2 mb-4 text-xs uppercase tracking-[0.15em] text-foreground/60">
                 <Code className="h-3 w-3" aria-hidden="true" />

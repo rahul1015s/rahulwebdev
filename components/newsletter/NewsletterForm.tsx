@@ -167,11 +167,11 @@ export default function NewsletterForm({ variant = 'default', location = 'portfo
 
   // Default variant
   return (
-    <div className="bg-gradient-to-r from-emerald-50/50 via-white to-cyan-50/50 dark:from-emerald-900/20 dark:via-gray-900/20 dark:to-cyan-900/20 rounded-2xl p-6 md:p-8 border border-emerald-200/50 dark:border-emerald-800/50">
+    <div className="bg-linear-to-r from-emerald-50/50 via-white to-cyan-50/50 dark:from-emerald-900/20 dark:via-gray-900/20 dark:to-cyan-900/20 rounded-2xl p-6 md:p-8 border border-emerald-200/50 dark:border-emerald-800/50">
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
         <div className="md:w-2/3">
           <div className="flex items-center gap-3 mb-4">
-            <div className="p-2 bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 rounded-lg">
+            <div className="p-2 bg-linear-to-br from-emerald-500/10 to-cyan-500/10 rounded-lg">
               <Mail className="w-6 h-6 text-emerald-600" />
             </div>
             <span className="text-sm font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full">
@@ -225,7 +225,7 @@ export default function NewsletterForm({ variant = 'default', location = 'portfo
             <Button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25 group"
+              className="w-full bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25 group"
             >
               {status === 'loading' ? (
                 <Loader2 className="w-5 h-5 animate-spin" />

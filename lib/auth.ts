@@ -2,22 +2,31 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { emailOTP } from "better-auth/plugins";
 import { connectDB } from "./mongodb";
-import { resetPasswordTemplate, passwordResetSuccessTemplate } from "@/components/email-templates";
+import {
+  resetPasswordTemplate,
+  passwordResetSuccessTemplate,
+} from "@/components/email-templates";
 import emailService from "./email";
 
-// Create auth configuration function
+/* ------------------------------------------
+   Create Auth Instance
+------------------------------------------- */
 const createAuth = async () => {
-  const mongooseConnection = await connectDB();
-  const db = mongooseConnection.connection.db!;
+  const mongoose = await connectDB();
+  const db = mongoose.connection.db!;
 
   return betterAuth({
+    /* ---------------- Database ---------------- */
     database: mongodbAdapter(db, {
-      client: mongooseConnection.connection.getClient(),
+      client: mongoose.connection.getClient(),
     }),
+
+    /* ---------------- Email + Password ---------------- */
     emailAndPassword: {
       enabled: true,
       requireEmailVerification: true,
       minPasswordLength: 6,
+
       sendResetPassword: async ({ user, url }) => {
         await emailService.sendEmail({
           to: user.email,
@@ -25,6 +34,7 @@ const createAuth = async () => {
           html: resetPasswordTemplate(url, user.email),
         });
       },
+
       onPasswordReset: async ({ user }) => {
         await emailService.sendEmail({
           to: user.email,
@@ -33,20 +43,28 @@ const createAuth = async () => {
         });
       },
     },
+
+    /* ---------------- SMTP Config (Zoho) ---------------- */
     email: {
       from: process.env.FROM_EMAIL!,
-      sendOnSignUp: false,
+      sendOnSignUp: false,              // OTP handles verification
       sendOnForgotPassword: true,
+
       transport: {
         host: process.env.SMTP_HOST!,
-        port: parseInt(process.env.SMTP_PORT!),
-        secure: parseInt(process.env.SMTP_PORT!) === 465,
+        port: 587,                      // Zoho TLS
+        secure: false,                  // MUST be false for 587
         auth: {
           user: process.env.SMTP_USER!,
-          pass: process.env.SMTP_PASS!,
+          pass: process.env.SMTP_PASS!, // Zoho APP password
+        },
+        tls: {
+          rejectUnauthorized: false,
         },
       },
     },
+
+    /* ---------------- User Fields ---------------- */
     user: {
       additionalFields: {
         mobile: {
@@ -62,49 +80,62 @@ const createAuth = async () => {
         },
       },
     },
+
+    /* ---------------- Session ---------------- */
     secret: process.env.BETTER_AUTH_SECRET!,
     session: {
-      expiresIn: 60 * 60 * 24 * 7,  // 7 days
-      updateAge: 60 * 60 * 24,        // 1 day
+      expiresIn: 60 * 60 * 24 * 7, // 7 days
+      updateAge: 60 * 60 * 24,     // 1 day
     },
+
+    /* ---------------- CORS / Trusted Origins ---------------- */
     trustedOrigins: (
       process.env.NEXT_PUBLIC_TRUSTED_ORIGINS?.split(",") || [
         "http://localhost:3000",
-        "http://localhost:3001",
       ]
     ).map((origin) => origin.trim()),
+
+    /* ---------------- Plugins ---------------- */
     plugins: [
       emailOTP({
         sendVerificationOTP: async ({ email, otp, type }) => {
-          if (type === "email-verification") {
-            await emailService.sendEmail({
-              to: email,
-              subject: "Verify your email - OTP Code",
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-                  <h1 style="color: #333; text-align: center;">Verify Your Email</h1>
-                  <p style="color: #666; font-size: 16px; line-height: 1.5;">
-                    Welcome! Please verify your email address to complete your registration.
-                  </p>
-                  <div style="text-align: center; margin: 30px 0;">
-                    <div style="background: #f8f9fa; border: 2px dashed #007bff; padding: 20px; border-radius: 10px; display: inline-block;">
-                      <h2 style="color: #007bff; font-size: 32px; margin: 0; letter-spacing: 5px; font-family: monospace;">${otp}</h2>
-                    </div>
-                  </div>
-                  <p style="color: #666; text-align: center;">
-                    Enter this 6-digit OTP code on the verification page to complete your registration.
-                  </p>
-                  <p style="color: #999; font-size: 14px; text-align: center;">
-                    This code will expire in 10 minutes for security reasons.
-                  </p>
+          if (type !== "email-verification") return;
+
+          console.log("📨 Sending email verification OTP to:", email);
+
+          await emailService.sendEmail({
+            to: email,
+            subject: "Verify your email address",
+            html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
+                <h2 style="text-align: center;">Verify Your Email</h2>
+                <p>Use the OTP below to verify your email address:</p>
+                <div style="text-align: center; margin: 24px 0;">
+                  <span style="
+                    font-size: 32px;
+                    letter-spacing: 6px;
+                    font-weight: bold;
+                    background: #f3f4f6;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    display: inline-block;
+                  ">
+                    ${otp}
+                  </span>
                 </div>
-              `,
-            });
-          }
+                <p style="font-size: 14px; color: #666;">
+                  This OTP will expire in 10 minutes.
+                </p>
+              </div>
+            `,
+          });
         },
       }),
     ],
   });
 };
 
+/* ------------------------------------------
+   Export Auth
+------------------------------------------- */
 export const auth = await createAuth();
