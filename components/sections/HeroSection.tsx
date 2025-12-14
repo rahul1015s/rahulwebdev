@@ -288,7 +288,7 @@ export default function HeroSection() {
             onHoverEnd={() => setHoveredButton(null)}
           >
             <Button asChild variant="outline" className="gap-2">
-              <Link href="https://linkedin.com/in/rahulverma" target="_blank">
+              <Link href="https://linkedin.com/in/rahul1015s" target="_blank">
                 <motion.div
                   animate={{ 
                     scale: hoveredButton === "linkedin" ? 1.2 : 1
