@@ -228,7 +228,7 @@ export default function HeroSection() {
             onHoverEnd={() => setHoveredButton(null)}
           >
             <Button asChild className="gap-2 relative overflow-hidden group">
-              <Link href="mailto:rahulvjob@gmail.com">
+              <Link href="mailto:rahulwebjs@gmail.com">
                 <motion.div
                   animate={{ 
                     scale: hoveredButton === "email" ? 1.2 : 1,

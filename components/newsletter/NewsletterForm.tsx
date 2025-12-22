@@ -263,9 +263,9 @@ export default function NewsletterForm({ variant = 'default', location = 'portfo
             )}
           </AnimatePresence>
           
-          <p className="text-xs text-muted-foreground mt-4 text-center">
-            Join 500+ developers already subscribed
-          </p>
+          {/* <p className="text-xs text-muted-foreground mt-4 text-center">
+            Join developers already subscribed
+          </p> */}
         </div>
       </div>
     </div>
