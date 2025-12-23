@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { connectDB } from "@/lib/mongodb"
 import CaseStudy from "@/models/casestudy"
 import PostContent from "@/components/blog/PostContent"
+import { Metadata } from 'next';
 
 export const revalidate = 60 // ISR: Revalidate every 60 seconds
 
@@ -10,13 +11,13 @@ async function getCaseStudy(slug: string) {
   try {
     await connectDB()
     const study = await CaseStudy.findOne({ slug }).lean()
-    
+
     // Ensure content is properly stored/retrieved
     if (study && study.content && typeof study.content === 'object') {
       // If it's already an object (MongoDB might have parsed it), convert to string for PostContent
       study.content = JSON.stringify(study.content)
     }
-    
+
     return study
   } catch (error) {
     console.error('Error fetching case study:', error)
@@ -24,15 +25,49 @@ async function getCaseStudy(slug: string) {
   }
 }
 
-export async function generateMetadata({ params }: { params: any }) {
+export async function generateMetadata({ params }: { params: any }): Promise<Metadata> {
   const { slug } = await params
   const study = await getCaseStudy(slug)
-  if (!study) return { title: "Not Found" }
+  if (!study) {
+    return {
+      title: "Case Study Not Found - Rahul Verma",
+      description: "The requested case study could not be found.",
+    };
+  }
+
+  const description = study.description || study.tagline || "Detailed case study showcasing project development and implementation.";
+  const ogImage = study.coverImage || "/og-case-studies.svg";
 
   return {
-    title: `${study.name} — Case Study`,
-    description: study.description || study.tagline || "Case study details",
-  }
+    title: `${study.name} — Case Study | Rahul Verma`,
+    description,
+    openGraph: {
+      title: `${study.name} — Case Study`,
+      description,
+      url: `https://rahulwebdev.in/case-studies/${slug}`,
+      siteName: "Rahul Verma Portfolio",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${study.name} - Case Study by Rahul Verma`,
+        },
+      ],
+      locale: "en_US",
+      type: "article",
+      publishedTime: study.createdAt?.toISOString(),
+      modifiedTime: study.updatedAt?.toISOString(),
+      authors: ["Rahul Verma"],
+      tags: study.category || study.stack || [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${study.name} — Case Study`,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function CaseStudyPage({ params }: { params: any }) {
@@ -43,8 +78,45 @@ export default async function CaseStudyPage({ params }: { params: any }) {
     notFound()
   }
 
+  const ogImage = study.coverImage || "/og-case-studies.svg";
+
+  const caseStudyStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": study.name,
+    "description": study.description || study.tagline,
+    "image": ogImage,
+    "author": {
+      "@type": "Person",
+      "name": "Rahul Verma",
+      "url": "https://rahulwebdev.in"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Rahul Verma"
+    },
+    "datePublished": study.createdAt?.toISOString(),
+    "dateModified": study.updatedAt?.toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://rahulwebdev.in/case-studies/${slug}`
+    },
+    "keywords": study.category?.join(", ") || study.stack?.join(", ") || "",
+    "articleSection": "Case Studies",
+    "url": `https://rahulwebdev.in/case-studies/${slug}`,
+    "about": study.category || [],
+    "mentions": study.stack || []
+  };
+
   return (
-    <article className="mx-auto max-w-3xl px-4 py-12">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(caseStudyStructuredData),
+        }}
+      />
+      <article className="mx-auto max-w-3xl px-4 py-12">
       {/* Hero Section */}
       {study.coverImage && (
         <div className="relative h-64 md:h-96 w-full mb-8 rounded-lg overflow-hidden">
@@ -190,5 +262,6 @@ export default async function CaseStudyPage({ params }: { params: any }) {
         </section>
       )}
     </article>
+  </>
   )
 }

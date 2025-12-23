@@ -5,7 +5,7 @@ export function convertDriveUrl(url: string): string {
     // Handle Google Drive direct file ID format
     if (url.startsWith('drive://')) {
       const fileId = url.replace('drive://', '');
-      return `https://drive.google.com/uc?export=download&id=${fileId}`;
+      return `https://drive.google.com/uc?export=view&id=${fileId}`;
     }
 
     // Extract file ID from various Google Drive URL formats
@@ -20,7 +20,7 @@ export function convertDriveUrl(url: string): string {
     for (const pattern of patterns) {
       const match = url.match(pattern);
       if (match && match[1]) {
-        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+        return `https://drive.google.com/uc?export=view&id=${match[1]}`;
       }
     }
 
@@ -107,6 +107,9 @@ export function normalizeImageUrl(url: string): string {
 
     // Skip normalization for data URLs
     if (trimmedUrl.startsWith('data:')) return trimmedUrl;
+
+    // Skip normalization for already proxied URLs
+    if (trimmedUrl.includes('/api/proxy/image')) return trimmedUrl;
 
     // Skip normalization for already normalized URLs
     if (trimmedUrl.includes('drive.google.com/uc?export=view')) return trimmedUrl;

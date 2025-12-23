@@ -3,10 +3,33 @@ import Image from "next/image"
 import { BlogCard } from "@/components/cards/blog-card"
 import { connectDB } from "@/lib/mongodb";
 import CaseStudy from "@/models/casestudy"
+import { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Case Studies — Rahul Verma",
-  description: "In-depth case studies of selected projects",
+  description: "In-depth case studies of selected projects showcasing full-stack development, problem-solving, and technical implementation.",
+  openGraph: {
+    title: "Case Studies — Rahul Verma",
+    description: "In-depth case studies of selected projects showcasing full-stack development, problem-solving, and technical implementation.",
+    url: "https://rahulwebdev.in/case-studies",
+    siteName: "Rahul Verma Portfolio",
+    images: [
+      {
+        url: "/og-case-studies.svg",
+        width: 1200,
+        height: 630,
+        alt: "Rahul Verma Case Studies Preview",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Case Studies — Rahul Verma",
+    description: "In-depth case studies of selected projects showcasing full-stack development, problem-solving, and technical implementation.",
+    images: ["/og-case-studies.svg"],
+  },
 }
 
 export const revalidate = 60 // ISR: Revalidate every 60 seconds

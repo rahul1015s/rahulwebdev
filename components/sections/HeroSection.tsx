@@ -310,7 +310,7 @@ export default function HeroSection() {
             onHoverEnd={() => setHoveredButton(null)}
           >
             <Button asChild variant="secondary" className="gap-2">
-              <Link href="/resume.pdf" target="_blank">
+              <Link href="/resume" target="_blank">
                 <motion.div
                   animate={{ 
                     x: hoveredButton === "resume" ? [0, 3, 0] : 0

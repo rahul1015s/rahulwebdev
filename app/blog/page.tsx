@@ -6,11 +6,126 @@ import { normalizeImageUrl } from "@/utils/url-utils";
 import { cn } from "@/lib/utils";
 import { BookOpen, TrendingUp, Zap, MessageSquare, Rocket, Star, PenTool, FileText, Hash } from "lucide-react";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
+import { Metadata } from 'next';
 
-export const metadata = {
-  title: "Blog — Rahul Verma",
-  description: "Short posts and notes by Rahul Verma",
-};
+// Generate dynamic metadata for blog listing page
+export async function generateMetadata(): Promise<Metadata> {
+  await connectDB();
+
+  try {
+    // Get the latest 3 published posts for dynamic description
+    const latestPosts = await Post.find({ published: true })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .select('title tags')
+      .lean();
+
+    // Create dynamic description based on latest posts
+    let description = "Short posts and notes by Rahul Verma - Full Stack Developer sharing insights on web development, technology, and programming.";
+
+    if (latestPosts.length > 0) {
+      const postTitles = latestPosts.map(post => post.title).join(', ');
+      description = `Latest posts: ${postTitles}. Read insights on web development, technology, and programming by Rahul Verma.`;
+    }
+
+    // Try to get a recent post's image for OG - prioritize actual blog images
+    let ogImage = "/api/og/blog"; // Dynamic OG image showing latest posts
+    let recentImageFound = false;
+
+    // First, try to get an image from recent posts
+    const recentPosts = await Post.find({ published: true })
+      .sort({ createdAt: -1 })
+      .limit(5) // Check more posts for images
+      .select('image content')
+      .lean();
+
+    for (const recentPost of recentPosts) {
+      // Check post cover image first
+      if (recentPost.image && typeof recentPost.image === 'string' && recentPost.image.trim()) {
+        const normalizedImage = normalizeImageUrl(recentPost.image);
+        if (normalizedImage) {
+          ogImage = normalizedImage;
+          recentImageFound = true;
+          break;
+        }
+      }
+
+      // If no cover image, check content for images
+      if (!recentImageFound && typeof recentPost.content === 'string') {
+        try {
+          const json = JSON.parse(recentPost.content);
+          const nodes = json?.content || [];
+          for (const node of nodes) {
+            if (node.type === "image" && node.attrs?.src) {
+              const contentImage = normalizeImageUrl(node.attrs.src);
+              if (contentImage) {
+                ogImage = contentImage;
+                recentImageFound = true;
+                break;
+              }
+            }
+          }
+          if (recentImageFound) break;
+        } catch {}
+      }
+    }
+
+    return {
+      title: "Blog - Rahul Verma",
+      description,
+      openGraph: {
+        title: "Blog - Rahul Verma",
+        description,
+        url: "https://rahulwebdev.in/blog",
+        siteName: "Rahul Verma Portfolio",
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: "Rahul Verma Blog Preview",
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "Blog - Rahul Verma",
+        description,
+        images: [ogImage],
+      },
+    };
+  } catch (error) {
+    // Fallback to static metadata if database query fails
+    return {
+      title: "Blog - Rahul Verma",
+      description: "Short posts and notes by Rahul Verma - Full Stack Developer sharing insights on web development, technology, and programming.",
+      openGraph: {
+        title: "Blog - Rahul Verma",
+        description: "Short posts and notes by Rahul Verma - Full Stack Developer sharing insights on web development, technology, and programming.",
+        url: "https://rahulwebdev.in/blog",
+        siteName: "Rahul Verma Portfolio",
+        images: [
+          {
+            url: "/api/og/blog",
+            width: 1200,
+            height: 630,
+            alt: "Rahul Verma Blog Preview",
+          },
+        ],
+        locale: "en_US",
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "Blog - Rahul Verma",
+        description: "Short posts and notes by Rahul Verma - Full Stack Developer sharing insights on web development, technology, and programming.",
+        images: ["/api/og/blog"],
+      },
+    };
+  }
+}
 
 const PAGE_SIZE = 9;
 
@@ -69,7 +184,7 @@ export default async function BlogPage({
   ).slice(0, 6);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 relative">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl" />
@@ -170,32 +285,53 @@ export default async function BlogPage({
       </div>
 
       {/* BLOG GRID */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16">
         {posts.map((p: any, index: number) => {
           const idOrSlug = p.slug || String(p._id);
 
           // -----------------------------
-          // EXCERPT (clean)
+          // PARSE CONTENT ONCE (optimization)
           // -----------------------------
-          let excerpt = "Read the full article…";
+          let parsedContent = null;
           if (typeof p.content === "string") {
             try {
-              const parsed = JSON.parse(p.content);
-              excerpt =
-                parsed?.content?.[1]?.content?.[0]?.text ||
-                p.content.slice(0, 120);
+              parsedContent = JSON.parse(p.content);
             } catch {
-              excerpt = p.content.slice(0, 120);
+              // Keep as null if parsing fails
             }
           }
 
           // -----------------------------
-          // IMAGE HANDLING
+          // EXCERPT (from parsed content)
           // -----------------------------
-          const firstImage = extractFirstImage(p.content);
-          const safeImage = firstImage
-            ? normalizeImageUrl(firstImage)
-            : "/default-blog.png";
+          let excerpt = "Read the full article…";
+          if (parsedContent) {
+            excerpt =
+              parsedContent?.content?.[1]?.content?.[0]?.text ||
+              p.content.slice(0, 120);
+          } else if (typeof p.content === "string") {
+            excerpt = p.content.slice(0, 120);
+          }
+
+          // -----------------------------
+          // IMAGE HANDLING (from parsed content)
+          // -----------------------------
+          let coverImage: string | null = null;
+
+          if (p.image) coverImage = normalizeImageUrl(p.image);
+
+          if (!coverImage && parsedContent) {
+            // Extract first image from already parsed content
+            const nodes = parsedContent?.content ?? [];
+            for (const node of nodes) {
+              if (node.type === "image" && node.attrs?.src) {
+                coverImage = normalizeImageUrl(node.attrs.src);
+                break; // Only need first image
+              }
+            }
+          }
+
+          const safeImage = coverImage || "/default-blog.png";
 
           return (
             <div key={idOrSlug} className="relative group">
@@ -258,7 +394,7 @@ export default async function BlogPage({
 
       {/* SUBSCRIBE NEWSLETTER SECTION */}
      
-      <NewsletterForm variant="default" location="blog" />
+      <NewsletterForm variant="default" location="blog"  />
 
 
       {/* PAGINATION WITH ENHANCED INTERACTIONS */}

@@ -7,9 +7,154 @@ import Image from "next/image";
 import { normalizeImageUrl } from "@/utils/url-utils";
 import { Calendar, Clock, ArrowLeft, Eye, Tag, User } from "lucide-react";
 import ActionButtons from "./ActionButtons";
+import { Metadata } from 'next';
 
 interface PostPageProps {
   params: Promise<{ slug: string }> | { slug: string };
+}
+
+// Generate metadata for each blog post
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const unwrapped = params instanceof Promise ? await params : params;
+  const { slug } = unwrapped;
+
+  await connectDB();
+
+  let post = await Post.findOne({ slug }).lean();
+
+  if (!post && /^[0-9a-fA-F]{24}$/.test(slug)) {
+    post = await Post.findById(slug).lean();
+  }
+
+  if (!post) {
+    return {
+      title: "Post Not Found - Rahul Verma",
+      description: "The requested blog post could not be found.",
+    };
+  }
+
+  // Extract description from content (first paragraph or summary)
+  let description = "Read this insightful post by Rahul Verma on web development and technology.";
+  let excerpt = "";
+
+  try {
+    if (typeof post.content === "string") {
+      const json = JSON.parse(post.content);
+      const nodes = json?.content || [];
+
+      // Find first meaningful text content
+      for (const node of nodes) {
+        if (node.type === "paragraph" && node.content?.length > 0) {
+          const text = node.content.map((c: any) => c.text || "").join("").trim();
+          if (text.length > 20) { // Only use substantial paragraphs
+            excerpt = text;
+            break;
+          }
+        } else if (node.type === "heading" && node.content?.length > 0 && !excerpt) {
+          // Fallback to heading if no good paragraph found
+          excerpt = node.content.map((c: any) => c.text || "").join("").trim();
+        }
+      }
+
+      if (excerpt) {
+        description = excerpt.length > 160 ? excerpt.substring(0, 157) + "..." : excerpt;
+      }
+    }
+  } catch (error) {
+    console.error("Error parsing post content for metadata:", error);
+  }
+
+  // OG Image Priority (highest to lowest):
+  // 1. Blog post's cover image (post.image)
+  // 2. First image found in blog content
+  // 3. Dynamic SVG with post title (fallback)
+  let ogImage = `/api/og/blog/${slug}?title=${encodeURIComponent(post.title)}&author=Rahul+Verma`; // Fallback dynamic OG image
+  let imageAlt = `${post.title} - Rahul Verma Blog`;
+
+  // Priority 1: Use the blog post's cover image if available
+  if (post.image && typeof post.image === 'string' && post.image.trim()) {
+    const normalizedImage = normalizeImageUrl(post.image);
+    if (normalizedImage && normalizedImage !== post.image) { // Check if normalization worked
+      ogImage = normalizedImage;
+      imageAlt = `${post.title} - Blog post cover image`;
+    } else if (post.image.startsWith('http') || post.image.startsWith('/')) {
+      ogImage = post.image;
+      imageAlt = `${post.title} - Blog post cover image`;
+    }
+  }
+
+  // Priority 2: Look for first image in blog content (only if no cover image)
+  if (ogImage.startsWith('/api/og/') && typeof post.content === "string") {
+    try {
+      const json = JSON.parse(post.content);
+      const nodes = json?.content || [];
+
+      // Look for first image in content
+      for (const node of nodes) {
+        if (node.type === "image" && node.attrs?.src) {
+          const contentImage = normalizeImageUrl(node.attrs.src);
+          if (contentImage) {
+            ogImage = contentImage;
+            imageAlt = node.attrs?.alt || `${post.title} - Blog post image`;
+            break; // Use first image found
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing blog content for OG image:", error);
+    }
+  }
+
+  // Create keywords from tags for better SEO
+  const keywords = (post.tags && Array.isArray(post.tags) && post.tags.length > 0)
+    ? post.tags.join(", ")
+    : "web development, programming, technology, React, Next.js";
+
+  // Enhanced description with read time if available
+  let enhancedDescription = description;
+  if (post.readTime && typeof post.readTime === 'string') {
+    enhancedDescription = `${description} (${post.readTime} read)`;
+  }
+
+  return {
+    title: `${post.title} - Rahul Verma`,
+    description: enhancedDescription,
+    keywords,
+    authors: [{ name: "Rahul Verma" }],
+    openGraph: {
+      title: post.title,
+      description: enhancedDescription,
+      url: `https://rahulwebdev.in/blog/${slug}`,
+      siteName: "Rahul Verma Portfolio",
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: imageAlt,
+        },
+      ],
+      locale: "en_US",
+      type: "article",
+      publishedTime: post.createdAt?.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString(),
+      authors: ["Rahul Verma"],
+      tags: post.tags || [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: enhancedDescription,
+      images: [ogImage],
+      creator: "@rahulwebdev", // Add if you have a Twitter handle
+    },
+    other: {
+      "article:author": "Rahul Verma" as string,
+      ...(post.createdAt && { "article:published_time": post.createdAt.toISOString() as string }),
+      ...(post.updatedAt && { "article:modified_time": post.updatedAt.toISOString() as string }),
+      ...(post.tags && Array.isArray(post.tags) && post.tags.length > 0 && { "article:tag": post.tags.join(",") as string }),
+    },
+  };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
@@ -55,8 +200,115 @@ export default async function PostPage({ params }: PostPageProps) {
       })
     : "";
 
+  // Create description for structured data
+  let description = "Read this insightful post by Rahul Verma on web development and technology.";
+  let excerpt = "";
+
+  try {
+    if (typeof post.content === "string") {
+      const json = JSON.parse(post.content);
+      const nodes = json?.content || [];
+
+      // Find first meaningful text content
+      for (const node of nodes) {
+        if (node.type === "paragraph" && node.content?.length > 0) {
+          const text = node.content.map((c: any) => c.text || "").join("").trim();
+          if (text.length > 20) { // Only use substantial paragraphs
+            excerpt = text;
+            break;
+          }
+        } else if (node.type === "heading" && node.content?.length > 0 && !excerpt) {
+          // Fallback to heading if no good paragraph found
+          excerpt = node.content.map((c: any) => c.text || "").join("").trim();
+        }
+      }
+
+      if (excerpt) {
+        description = excerpt.length > 160 ? excerpt.substring(0, 157) + "..." : excerpt;
+      }
+    }
+  } catch (error) {
+    console.error("Error parsing post content for structured data:", error);
+  }
+
+  // Enhanced description with read time if available
+  let enhancedDescription = description;
+  if (post.readTime && typeof post.readTime === 'string') {
+    enhancedDescription = `${description} (${post.readTime} read)`;
+  }
+
+  // OG Image Priority (highest to lowest):
+  // 1. Blog post's cover image (post.image)
+  // 2. First image found in blog content
+  // 3. Dynamic SVG with post title (fallback)
+  let ogImage = `/api/og/blog/${slug}?title=${encodeURIComponent(post.title)}&author=Rahul+Verma`; // Fallback dynamic OG image
+
+  // Priority 1: Use the blog post's cover image if available
+  if (post.image && typeof post.image === 'string' && post.image.trim()) {
+    const normalizedImage = normalizeImageUrl(post.image);
+    if (normalizedImage && normalizedImage !== post.image) { // Check if normalization worked
+      ogImage = normalizedImage;
+    } else if (post.image.startsWith('http') || post.image.startsWith('/')) {
+      ogImage = post.image;
+    }
+  }
+
+  // Priority 2: Look for first image in blog content (only if no cover image)
+  if (ogImage.startsWith('/api/og/') && typeof post.content === "string") {
+    try {
+      const json = JSON.parse(post.content);
+      const nodes = json?.content || [];
+
+      // Look for first image in content
+      for (const node of nodes) {
+        if (node.type === "image" && node.attrs?.src) {
+          const contentImage = normalizeImageUrl(node.attrs.src);
+          if (contentImage) {
+            ogImage = contentImage;
+            break; // Use first image found
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error parsing blog content for OG image:", error);
+    }
+  }
+
+  const articleStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "description": enhancedDescription,
+    "image": ogImage,
+    "author": {
+      "@type": "Person",
+      "name": "Rahul Verma",
+      "url": "https://rahulwebdev.in"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Rahul Verma"
+    },
+    "datePublished": post.createdAt?.toISOString(),
+    "dateModified": post.updatedAt?.toISOString(),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://rahulwebdev.in/blog/${slug}`
+    },
+    "keywords": post.tags?.join(", ") || "",
+    "articleSection": "Technology",
+    "url": `https://rahulwebdev.in/blog/${slug}`
+  };
+
   return (
-    <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleStructuredData),
+        }}
+      />
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
       {/* Back Button with animation */}
       <div className="mb-8 sm:mb-10">
         <Link
@@ -119,7 +371,7 @@ export default async function PostPage({ params }: PostPageProps) {
             fill
             priority
             unoptimized={coverImage.startsWith("http")}
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-contain group-hover:scale-105 transition-transform duration-700"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
           />
           
@@ -217,5 +469,6 @@ export default async function PostPage({ params }: PostPageProps) {
         </Link>
       </div>
     </div>
+  </>
   );
 }

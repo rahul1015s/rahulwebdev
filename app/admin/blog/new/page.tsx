@@ -8,7 +8,7 @@ export default function NewPostPage() {
   const [slug, setSlug] = useState('')
   const [content, setContent] = useState('')
   const [image, setImage] = useState('')
-  const [published, setPublished] = useState(false)
+  const [published, setPublished] = useState(true)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
   const [resetKey, setResetKey] = useState(0)

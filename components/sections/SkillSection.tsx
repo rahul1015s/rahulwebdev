@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Code2, Database, Server, Wrench, Zap, Sparkles } from "lucide-react";
+import { Code2, Database, Server, Wrench, Zap, Star } from "lucide-react";
 import { useState } from "react";
 
 export default function SkillsSection() {
@@ -143,7 +143,7 @@ export default function SkillsSection() {
                     transition={{ duration: 0.2 }}
                     className="ml-auto"
                   >
-                    <Sparkles className="w-4 h-4 text-emerald-500" />
+                    <Star className="w-4 h-4 text-emerald-500" />
                   </motion.div>
                 </motion.div>
 
