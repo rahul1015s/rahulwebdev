@@ -3,7 +3,7 @@ import { BlogCard } from "@/components/cards/blog-card";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import { normalizeImageUrl } from "@/utils/url-utils";
-import { ArrowRight, FileText, TrendingUp, Sparkles, Clock } from "lucide-react";
+import { ArrowRight, FileText, TrendingUp, Star, Clock } from "lucide-react";
 
 // -----------------------------------------
 // Extract FIRST image from ProseMirror JSON
@@ -55,10 +55,19 @@ export default async function BlogSection() {
     // Transform posts like BlogPage
     // -----------------------------
     posts = finalDocs.map((p: any, index: number) => {
-      const firstImage = extractFirstImage(p.content);
-      const safeImage = firstImage
-        ? normalizeImageUrl(firstImage)
-        : "/default-blog.png";
+      // COVER IMAGE LOGIC (same as blog post page)
+      let coverImage: string | null = null;
+
+      if (p.image) coverImage = normalizeImageUrl(p.image);
+
+      if (!coverImage) {
+        const firstImage = extractFirstImage(p.content);
+        if (firstImage) {
+          coverImage = normalizeImageUrl(firstImage);
+        }
+      }
+
+      const safeImage = coverImage || "/default-blog.png";
 
       // EXCERPT CLEANING
       let excerpt = "Read the full article…";
@@ -103,7 +112,7 @@ export default async function BlogSection() {
         <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header with micro-interactions */}
         <div className="mb-12 relative">
           <div className="flex items-center gap-3 mb-4">

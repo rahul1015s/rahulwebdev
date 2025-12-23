@@ -61,7 +61,7 @@ export function BlogCard({
         <Link href={href} className="block relative">
 
           {/* Image Section with enhanced effects */}
-          <div className="relative w-full h-48 overflow-hidden">
+          <div className="relative w-full h-40 sm:h-48 overflow-hidden">
             {/* Loading shimmer */}
             {!isImageLoaded && (
               <motion.div 
@@ -87,12 +87,10 @@ export function BlogCard({
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="relative w-full h-full"
             >
-              <Image
+              <img
                 src={src}
                 alt={title}
-                fill
-                unoptimized={true}
-                className="object-cover"
+                className="w-full h-full object-contain"
                 onError={() => setSrc('/default-blog.png')}
                 onLoad={() => setIsImageLoaded(true)}
               />
@@ -150,7 +148,7 @@ export function BlogCard({
           </div>
 
           {/* Content */}
-          <div className="p-5 space-y-3">
+          <div className="p-4 sm:p-5 space-y-3">
             {/* Tags with micro-interactions */}
             {tags && tags.length > 0 && (
               <div className="flex gap-2 flex-wrap">
@@ -197,7 +195,7 @@ export function BlogCard({
             {/* Title with animated underline */}
             <div className="relative">
               <motion.h3 
-                className="text-lg font-semibold group-hover:text-emerald-600 transition-colors duration-300"
+                className="text-base sm:text-lg font-semibold group-hover:text-emerald-600 transition-colors duration-300"
                 animate={{ color: isHovered ? "hsl(var(--emerald-600))" : "hsl(var(--foreground))" }}
               >
                 {title}
@@ -214,7 +212,7 @@ export function BlogCard({
 
             {/* Excerpt with subtle animation */}
             <motion.p 
-              className="text-sm text-muted-foreground line-clamp-2"
+              className="text-xs sm:text-sm text-muted-foreground line-clamp-2"
               animate={{ 
                 color: isHovered ? "hsl(var(--foreground)/0.8)" : "hsl(var(--muted-foreground))"
               }}
@@ -269,7 +267,7 @@ export function BlogCard({
           </motion.div>
 
           {/* Bottom accent */}
-          <motion.div 
+          {/* <motion.div 
             className="absolute -bottom-1 left-1/2 transform -translate-x-1/2"
             animate={{ 
               scale: isHovered ? [1, 1.2, 1] : 1,
@@ -278,7 +276,7 @@ export function BlogCard({
             transition={{ duration: 1.5, repeat: isHovered ? Infinity : 0 }}
           >
             <BookOpen className="w-4 h-4 text-emerald-400/50" />
-          </motion.div>
+          </motion.div> */}
         </Link>
       </motion.div>
     </motion.div>

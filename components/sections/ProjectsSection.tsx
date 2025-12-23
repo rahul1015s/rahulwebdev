@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Github, ExternalLink, Sparkles, Zap, FolderOpen } from "lucide-react";
+import { Github, ExternalLink, Star, Zap, FolderOpen } from "lucide-react";
 import Link from "next/link";
 
 const projects = [
@@ -38,7 +38,7 @@ export default function ProjectsSection() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-3 mb-4"
           >
-            <Sparkles className="w-5 h-5 text-emerald-500" />
+            <Star className="w-5 h-5 text-emerald-500" />
             <span className="text-sm font-medium text-emerald-600 tracking-wide">
               PROJECTS
             </span>

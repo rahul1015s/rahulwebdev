@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Github, Linkedin, Send, Sparkles, Zap, MessageSquare, Phone, MessageCircle } from "lucide-react";
+import { Mail, Github, Linkedin, Send, Star, Zap, MessageSquare, Phone, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
@@ -377,7 +377,7 @@ export default function ContactSection() {
             animate={{ y: [0, -5, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <Sparkles className="w-4 h-4 text-emerald-400/50 mx-auto" />
+            <Star className="w-4 h-4 text-emerald-400/50 mx-auto" />
           </motion.div>
         </motion.div>
       </div>

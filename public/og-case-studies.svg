@@ -1,0 +1,8 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <text x="600" y="200" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#10b981" text-anchor="middle">Rahul Verma</text>
+  <text x="600" y="260" font-family="Arial, sans-serif" font-size="24" fill="#e2e8f0" text-anchor="middle">Case Studies</text>
+  <text x="600" y="320" font-family="Arial, sans-serif" font-size="18" fill="#94a3b8" text-anchor="middle">Project Deep Dives</text>
+  <text x="600" y="380" font-family="Arial, sans-serif" font-size="16" fill="#64748b" text-anchor="middle">Full-Stack Development | Problem Solving | Technical Implementation</text>
+  <rect x="100" y="450" width="1000" height="4" fill="#10b981"/>
+</svg>

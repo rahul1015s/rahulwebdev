@@ -99,7 +99,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="my-8 sm:my-10"
         >
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
+          <div className="h-px w-full bg-linear-to-r from-transparent via-emerald-500/30 to-transparent" />
         </motion.div>
       )
 
@@ -138,7 +138,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
-          className="border-l-3 sm:border-l-4 border-emerald-500/50 pl-4 sm:pl-6 md:pl-8 py-3 sm:py-4 italic my-6 sm:my-8 text-foreground/80 bg-gradient-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
+          className="border-l-3 sm:border-l-4 border-emerald-500/50 pl-4 sm:pl-6 md:pl-8 py-3 sm:py-4 italic my-6 sm:my-8 text-foreground/80 bg-linear-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
         >
           <div className="absolute -left-1.5 sm:-left-2 top-3 sm:top-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             ❝
@@ -250,14 +250,14 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
       {/* Code header - RESPONSIVE */}
       <div className="flex flex-wrap items-center justify-between gap-2 bg-gray-900 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-800">
         <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-          <div className="flex gap-1 flex-shrink-0">
+          <div className="flex gap-1 shrink-0">
             <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
             <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500" />
             <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500" />
           </div>
           
           {language && (
-            <span className="ml-2 text-xs sm:text-sm font-mono text-gray-400 truncate max-w-[120px] sm:max-w-[200px] md:max-w-none">
+            <span className="ml-2 text-xs sm:text-sm font-mono text-gray-400 truncate max-w-30` sm:max-w-50 md:max-w-none">
               {language}
             </span>
           )}
@@ -293,12 +293,12 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           >
             {copied ? (
               <>
-                <Check size={12} className="sm:size-4 flex-shrink-0" />
+                <Check size={12} className="sm:size-4 shrink-0" />
                 <span className="hidden sm:inline">Copied</span>
               </>
             ) : (
               <>
-                <Copy size={12} className="sm:size-4 flex-shrink-0" />
+                <Copy size={12} className="sm:size-4 shrink-0" />
                 <span className="hidden sm:inline">Copy</span>
               </>
             )}
@@ -315,7 +315,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
       `}>
         {/* Horizontal scroll indicator */}
         {showScrollHint && (
-          <div className="sticky top-0 left-0 z-10 w-full h-1 bg-gradient-to-r from-transparent via-gray-700/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div className="sticky top-0 left-0 z-10 w-full h-1 bg-linear-to-r from-transparent via-gray-700/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         )}
         
         <div className="relative">
@@ -354,7 +354,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
                 p-3 sm:p-4 md:p-5
                 overflow-x-auto
                 overflow-y-hidden
-                min-h-[60px]
+                min-h-15
               "
             >
               <code className="
@@ -413,7 +413,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           sm:hidden
           absolute inset-x-0 bottom-0
           h-16
-          bg-gradient-to-t from-gray-950 via-gray-950/90 to-transparent
+          bg-linear-to-t from-gray-950 via-gray-950/90 to-transparent
           flex items-end justify-center
           pb-3
           pointer-events-none
@@ -502,7 +502,7 @@ function renderImageNode(node: any, index: number) {
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1024px) 80vw, 70vw"
             className="
-              object-cover
+              object-contain
               w-full h-full
               absolute top-0 left-0
               transition-transform duration-700
@@ -516,7 +516,7 @@ function renderImageNode(node: any, index: number) {
           {/* Gradient overlay */}
           <div className="
             absolute inset-0
-            bg-gradient-to-t
+            bg-linear-to-t
             from-black/30 via-transparent to-transparent
             opacity-0 group-hover:opacity-100
             transition-opacity duration-300
@@ -528,7 +528,7 @@ function renderImageNode(node: any, index: number) {
           <div className="
             absolute bottom-0 left-0 right-0
             p-3 sm:p-4 md:p-5
-            bg-gradient-to-t from-black/90 via-black/70 to-transparent
+            bg-linear-to-t from-black/90 via-black/70 to-transparent
             transform translate-y-full
             group-hover:translate-y-0
             transition-transform duration-300
@@ -625,7 +625,7 @@ export default function PostContent({ content }: PostContentProps) {
       animate={{ opacity: 1 }}
       className="prose prose-sm sm:prose-base max-w-none"
     >
-      <pre className="whitespace-pre-wrap break-words rounded-lg border border-border/50 p-3 sm:p-4 bg-muted/50 text-xs sm:text-sm overflow-x-auto">
+      <pre className="whitespace-pre-wrap wrap-break-word rounded-lg border border-border/50 p-3 sm:p-4 bg-muted/50 text-xs sm:text-sm overflow-x-auto">
         {JSON.stringify(parsedContent, null, 2)}
       </pre>
     </motion.div>
