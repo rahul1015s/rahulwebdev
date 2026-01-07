@@ -46,9 +46,9 @@ export async function PUT(
       const { normalizeImageUrl } = await import('@/utils/url-utils')
       updates.coverImage = normalizeImageUrl(String(updates.coverImage))
     }
-    if (updates.images && Array.isArray(updates.images)) {
+    if (updates.gallery && Array.isArray(updates.gallery)) {
       const { normalizeImageUrl } = await import('@/utils/url-utils')
-      updates.images = updates.images.map((u: any) => normalizeImageUrl(String(u)))
+      updates.gallery = updates.gallery.map((u: any) => normalizeImageUrl(String(u)))
     }
 
     const caseStudy = await CaseStudy.findOneAndUpdate(query, { $set: updates }, { new: true })

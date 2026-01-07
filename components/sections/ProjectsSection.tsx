@@ -2,208 +2,307 @@
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Github, ExternalLink, Star, Zap, FolderOpen } from "lucide-react";
+import { Github, ExternalLink, FolderOpen, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useState, useMemo, useCallback, memo } from "react";
 
-const projects = [
+type Project = {
+  title: string;
+  description: string;
+  tech: string[];
+  live: string;
+  github: string;
+  features: string[];
+};
+
+/* ------------------------------------------------------------------ */
+/* Data */
+/* ------------------------------------------------------------------ */
+
+const projects: Project[] = [
   {
     title: "Gen-Notes",
-    description: "Secure MERN Stack PWA for note-taking with offline capabilities, JWT authentication, and private data handling.",
+    description: "Secure MERN Stack PWA for note-taking with offline capabilities and JWT authentication.",
     tech: ["React", "Node.js", "MongoDB", "Express", "Tailwind"],
     live: "https://gennotes.vercel.app/",
     github: "https://github.com/rahul1015s/Gen-Notes",
     features: ["PWA", "JWT Auth", "Secure CRUD", "REST API"],
-    status: "Live"
   },
   {
     title: "AtoZ Market",
-    description: "Serverless e-commerce platform with Firebase authentication, Redux state management, and modern UI.",
+    description: "Serverless e-commerce platform with Firebase authentication and modern UI.",
     tech: ["React", "Firebase", "Redux", "Tailwind", "Vite"],
     live: "https://atoz-market.vercel.app/",
     github: "https://github.com/rahul1015s/AtoZ-market",
     features: ["Firebase Auth", "Cart System", "Modern UI", "Newsletter"],
-    status: "Live"
   },
 ];
 
-export default function ProjectsSection() {
+/* ------------------------------------------------------------------ */
+/* Tech Icon Component */
+/* ------------------------------------------------------------------ */
+
+const TechIcon = memo(({ tech }: { tech: string }) => {
+  const icons: Record<string, React.ReactNode> = {
+    "React": (
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Node.js": (
+      <path d="M12 2l10 6v8l-10 6-10-6V8z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "MongoDB": (
+      <path d="M12 2v20M12 6c-4 0-6 2-6 6s2 6 6 6 6-2 6-6-2-6-6-6z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Express": (
+      <path d="M4 4h16v16H4zM8 8h8v8H8z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Tailwind": (
+      <path d="M12 6c-3 0-4 2-4 4s1 4 4 4 4-2 4-4-1-4-4-4z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Firebase": (
+      <path d="M12 2l-2 5-5 12 7-4 7 4-5-12z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Redux": (
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+    "Vite": (
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="1.5" fill="none" />
+    ),
+  };
+
   return (
-    <section id="projects" className="py-20 md:py-28">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Section Header */}
-        <div className="mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 mb-4"
-          >
-            <Star className="w-5 h-5 text-emerald-500" />
-            <span className="text-sm font-medium text-emerald-600 tracking-wide">
-              PROJECTS
-            </span>
-          </motion.div>
-
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight"
-          >
-            Featured{" "}
-            <span className="relative inline-block">
-              <span className="text-emerald-600">Projects</span>
-              <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-emerald-600/30" />
-            </span>
-          </motion.h2>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-4 text-muted-foreground text-lg max-w-2xl"
-          >
-            A selection of projects showcasing modern web development practices and clean UI/UX.
-          </motion.p>
-        </div>
-
-        {/* Projects Grid */}
-        <div className="grid md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <ProjectCard key={index} project={project} index={index} />
-          ))}
-        </div>
-
-        {/* View More */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="mt-16 text-center"
-        >
-          <Link
-            href="https://github.com/rahul1015s"
-            target="_blank"
-            className="inline-flex items-center gap-2 group text-emerald-600 hover:text-emerald-700 font-medium"
-          >
-            <span className="border-b border-transparent group-hover:border-emerald-600 transition-all">
-              View all projects on GitHub
-            </span>
-            <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </Link>
-        </motion.div>
-      </div>
-    </section>
+    <svg width="12" height="12" viewBox="0 0 24 24" className="text-muted-foreground">
+      {icons[tech] || (
+        <circle cx="12" cy="12" r="6" fill="currentColor" />
+      )}
+    </svg>
   );
-}
+});
 
-// Project Card Component
-function ProjectCard({ project, index }: { project: any; index: number }) {
+TechIcon.displayName = "TechIcon";
+
+/* ------------------------------------------------------------------ */
+/* Project Card Component - Minimal */
+/* ------------------------------------------------------------------ */
+
+const ProjectCard = memo(({ project, index }: { project: Project; index: number }) => {
+  const [isHovering, setIsHovering] = useState(false);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      whileHover={{ y: -4 }}
-      className="group relative"
+      viewport={{ once: true }}
+      transition={{ duration: 0.3, delay: index * 0.1 }}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      className="group"
     >
-      {/* Status Badge */}
-      <div className="absolute -top-3 -right-3 z-10">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white text-xs font-medium rounded-full shadow-lg">
-          <Zap className="w-3 h-3" />
-          {project.status}
-        </div>
-      </div>
-
-      <Card className="h-full overflow-hidden border hover:border-emerald-200 transition-colors bg-card/50 backdrop-blur-sm">
-        {/* Card Header */}
-        <div className="p-6 pb-4">
-          <div className="flex items-start justify-between">
+      <Card className="border border-border/50 hover:border-primary/30 transition-colors bg-card/50 backdrop-blur-sm overflow-hidden">
+        <div className="p-5">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
               <motion.div
-                whileHover={{ rotate: 15, scale: 1.1 }}
+                className="p-2 rounded-md bg-primary/5 group-hover:bg-primary/10 transition-colors"
+                animate={{ 
+                  rotate: isHovering ? 5 : 0
+                }}
                 transition={{ type: "spring", stiffness: 300 }}
-                className="p-2 rounded-lg bg-emerald-50"
               >
-                <FolderOpen className="w-5 h-5 text-emerald-600" />
+                <FolderOpen className="w-4 h-4 text-primary" />
               </motion.div>
-              <h3 className="text-xl font-semibold group-hover:text-emerald-700 transition-colors">
-                {project.title}
-              </h3>
+              
+              <div>
+                <h3 className="font-medium group-hover:text-primary transition-colors">
+                  {project.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                  {project.description}
+                </p>
+              </div>
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-2">
+              <Link
+                href={project.live}
+                target="_blank"
+                className="p-2 rounded-md border hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                title="Live Demo"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              
+              <Link
+                href={project.github}
+                target="_blank"
+                className="p-2 rounded-md border hover:bg-primary/5 hover:border-primary/20 transition-colors"
+                title="GitHub Repository"
+              >
+                <Github className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
 
-          {/* Description */}
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            {project.description}
-          </p>
+          {/* Tech Stack */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="text-xs text-muted-foreground">Built with</span>
+            <div className="flex flex-wrap gap-1.5">
+              {project.tech.map((tech, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-1 px-2 py-1 text-xs bg-muted rounded-md hover:bg-primary/5 hover:text-primary transition-colors"
+                >
+                  <TechIcon tech={tech} />
+                  <span>{tech}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Features */}
-          <div className="mt-4 flex flex-wrap gap-2">
-            {project.features.map((feature: string, i: number) => (
+          <div className="flex flex-wrap gap-1.5">
+            {project.features.map((feature, i) => (
               <span
                 key={i}
-                className="px-2.5 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full"
+                className="px-2 py-1 text-xs bg-primary/5 text-primary rounded-md"
               >
                 {feature}
               </span>
             ))}
           </div>
         </div>
-
-        {/* Tech Stack */}
-        <div className="px-6 pb-4">
-          <div className="flex flex-wrap gap-2">
-            {project.tech.map((tech: string, i: number) => (
-              <motion.span
-                key={i}
-                whileHover={{ scale: 1.05 }}
-                className="px-3 py-1 text-xs font-medium bg-muted text-muted-foreground rounded-full hover:bg-emerald-50 hover:text-emerald-700 transition-colors cursor-default"
-              >
-                {tech}
-              </motion.span>
-            ))}
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="px-6 pb-6 pt-4 border-t">
-          <div className="flex items-center gap-3">
-            <Link
-              href={project.live}
-              target="_blank"
-              className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-all group relative overflow-hidden"
-            >
-              {/* Shine effect */}
-              <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/20 to-transparent" />
-              
-              <span>Live Demo</span>
-              <motion.span
-                animate={{ x: [0, 2, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
-              >
-                <ExternalLink className="w-4 h-4" />
-              </motion.span>
-            </Link>
-
-            <Link
-              href={project.github}
-              target="_blank"
-              className="inline-flex items-center justify-center p-2.5 border rounded-lg hover:bg-muted transition-colors group"
-            >
-              <motion.div
-                whileHover={{ rotate: [0, -10, 10, 0] }}
-                transition={{ duration: 0.5 }}
-              >
-                <Github className="w-4 h-4" />
-              </motion.div>
-            </Link>
-          </div>
-        </div>
-
+        
         {/* Hover Indicator */}
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-emerald-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
+        <motion.div
+          className="h-0.5 bg-primary"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: isHovering ? 1 : 0 }}
+          transition={{ duration: 0.2 }}
+        />
       </Card>
     </motion.div>
+  );
+});
+
+ProjectCard.displayName = "ProjectCard";
+
+/* ------------------------------------------------------------------ */
+/* Header Component */
+/* ------------------------------------------------------------------ */
+
+const Header = memo(() => (
+  <div className="mb-10">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3 }}
+      className="mb-3"
+    >
+      <span className="text-sm font-medium text-primary">
+        Projects
+      </span>
+    </motion.div>
+
+    <motion.h2
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3, delay: 0.1 }}
+      className="text-2xl font-semibold mb-2"
+    >
+      Work
+    </motion.h2>
+
+    <motion.p
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.3, delay: 0.2 }}
+      className="text-muted-foreground text-sm"
+    >
+      A selection of recent projects I've built.
+    </motion.p>
+  </div>
+));
+
+Header.displayName = "Header";
+
+/* ------------------------------------------------------------------ */
+/* Stats Component */
+/* ------------------------------------------------------------------ */
+
+const Stats = memo(() => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.3, delay: 0.3 }}
+    className="flex items-center gap-4 mb-6"
+  >
+    <div className="text-sm">
+      <span className="text-primary font-medium">{projects.length}</span>
+      <span className="text-muted-foreground"> projects</span>
+    </div>
+    <div className="w-px h-4 bg-border" />
+    <div className="text-sm">
+      <span className="text-primary font-medium">
+        {Array.from(new Set(projects.flatMap(p => p.tech))).length}
+      </span>
+      <span className="text-muted-foreground"> technologies</span>
+    </div>
+  </motion.div>
+));
+
+Stats.displayName = "Stats";
+
+/* ------------------------------------------------------------------ */
+/* GitHub CTA */
+/* ------------------------------------------------------------------ */
+
+const GitHubCTA = memo(() => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.3, delay: 0.4 }}
+    className="mt-10 pt-6 border-t border-border/30"
+  >
+    <Link
+      href="https://github.com/rahul1015s"
+      target="_blank"
+      className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+    >
+      <span>View all projects on GitHub</span>
+      <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+    </Link>
+  </motion.div>
+));
+
+GitHubCTA.displayName = "GitHubCTA";
+
+/* ------------------------------------------------------------------ */
+/* Main Component */
+/* ------------------------------------------------------------------ */
+
+export default function ProjectsSection() {
+  return (
+    <section id="projects" className="py-16 md:py-20">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6">
+        <Header />
+        <Stats />
+        
+        {/* Projects List */}
+        <div className="space-y-4">
+          {projects.map((project, index) => (
+            <ProjectCard key={index} project={project} index={index} />
+          ))}
+        </div>
+
+        <GitHubCTA />
+      </div>
+    </section>
   );
 }

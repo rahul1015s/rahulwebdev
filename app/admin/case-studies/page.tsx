@@ -2,7 +2,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Plus, Briefcase, Eye, EyeOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { connectDB } from '@/lib/mongodb'
 import CaseStudy from '@/models/casestudy'
@@ -134,7 +134,8 @@ export default async function CaseStudiesAdminPage() {
                         Edit
                       </Link>
                     </Button>
-                    <DeleteCaseStudyButton id={String(s._id)} />
+                       <DeleteCaseStudyButton id={String(s._id)} />
+                   
                   </div>
                 </div>
               </CardContent>
