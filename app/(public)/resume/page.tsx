@@ -229,8 +229,8 @@ export default function ResumePage() {
           }),
         }}
       />
-      <Toaster position="top-right" />
-      <div className="min-h-screen bg-white dark:bg-slate-900 mt-10 text-slate-900 dark:text-slate-100 p-4 md:p-8">
+
+      <div className="min-h-screen bg-white dark:bg-slate-900  mt-10 text-slate-900 dark:text-slate-100 p-4 md:p-8">
         <div id="resume-content" ref={contentRef} className="max-w-4xl mx-auto">
           <motion.div
             className="mb-8"

@@ -22,11 +22,32 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
       const body = await request.json()
-      const { title, name: incomingName, excerpt, content, coverImage, images = [], tags = [], published = false } = body
+      const { 
+        name, 
+        slug, 
+        tagline, 
+        description, 
+        content, 
+        coverImage, 
+        gallery = [], 
+        stack = [], 
+        liveUrl, 
+        githubUrl, 
+        featured = false, 
+        category = [], 
+        deliverables = [], 
+        timeline, 
+        client, 
+        team = [], 
+        challenges = [], 
+        solutions = [], 
+        results = [], 
+        published = false, 
+        order = 0 
+      } = body
 
-      const name = incomingName || title
       if (!name) {
-        return NextResponse.json({ ok: false, error: 'Missing required fields: name/title' }, { status: 400 })
+        return NextResponse.json({ ok: false, error: 'Missing required field: name' }, { status: 400 })
       }
 
     await connectDB()
@@ -40,33 +61,44 @@ export async function POST(request: Request) {
         .replace(/\s+/g, '-')
         .replace(/-+/g, '-')
 
-    let slug = body.slug || slugify(name)
+    let finalSlug = slug || slugify(name)
     
     // Check for existing slug and generate unique one if needed
     let counter = 1
-    const originalSlug = slug
-    let existing = await CaseStudy.findOne({ slug })
+    const originalSlug = finalSlug
+    let existing = await CaseStudy.findOne({ slug: finalSlug })
     
     while (existing) {
-      slug = `${originalSlug}-${counter}`
-      existing = await CaseStudy.findOne({ slug })
+      finalSlug = `${originalSlug}-${counter}`
+      existing = await CaseStudy.findOne({ slug: finalSlug })
       counter++
     }
 
     const normCover = coverImage ? normalizeImageUrl(String(coverImage)) : undefined
-    const normImages = Array.isArray(images) ? images.map((u: any) => normalizeImageUrl(String(u))) : []
+    const normGallery = Array.isArray(gallery) ? gallery.map((u: any) => normalizeImageUrl(String(u))) : []
 
-    // Map incoming fields to CaseStudy schema: name, tagline, description, gallery
     const record = new CaseStudy({
       name,
-      slug,
-      tagline: excerpt || '',
-      description: excerpt || '',
+      slug: finalSlug,
+      tagline,
+      description,
       content,
       coverImage: normCover,
-      gallery: normImages,
-      stack: tags || [],
-      published
+      gallery: normGallery,
+      stack,
+      liveUrl,
+      githubUrl,
+      featured,
+      category,
+      deliverables,
+      timeline,
+      client,
+      team,
+      challenges,
+      solutions,
+      results,
+      published,
+      order
     })
     await record.save()
 
