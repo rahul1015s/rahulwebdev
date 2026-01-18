@@ -2,7 +2,7 @@ export const site = {
   name: "Rahul Verma",
   role: "Self-taught Web Developer",
   bio: "Self-taught web developer with a background in Art History, currently pursuing MCA. Focused on building accessible, production-ready web applications.",
-  email: "rahul@example.com",
+  email: "hello@rahulwebdev.in",
   github: "https://github.com/yourusername",
   linkedin: "https://linkedin.com/in/yourusername",
 };

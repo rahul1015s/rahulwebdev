@@ -37,7 +37,7 @@ export const resumeData = {
     name: 'Rahul Verma',
     title: 'Full Stack Developer',
     subtitle: 'Building production-grade applications with React, Next.js, and Node.js',
-    email: 'rahulwebjs@gmail.com',
+    email: 'hello@rahulwebdev.in',
     phone: '+91 9135271562',
     location: 'Patna, India',
     links: {

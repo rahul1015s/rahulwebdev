@@ -15,7 +15,7 @@ import NewsletterForm from "../newsletter/NewsletterForm";
 
 export default function ContactSection() {
   return (
-    <section id="contact" className="relative py-24 overflow-hidden">
+    <section id="contact" className="relative py-24 overflow-hidden bg-linear-to-b from-background via-card/20 to-background">
       {/* Subtle SVG halo (theme-based) */}
       <ContactHaloSVG />
 
@@ -33,8 +33,8 @@ export default function ContactSection() {
             <span className="text-sm font-medium">Get in touch</span>
           </div>
 
-          <h2 className="text-3xl md:text-4xl font-bold">
-            Let’s <span className="text-primary">Connect</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            Let's <span className="text-primary">Connect</span>
           </h2>
 
           <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-lg">
@@ -60,7 +60,7 @@ export default function ContactSection() {
           />
 
           <ContactButton
-            href="mailto:rahulwebjs@gmail.com"
+            href="mailto:hello@rahulwebdev.in"
             label="Email"
             icon={Mail}
           />
@@ -86,9 +86,9 @@ export default function ContactSection() {
           transition={{ duration: 0.4, delay: 0.25 }}
           className="
             mt-12 max-w-lg mx-auto
-            rounded-2xl border
-            bg-card/70 backdrop-blur
-            p-6
+            rounded-2xl border border-primary/20
+            bg-card/40 backdrop-blur-sm
+            p-6 hover:border-primary/40 hover:bg-card/60 transition-all duration-300
           "
         >
           <p className="font-medium text-primary mb-3">
@@ -103,7 +103,7 @@ export default function ContactSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="mt-14 pt-8 border-t text-sm text-muted-foreground"
+          className="mt-14 pt-8 border-t border-border text-sm text-muted-foreground"
         >
           <div className="flex items-center justify-center gap-2">
             <span>© {new Date().getFullYear()} Rahul Verma</span>

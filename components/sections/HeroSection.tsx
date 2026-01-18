@@ -112,26 +112,27 @@ export default function HeroSection() {
           className="mt-10 flex flex-wrap gap-4"
         >
           <Button asChild className="gap-2">
-            <Link href="mailto:rahulwebjs@gmail.com">
+            <a href="mailto:hello@rahulwebdev.in">
               <Mail className="h-4 w-4" />
               Email
-            </Link>
+            </a>
           </Button>
 
           <Button asChild variant="outline" className="gap-2">
-            <Link href="https://github.com/rahul1015s" target="_blank">
+            <a href="https://github.com/rahul1015s" target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4" />
               GitHub
-            </Link>
+            </a>
           </Button>
 
           <Button asChild variant="outline" className="gap-2">
-            <Link href="https://linkedin.com/in/rahul1015s" target="_blank">
+            <a href="https://linkedin.com/in/rahul1015s" target="_blank" rel="noopener noreferrer">
               <Linkedin className="h-4 w-4" />
               LinkedIn
-            </Link>
+            </a>
           </Button>
         </motion.div>
+
       </div>
 
       {/* ---------- BOTTOM SVG DIVIDER ---------- */}
