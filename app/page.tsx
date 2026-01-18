@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic'
-import BlogSection from '@/components/sections/BlogSection'
+// import BlogSection from '@/components/sections/BlogSection'
 import { Metadata } from 'next'
 
 // Lazy load interactive sections to reduce main-thread blocking
@@ -102,7 +102,7 @@ const page = () => {
       <ProjectsSection />
       <SkillsSection />
       <AboutSection />
-      <BlogSection />
+      {/* <BlogSection /> */}
       <ContactSection />
     </>
   )

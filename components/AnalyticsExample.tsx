@@ -69,42 +69,42 @@ export function AnalyticsExample() {
       <div className="grid gap-3">
         <button 
           onClick={handleCTAClick}
-          className="px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold transition"
         >
           💼 Hire Me CTA
         </button>
 
         <button 
           onClick={() => handleProjectClick('proj-001', 'E-Commerce Platform')}
-          className="px-4 py-3 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-lg font-semibold transition"
         >
           🚀 View Project
         </button>
 
         <button 
           onClick={() => handleBlogClick('post-001', 'React Best Practices')}
-          className="px-4 py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg font-semibold transition"
         >
           📖 Read Blog Post
         </button>
 
         <button 
           onClick={() => handleExternalLink('https://github.com', 'GitHub Profile')}
-          className="px-4 py-3 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white rounded-lg font-semibold transition"
         >
           🔗 Visit GitHub
         </button>
 
         <button 
           onClick={() => handleNewsletterSignup()}
-          className="px-4 py-3 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-lg font-semibold transition"
         >
           📧 Newsletter Signup
         </button>
 
         <button 
           onClick={() => handleResumDownload('pdf')}
-          className="px-4 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition"
+          className="px-4 py-3 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-lg font-semibold transition"
         >
           📄 Download Resume
         </button>
