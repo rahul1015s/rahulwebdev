@@ -79,7 +79,7 @@ export const metadata: Metadata = {
     siteName: 'Rahul Verma Portfolio',
     images: [
       {
-        url: '/og-home.svg',
+        url: '/rahul.jpg',
         width: 1200,
         height: 630,
         alt: 'Rahul Verma Portfolio',
@@ -90,7 +90,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Rahul Verma | Full Stack Developer',
     description: 'Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies.',
-    images: ['/og-home.svg'],
+    images: ['/rahul.jpg'],
     creator: '@rahulwebdev',
   },
   verification: {
@@ -140,11 +140,11 @@ export default function RootLayout({
     "jobTitle": "Full Stack Developer",
     "description": "Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies",
     "url": "https://rahulwebdev.in",
-    "image": "https://rahulwebdev.in/profile.jpg",
+    "image": "https://rahulwebdev.in/rahul.jpg",
     "sameAs": [
-      "https://github.com/rahulwebdev",
-      "https://linkedin.com/in/rahulwebdev",
-      "https://twitter.com/rahulwebdev"
+      "https://github.com/rahul1015s",
+      "https://linkedin.com/in/rahul1015s",
+      "https://twitter.com/rahul1015s"
     ],
     "email": "hello@rahulwebdev.in",
     "knowsAbout": [
@@ -190,9 +190,9 @@ export default function RootLayout({
     "logo": "https://rahulwebdev.in/logo.png",
     "description": "Full Stack Web Developer portfolio showcasing projects, skills, and expertise in modern web technologies",
     "sameAs": [
-      "https://github.com/rahulwebdev",
-      "https://linkedin.com/in/rahulwebdev",
-      "https://twitter.com/rahulwebdev"
+      "https://github.com/rahul1015s",
+      "https://linkedin.com/in/rahul1015s",
+      "https://twitter.com/rahul1015s"
     ],
     "contact": {
       "@type": "ContactPoint",
