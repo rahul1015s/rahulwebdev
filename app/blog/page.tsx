@@ -1,44 +1,11 @@
-import Link from "next/link";
-import { connectDB } from "@/lib/mongodb";
-import Post from "@/models/post";
-import { BlogCard } from "@/components/cards/BlogCard";
-import { normalizeImageUrl } from "@/utils/url-utils";
-import { cn } from "@/lib/utils";
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import { BlogControls } from "@/components/blog/BlogControls";
+import { BlogListRow } from "@/components/blog/BlogListRow";
+import { processPosts } from "@/lib/blog-utils";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
-import type { Metadata } from "next";
-
-/* ---------------------------------------------
-   Metadata
---------------------------------------------- */
-export const metadata: Metadata = {
-  title: "Blog – Rahul Verma",
-  description:
-    "Articles and notes by Rahul Verma on web development, programming, and technology.",
-};
-
-/* ---------------------------------------------
-   Constants
---------------------------------------------- */
-const PAGE_SIZE = 9;
-
-/* ---------------------------------------------
-   Helpers
---------------------------------------------- */
-function extractFirstImage(content: any): string | null {
-  try {
-    const json = typeof content === "string" ? JSON.parse(content) : content;
-    const nodes = json?.content ?? [];
-
-    for (const node of nodes) {
-      if (node.type === "image" && node.attrs?.src) {
-        return node.attrs.src;
-      }
-    }
-    return null;
-  } catch {
-    return null;
-  }
-}
+import { generateBreadcrumbStructuredData } from "@/lib/seo";
 
 function extractExcerpt(content: any): string {
   if (typeof content !== "string") return "Read the full article…";
@@ -54,102 +21,98 @@ function extractExcerpt(content: any): string {
   }
 }
 
-/* ---------------------------------------------
-   Page
---------------------------------------------- */
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams?: Promise<{ page?: string }> | { page?: string };
-}) {
-  /* ✅ FIX: normalize searchParams (Next.js 16 safe) */
-  const params =
-    searchParams instanceof Promise
-      ? await searchParams
-      : searchParams ?? {};
+export default function BlogPage() {
+  const [posts, setPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+  const [tag, setTag] = useState<string | null>(null);
+  const [sort, setSort] = useState<
+    "newest" | "oldest" | "title-asc" | "title-desc"
+  >("newest");
 
-  const page = Math.max(1, Number(params.page ?? 1));
-  const skip = (page - 1) * PAGE_SIZE;
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch("/api/blog");
+        if (!response.ok) {
+          throw new Error("Failed to fetch posts");
+        }
+        const data = await response.json();
+        setPosts(data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-  await connectDB();
+    fetchPosts();
+  }, []);
 
-  const [posts, total] = await Promise.all([
-    Post.find({ published: true })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(PAGE_SIZE)
-      .lean(),
-    Post.countDocuments({ published: true }),
-  ]);
+  const allTags = useMemo(
+    () =>
+      Array.from(
+        new Set((posts || []).flatMap((p) => p.tags || []))
+      ),
+    [posts]
+  );
 
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const visiblePosts = useMemo(
+    () =>
+      processPosts({
+        posts,
+        query,
+        tag,
+        sort,
+      }),
+    [posts, query, tag, sort]
+  );
 
   return (
-    <section className="relative py-14 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* Header */}
-        <div className="mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold mb-2">
-            Blog
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-            Writing about web development, real-world projects, and things I
-            learn along the way.
-          </p>
-        </div>
+    <main className="min-h-screen">
+      <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        {/* Controls */}
+        <BlogControls
+          query={query}
+          setQuery={setQuery}
+          tag={tag}
+          setTag={setTag}
+          sort={sort}
+          setSort={setSort}
+          tags={allTags}
+        />
 
-        {/* Blog Grid – MOBILE FIRST */}
-        {posts.length > 0 ? (
-          <div
-            className="
-              grid grid-cols-1
-              gap-4
-              sm:grid-cols-2 sm:gap-5
-              lg:grid-cols-3 lg:gap-6
-            "
-          >
-            {posts.map((p: any, index: number) => {
-              let coverImage: string | null = null;
-
-              if (p.image) coverImage = normalizeImageUrl(p.image);
-              if (!coverImage) {
-                const firstImage = extractFirstImage(p.content);
-                if (firstImage) coverImage = normalizeImageUrl(firstImage);
-              }
-
-              const safeImage = coverImage || "/default-blog.png";
-              const excerpt = extractExcerpt(p.content);
-
-              return (
-                <div
-                  key={p._id.toString()}
-                  className="mx-auto w-full max-w-sm sm:max-w-none"
-                >
-                  <BlogCard
-                    href={`/blog/${p.slug || p._id}`}
-                    title={p.title}
-                    excerpt={excerpt}
-                    image={safeImage}
-                    tags={p.tags || ["Article"]}
-                    readTime={p.readTime || "5 min read"}
-                    date={
-                      p.createdAt
-                        ? new Date(p.createdAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : undefined
-                    }
-                    index={index}
-                  />
-                </div>
-              );
-            })}
+        {/* List */}
+        {loading ? (
+          <div className="py-20 text-center text-sm text-muted-foreground">
+            Loading posts...
+          </div>
+        ) : visiblePosts.length > 0 ? (
+          <div className="space-y-3">
+            {visiblePosts.map((p: any) => (
+              <BlogListRow
+                key={p._id.toString()}
+                href={`/blog/${p.slug || p._id}`}
+                title={p.title}
+                excerpt={extractExcerpt(p.content)}
+                tags={p.tags || ["Article"]}
+                readTime={p.readTime || "5 min"}
+                date={
+                  p.createdAt
+                    ? new Date(p.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : undefined
+                }
+              />
+            ))}
           </div>
         ) : (
           <div className="py-20 text-center text-sm text-muted-foreground">
-            No posts yet.
+            No posts found.
           </div>
         )}
 
@@ -157,54 +120,7 @@ export default async function BlogPage({
         <div className="mt-14">
           <NewsletterForm variant="default" location="blog" />
         </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="mt-10 flex flex-wrap justify-center gap-2">
-            <Link
-              href={`/blog?page=${Math.max(1, page - 1)}`}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-xs sm:text-sm",
-                page <= 1
-                  ? "pointer-events-none opacity-40"
-                  : "border hover:bg-muted"
-              )}
-            >
-              Previous
-            </Link>
-
-            {Array.from({ length: totalPages }).map((_, i) => {
-              const pNum = i + 1;
-              return (
-                <Link
-                  key={pNum}
-                  href={`/blog?page=${pNum}`}
-                  className={cn(
-                    "w-8 h-8 flex items-center justify-center rounded-md text-xs sm:text-sm",
-                    page === pNum
-                      ? "bg-primary text-primary-foreground"
-                      : "border hover:bg-muted"
-                  )}
-                >
-                  {pNum}
-                </Link>
-              );
-            })}
-
-            <Link
-              href={`/blog?page=${Math.min(totalPages, page + 1)}`}
-              className={cn(
-                "px-3 py-1.5 rounded-md text-xs sm:text-sm",
-                page >= totalPages
-                  ? "pointer-events-none opacity-40"
-                  : "border hover:bg-muted"
-              )}
-            >
-              Next
-            </Link>
-          </div>
-        )}
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }

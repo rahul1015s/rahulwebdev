@@ -13,8 +13,8 @@ export const socialLinks = [
   },
   {
     platform: "Email",
-    url: "mailto:rahulwebjs@gmail.com",
-    username: "rahulwebjs@gmail.com",
+    url: "mailto:hello@rahulwebdev.in",
+    username: "hello@rahulwebdev.in",
     icon: "Mail"
   }
 ];

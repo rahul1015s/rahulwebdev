@@ -36,6 +36,12 @@ export const defaultExtensions = [
         class: "border-l-4 border-primary",
       },
     },
+    heading: {
+      HTMLAttributes: {
+        class: "font-bold",
+      },
+      levels: [1, 2, 3, 4, 5, 6],
+    },
     codeBlock: {
       HTMLAttributes: {
         class: "rounded-sm bg-muted border p-5 font-mono font-medium",

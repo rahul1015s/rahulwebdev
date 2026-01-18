@@ -3,6 +3,7 @@ import { BlogCard } from "@/components/cards/BlogCard";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import { normalizeImageUrl } from "@/utils/url-utils";
+import { unstable_cache } from "next/cache";
 
 /* ---------------------------------------------
    Helpers
@@ -21,28 +22,37 @@ function extractFirstImage(content: any): string | null {
   }
 }
 
-/* ---------------------------------------------
-   Blog Section
---------------------------------------------- */
-export default async function BlogSection() {
-  let posts: any[] = [];
-  let totalPosts = 0;
+/* Cache blog posts for 30 seconds with revalidation tag */
+const getCachedBlogPosts = unstable_cache(
+  async () => {
+    await connectDB();
 
-  await connectDB();
+    // Use fetch with cache headers for automatic ISR
+    const docs = await Post.find({ published: true })
+      .sort({ createdAt: -1 })
+      .limit(3)
+      .lean()
+      .exec();
 
-  let docs = await Post.find({ published: true })
-    .sort({ createdAt: -1 })
-    .limit(3)
-    .lean();
+    const totalPosts = await Post.countDocuments({ published: true });
 
-  totalPosts = await Post.countDocuments({ published: true });
+    if (!docs || docs.length === 0) {
+      const allDocs = await Post.find({}).sort({ createdAt: -1 }).limit(3).lean().exec();
+      return { docs: allDocs, totalPosts };
+    }
 
-  if (!docs || docs.length === 0) {
-    docs = await Post.find({}).sort({ createdAt: -1 }).limit(3).lean();
-    totalPosts = await Post.countDocuments();
+    return { docs, totalPosts };
+  },
+  ["blog-posts"],
+  { 
+    tags: ["blog-posts"],
+    revalidate: 30 // Auto-revalidate every 30 seconds for fast updates
   }
+);
 
-  posts = docs.map((p: any, index: number) => {
+/* Transform posts to display format */
+function transformPosts(docs: any[]) {
+  return docs.map((p: any, index: number) => {
     let coverImage = p.image
       ? normalizeImageUrl(p.image)
       : extractFirstImage(p.content);
@@ -78,6 +88,12 @@ export default async function BlogSection() {
       index,
     };
   });
+}
+
+/* Blog Section Component */
+export default async function BlogSection() {
+  const { docs } = await getCachedBlogPosts();
+  const posts = transformPosts(docs);
 
   return (
     <section id="blog" className="py-20">

@@ -20,9 +20,9 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
     case 'heading':
       const level = node.attrs?.level || 1
       const headingClassesMap: Record<number, string> = {
-        1: 'text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mt-8 sm:mt-10 md:mt-12 mb-4 sm:mb-5 md:mb-6 first:mt-0 group relative scroll-mt-16 sm:scroll-mt-20',
-        2: 'text-2xl sm:text-2xl md:text-3xl font-bold tracking-tight mt-6 sm:mt-8 md:mt-10 mb-3 sm:mb-4 group relative scroll-mt-16 sm:scroll-mt-20',
-        3: 'text-xl sm:text-xl md:text-2xl font-semibold tracking-tight mt-5 sm:mt-6 md:mt-8 mb-2 sm:mb-3 group relative scroll-mt-16 sm:scroll-mt-20',
+        1: 'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mt-8 sm:mt-10 md:mt-12 mb-4 sm:mb-5 md:mb-6 first:mt-0 group relative scroll-mt-16 sm:scroll-mt-20',
+        2: 'text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mt-6 sm:mt-8 md:mt-10 mb-3 sm:mb-4 group relative scroll-mt-16 sm:scroll-mt-20',
+        3: 'text-lg sm:text-xl md:text-2xl font-semibold tracking-tight mt-5 sm:mt-6 md:mt-8 mb-2 sm:mb-3 group relative scroll-mt-16 sm:scroll-mt-20',
       }
       const headingClasses = headingClassesMap[level as keyof typeof headingClassesMap] || 'text-lg sm:text-xl font-semibold tracking-tight mt-4 sm:mt-6 mb-2 sm:mb-3 group relative'
       

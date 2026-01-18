@@ -1,20 +1,28 @@
 import type { Metadata } from "next"
+import dynamic from "next/dynamic"
 import { Inter, Space_Grotesk } from "next/font/google"
 import { ThemeProvider } from "@/providers/ThemeProvider"
 import { AuthProvider } from "@/providers/AuthProvider"
-
-import { Toaster } from "sonner"
+import { AnalyticsProvider } from "@/providers/AnalyticsProvider"
 import "./globals.css"
 import Navbar from "@/components/layout/Navbar"
 
+// Optimize font loading - variable fonts with reduced weight variants
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap", // Use system font while loading
 })
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
+  display: "swap",
+})
+
+// Lazy load Toaster as it's not critical for initial render
+const Toaster = dynamic(() => import("sonner").then(mod => ({ default: mod.Toaster })), {
+  loading: () => null
 })
 
 export const metadata: Metadata = {
@@ -107,6 +115,15 @@ export const metadata: Metadata = {
     'apple-mobile-web-app-status-bar-style': 'default',
     'apple-mobile-web-app-title': 'Rahul Verma',
     'mobile-web-app-capable': 'yes',
+    // AI and LLM-friendly meta tags
+    'color-scheme': 'light dark',
+    'charset': 'utf-8',
+    'viewport': 'width=device-width, initial-scale=1, maximum-scale=5',
+    // Prevent crawlers from indexing duplicate content
+    'googlebot': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    'bingbot': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+    // Language and locale hints for search engines
+    'language': 'English',
   },
 }
 
@@ -115,18 +132,21 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const structuredData = {
+  // Main Person schema for author
+  const personSchema = {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Rahul Verma",
     "jobTitle": "Full Stack Developer",
-    "description": "Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies",
+    "description": "Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies",
     "url": "https://rahulwebdev.in",
+    "image": "https://rahulwebdev.in/profile.jpg",
     "sameAs": [
       "https://github.com/rahulwebdev",
       "https://linkedin.com/in/rahulwebdev",
       "https://twitter.com/rahulwebdev"
     ],
+    "email": "hello@rahulwebdev.in",
     "knowsAbout": [
       "JavaScript",
       "TypeScript",
@@ -137,7 +157,14 @@ export default function RootLayout({
       "Express.js",
       "Web Development",
       "Full Stack Development",
-      "MERN Stack"
+      "MERN Stack",
+      "REST API",
+      "GraphQL",
+      "SQL",
+      "Git",
+      "Tailwind CSS",
+      "Web Design",
+      "UI/UX Development"
     ],
     "hasOccupation": {
       "@type": "Occupation",
@@ -154,29 +181,86 @@ export default function RootLayout({
     }
   };
 
+  // Organization schema
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Rahul Verma Portfolio",
+    "url": "https://rahulwebdev.in",
+    "logo": "https://rahulwebdev.in/logo.png",
+    "description": "Full Stack Web Developer portfolio showcasing projects, skills, and expertise in modern web technologies",
+    "sameAs": [
+      "https://github.com/rahulwebdev",
+      "https://linkedin.com/in/rahulwebdev",
+      "https://twitter.com/rahulwebdev"
+    ],
+    "contact": {
+      "@type": "ContactPoint",
+      "contactType": "Professional Services",
+      "email": "hello@rahulwebdev.in"
+    }
+  };
+
+  // WebSite schema with SearchAction
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Rahul Verma Portfolio",
+    "url": "https://rahulwebdev.in",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://rahulwebdev.in/search?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "Rahul Verma"
+    }
+  };
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Person Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
+            __html: JSON.stringify(personSchema),
+          }}
+        />
+        {/* Organization Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        {/* Website Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
           }}
         />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <Navbar />
-            <main className="min-h-screen">{children}</main>
-            <Toaster />
-          </AuthProvider>
-        </ThemeProvider>
+        <AnalyticsProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AuthProvider>
+              <Navbar />
+              <main className="min-h-screen">{children}</main>
+              <Toaster />
+            </AuthProvider>
+          </ThemeProvider>
+        </AnalyticsProvider>
       </body>
     </html>
   )
