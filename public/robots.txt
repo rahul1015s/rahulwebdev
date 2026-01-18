@@ -1,2 +1,0 @@
-# This file has been moved to app/robots.txt/route.ts for dynamic generation
-# The Next.js route handler will serve the robots.txt file dynamically
