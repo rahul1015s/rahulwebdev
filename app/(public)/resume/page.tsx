@@ -1,13 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { resumeData } from '@/data/resumeData';
 import { Mail, Linkedin, Github, ExternalLink, MapPin, Phone, Share2, Twitter, Facebook, Link as LinkIcon, Printer } from 'lucide-react';
 import Head from 'next/head';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -22,16 +21,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 export default function ResumePage() {
   const contentRef = useRef<HTMLDivElement>(null);
   const [showAlert, setShowAlert] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  const isClient = typeof window !== 'undefined';
 
   const handlePrint = () => {
     if (!isClient) return;
@@ -148,7 +143,7 @@ export default function ResumePage() {
           await navigator.clipboard.writeText(shareUrl);
           toast.success("Link copied to clipboard!");
           setShowAlert(false);
-        } catch (err) {
+        } catch {
           toast.error("Failed to copy link");
         }
       },

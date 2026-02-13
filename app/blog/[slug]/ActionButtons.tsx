@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ActionButtonsProps {
@@ -10,20 +10,12 @@ interface ActionButtonsProps {
 
 export default function ActionButtons({ title, slug }: ActionButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [url, setUrl] = useState("");
-
-  /* ---------------------------------------------
-     Safe client-only URL
-  --------------------------------------------- */
-  useEffect(() => {
-    setUrl(window.location.href);
-
-    const stored = JSON.parse(
-      localStorage.getItem("blog-bookmarks") || "[]"
-    );
-    setSaved(stored.includes(slug));
-  }, [slug]);
+  const [saved, setSaved] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const stored = JSON.parse(localStorage.getItem("blog-bookmarks") || "[]");
+    return Array.isArray(stored) && stored.includes(slug);
+  });
+  const url = typeof window !== "undefined" ? window.location.href : "";
 
   /* ---------------------------------------------
      Share

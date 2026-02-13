@@ -20,9 +20,9 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
     case 'heading':
       const level = node.attrs?.level || 1
       const headingClassesMap: Record<number, string> = {
-        1: 'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mt-8 sm:mt-10 md:mt-12 mb-4 sm:mb-5 md:mb-6 first:mt-0 group relative scroll-mt-16 sm:scroll-mt-20',
-        2: 'text-xl sm:text-2xl md:text-3xl font-bold tracking-tight mt-6 sm:mt-8 md:mt-10 mb-3 sm:mb-4 group relative scroll-mt-16 sm:scroll-mt-20',
-        3: 'text-lg sm:text-xl md:text-2xl font-semibold tracking-tight mt-5 sm:mt-6 md:mt-8 mb-2 sm:mb-3 group relative scroll-mt-16 sm:scroll-mt-20',
+        1: 'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mt-6 sm:mt-7 md:mt-8 mb-3 sm:mb-3.5 md:mb-4 first:mt-0 group relative scroll-mt-16 sm:scroll-mt-20',
+        2: 'text-lg sm:text-xl md:text-2xl font-bold tracking-tight mt-4 sm:mt-5 md:mt-6 mb-2.5 sm:mb-3 group relative scroll-mt-16 sm:scroll-mt-20',
+        3: 'text-base sm:text-lg md:text-xl font-semibold tracking-tight mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-2.5 group relative scroll-mt-16 sm:scroll-mt-20',
       }
       const headingClasses = headingClassesMap[level as keyof typeof headingClassesMap] || 'text-lg sm:text-xl font-semibold tracking-tight mt-4 sm:mt-6 mb-2 sm:mb-3 group relative'
       
@@ -44,7 +44,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: index * 0.02 }}
-          className="text-sm sm:text-base md:text-lg leading-6 sm:leading-7 md:leading-8 text-foreground/90 my-3 sm:my-4 md:my-5 first:mt-0 hover:text-foreground transition-colors duration-200"
+          className="text-sm sm:text-base md:text-base leading-6 sm:leading-6.5 md:leading-7 text-foreground/90 my-2 sm:my-2.5 md:my-3 first:mt-0 hover:text-foreground transition-colors duration-200"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
         </motion.p>
@@ -57,7 +57,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: index * 0.03 }}
-          className="list-disc list-outside space-y-1.5 sm:space-y-2 my-4 sm:my-5 md:my-6 ml-4 sm:ml-5 md:ml-6"
+          className="list-disc list-outside space-y-1 sm:space-y-1.5 my-2.5 sm:my-3 md:my-3.5 ml-4 sm:ml-5 md:ml-6"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
         </motion.ul>
@@ -70,7 +70,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: index * 0.03 }}
-          className="list-decimal list-outside space-y-1.5 sm:space-y-2 my-4 sm:my-5 md:my-6 ml-4 sm:ml-5 md:ml-6"
+          className="list-decimal list-outside space-y-1 sm:space-y-1.5 my-2.5 sm:my-3 md:my-3.5 ml-4 sm:ml-5 md:ml-6"
           start={node.attrs?.start || 1}
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
@@ -84,7 +84,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: index * 0.04 }}
-          className="text-sm sm:text-base leading-6 sm:leading-7 text-foreground/90 mb-1 sm:mb-2 pl-1 hover:text-foreground transition-colors duration-200"
+          className="text-sm sm:text-base leading-6 sm:leading-6.5 text-foreground/90 mb-0.5 sm:mb-1 pl-1 hover:text-foreground transition-colors duration-200"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
         </motion.li>
@@ -97,7 +97,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="my-8 sm:my-10"
+          className="my-5 sm:my-6"
         >
           <div className="h-px w-full bg-linear-to-r from-transparent via-emerald-500/30 to-transparent" />
         </motion.div>
@@ -138,13 +138,57 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
-          className="border-l-3 sm:border-l-4 border-emerald-500/50 pl-4 sm:pl-6 md:pl-8 py-3 sm:py-4 italic my-6 sm:my-8 text-foreground/80 bg-linear-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
+          className="border-l-3 sm:border-l-4 border-emerald-500/50 pl-4 sm:pl-6 md:pl-8 py-2 sm:py-3 italic my-3.5 sm:my-4 md:my-5 text-foreground/80 bg-linear-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
         >
-          <div className="absolute -left-1.5 sm:-left-2 top-3 sm:top-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute -left-1.5 sm:-left-2 top-2 sm:top-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             ❝
           </div>
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
         </motion.blockquote>
+      )
+
+    case 'table':
+      return (
+        <motion.div
+          key={key}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="my-3 sm:my-4 md:my-5 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm"
+        >
+          <table className="w-full border-collapse text-sm">
+            <tbody>
+              {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
+            </tbody>
+          </table>
+        </motion.div>
+      )
+
+    case 'tableRow':
+      return (
+        <tr key={key} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors duration-200">
+          {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
+        </tr>
+      )
+
+    case 'tableHeader':
+      return (
+        <th 
+          key={key}
+          className="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 text-left font-semibold bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 last:border-r-0 text-foreground"
+        >
+          {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
+        </th>
+      )
+
+    case 'tableCell':
+      return (
+        <td 
+          key={key}
+          className="px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 md:py-3 border-r border-gray-200 dark:border-gray-700 last:border-r-0 text-foreground/90"
+        >
+          {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
+        </td>
       )
 
     case 'image':
@@ -245,7 +289,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="relative my-4 sm:my-6 md:my-8 rounded-lg sm:rounded-xl overflow-hidden border border-gray-800 shadow-lg md:shadow-xl group bg-gray-950"
+      className="relative my-3 sm:my-4 md:my-5 rounded-lg sm:rounded-xl overflow-hidden border border-gray-800 shadow-lg md:shadow-xl group bg-gray-950"
     >
       {/* Code header - RESPONSIVE */}
       <div className="flex flex-wrap items-center justify-between gap-2 bg-gray-900 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-800">

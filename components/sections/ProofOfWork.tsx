@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -33,17 +33,7 @@ export default function ProofOfWork() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const total = projects.length;
-
-  /* Auto slide */
-  useEffect(() => {
-    const id = setInterval(() => {
-      goTo(active + 1);
-    }, 3500);
-
-    return () => clearInterval(id);
-  }, [active]);
-
-  const goTo = (index: number) => {
+  const goTo = useCallback((index: number) => {
     const next = (index + total) % total;
     setActive(next);
 
@@ -53,7 +43,16 @@ export default function ProofOfWork() {
         behavior: "smooth",
       });
     }
-  };
+  }, [total]);
+
+  /* Auto slide */
+  useEffect(() => {
+    const id = setInterval(() => {
+      goTo(active + 1);
+    }, 3500);
+
+    return () => clearInterval(id);
+  }, [active, goTo]);
 
   return (
     <section id="projects" className="py-20">
