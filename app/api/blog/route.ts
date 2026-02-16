@@ -4,6 +4,9 @@ import Post from '@/models/post';
 import '@/models/category';
 import '@/models/tag';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
     await connectDB();
@@ -28,7 +31,12 @@ export async function GET() {
         : [],
     }));
 
-    return NextResponse.json(normalizedPosts, { status: 200 });
+    return NextResponse.json(normalizedPosts, {
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-store, max-age=0',
+      },
+    });
   } catch (error) {
     console.error('Error fetching posts:', error);
     return NextResponse.json(

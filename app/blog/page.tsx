@@ -33,7 +33,7 @@ export default function BlogPage() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch("/api/blog");
+        const response = await fetch("/api/blog", { cache: "no-store" });
         if (!response.ok) {
           const errorBody = await response.text();
           throw new Error(

@@ -285,7 +285,7 @@ export function LocalServiceLanding() {
 
       {/* ================= HERO ================= */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/10 via-transparent to-transparent" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
         <div className="container max-w-5xl mx-auto px-4 py-24 md:py-32 text-center relative">
           <motion.div
@@ -300,7 +300,7 @@ export function LocalServiceLanding() {
 
             <h1 className="mt-6 text-5xl sm:text-6xl md:text-7xl font-bold tracking-tighter">
               Affordable Websites for 
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-500 to-primary"> Patna Businesses</span>
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-500 to-primary"> Patna Businesses</span>
             </h1>
 
             <p className="mt-8 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
@@ -366,7 +366,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= SERVICES ================= */}
-      <section id="services" className="py-20 bg-gradient-to-b from-background to-muted/30">
+      <section id="services" className="py-20 bg-linear-to-b from-background to-muted/30">
         <div className="container max-w-6xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -452,7 +452,7 @@ export function LocalServiceLanding() {
                 className="group"
               >
                 <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-                  <div className="h-40 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-300">
+                  <div className="h-40 bg-linear-to-br from-primary/10 to-primary/5 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-300">
                     {project.image}
                   </div>
                   <CardHeader>
@@ -491,7 +491,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= PAIN POINTS & SOLUTIONS ================= */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
+      <section className="py-20 bg-linear-to-b from-background to-muted/30">
         <div className="container max-w-6xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -548,7 +548,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= WHY CHOOSE US ================= */}
-      <section className="py-20 bg-gradient-to-r from-primary/5 to-primary/10">
+      <section className="py-20 bg-linear-to-r from-primary/5 to-primary/10">
         <div className="container max-w-6xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -612,7 +612,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= CONTACT ================= */}
-      <section id="contact" className="py-24 text-center bg-gradient-to-b from-background to-muted/20">
+      <section id="contact" className="py-24 text-center bg-linear-to-b from-background to-muted/20">
         <div className="container max-w-4xl mx-auto px-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">Ready to Go Online?</h2>
           <p className="mt-4 text-lg text-muted-foreground">

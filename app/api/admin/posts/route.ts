@@ -4,6 +4,7 @@ import Post from '@/models/post'
 import Category from '@/models/category'
 import Tag from '@/models/tag'
 import { normalizeImageUrl } from '@/utils/url-utils'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function GET(req: Request) {
   try {
@@ -123,6 +124,9 @@ export async function POST(req: Request) {
     
     await doc.save()
     const populated = await Post.findById(doc._id).populate('category').populate('tags')
+    revalidateTag('blog-posts')
+    revalidatePath('/blog')
+    if (populated?.slug) revalidatePath(`/blog/${populated.slug}`)
     return NextResponse.json({ ok: true, post: populated })
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: String(err.message || err) }, { status: 500 })

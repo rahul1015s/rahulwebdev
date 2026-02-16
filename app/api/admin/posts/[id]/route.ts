@@ -4,6 +4,7 @@ import Post from '@/models/post'
 import Category from '@/models/category'
 import Tag from '@/models/tag'
 import { normalizeImageUrl } from '@/utils/url-utils'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function GET(req: Request, { params }: { params: any }) {
   try {
@@ -62,6 +63,9 @@ export async function PATCH(req: Request, { params }: { params: any }) {
 
     const updated = await Post.findByIdAndUpdate(id, update, { new: true }).populate('category').populate('tags')
     if (!updated) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
+    revalidateTag('blog-posts')
+    revalidatePath('/blog')
+    if (updated.slug) revalidatePath(`/blog/${updated.slug}`)
     return NextResponse.json({ ok: true, post: updated })
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: String(err.message || err) }, { status: 500 })
@@ -74,6 +78,9 @@ export async function DELETE(req: Request, { params }: { params: any }) {
     await connectDB()
     const deleted = await Post.findByIdAndDelete(id)
     if (!deleted) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
+    revalidateTag('blog-posts')
+    revalidatePath('/blog')
+    if (deleted.slug) revalidatePath(`/blog/${deleted.slug}`)
     return NextResponse.json({ ok: true })
   } catch (err: any) {
     return NextResponse.json({ ok: false, error: String(err.message || err) }, { status: 500 })

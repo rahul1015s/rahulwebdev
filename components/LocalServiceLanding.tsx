@@ -83,7 +83,7 @@ const services = [
     features: ["Online Booking System", "Patient Portal", "Telemedicine Integration", "HIPAA Compliant"],
     color: "from-blue-50 to-white border-blue-200",
     image: "https://images.unsplash.com/photo-1516549655669-df0d4f7d7b44?w=800&auto=format&fit=crop",
-    gradient: "bg-gradient-to-br from-blue-50 to-blue-100",
+    gradient: "bg-linear-to-br from-blue-50 to-blue-100",
   },
   {
     title: "Coaching & Education",
@@ -92,7 +92,7 @@ const services = [
     features: ["LMS Integration", "Student Analytics", "Payment Processing", "Progress Tracking"],
     color: "from-purple-50 to-white border-purple-200",
     image: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w-800&auto=format&fit=crop",
-    gradient: "bg-gradient-to-br from-purple-50 to-purple-100",
+    gradient: "bg-linear-to-br from-purple-50 to-purple-100",
   },
   {
     title: "Retail & E-commerce",
@@ -101,7 +101,7 @@ const services = [
     features: ["Inventory Sync", "Payment Gateway", "Order Analytics", "Shipping Integration"],
     color: "from-green-50 to-white border-green-200",
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w-800&auto=format&fit=crop",
-    gradient: "bg-gradient-to-br from-green-50 to-green-100",
+    gradient: "bg-linear-to-br from-green-50 to-green-100",
   },
   {
     title: "Restaurants & Cafes",
@@ -110,7 +110,7 @@ const services = [
     features: ["Online Ordering", "Table Reservation", "Menu Analytics", "Delivery Integration"],
     color: "from-orange-50 to-white border-orange-200",
     image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w-800&auto=format&fit=crop",
-    gradient: "bg-gradient-to-br from-orange-50 to-orange-100",
+    gradient: "bg-linear-to-br from-orange-50 to-orange-100",
   },
 ]
 
@@ -308,7 +308,7 @@ export function LocalServiceLanding() {
       {/* ================= ENHANCED HERO SECTION ================= */}
       <section className="relative min-h-screen sm:min-h-[90vh] flex items-center overflow-hidden">
         {/* Background Elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent" />
         <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute bottom-10 left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
         
@@ -339,7 +339,7 @@ export function LocalServiceLanding() {
 
               <h1 className="mt-4 sm:mt-6 text-2xl sm:text-3xl lg:text-6xl font-bold tracking-tighter leading-tight">
                 Professional Websites for 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-blue-500 to-primary animate-gradient">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary via-blue-500 to-primary animate-gradient">
                   {" "}Patna Businesses
                 </span>
               </h1>
@@ -426,7 +426,7 @@ export function LocalServiceLanding() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.1 * i }}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-gradient-to-br from-white to-muted/30 p-4 rounded-xl border shadow-sm"
+                    className="bg-linear-to-br from-white to-muted/30 p-4 rounded-xl border shadow-sm"
                   >
                     <div className="flex items-center gap-3 mb-2">
                       <div className="p-2 rounded-lg bg-primary/10">
@@ -448,9 +448,9 @@ export function LocalServiceLanding() {
               className="relative hidden lg:block"
             >
               <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-blue-500/20 rounded-3xl blur-xl"></div>
-                <div className="relative bg-gradient-to-br from-white to-muted/50 p-8 rounded-2xl border shadow-2xl">
-                  <div className="aspect-video rounded-lg overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5 mb-6">
+                <div className="absolute -inset-4 bg-linear-to-r from-primary/20 to-blue-500/20 rounded-3xl blur-xl"></div>
+                <div className="relative bg-linear-to-br from-white to-muted/50 p-8 rounded-2xl border shadow-2xl">
+                  <div className="aspect-video rounded-lg overflow-hidden bg-linear-to-br from-primary/10 to-primary/5 mb-6">
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="text-center">
                         <div className="text-6xl mb-4">🚀</div>
@@ -464,7 +464,7 @@ export function LocalServiceLanding() {
                       <span className="text-sm text-muted-foreground">Starting From</span>
                       <span className="text-3xl font-bold text-primary">₹5,000</span>
                     </div>
-                    <div className="h-2 bg-gradient-to-r from-primary via-blue-500 to-primary rounded-full"></div>
+                    <div className="h-2 bg-linear-to-r from-primary via-blue-500 to-primary rounded-full"></div>
                     <div className="flex items-center justify-between text-sm">
                       <span>Basic Website</span>
                       <span>Premium E-commerce</span>
@@ -501,7 +501,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED SERVICES ================= */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/20">
+      <section className="py-20 bg-linear-to-b from-background to-muted/20">
         <div className="container max-w-7xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -563,7 +563,7 @@ export function LocalServiceLanding() {
                           whileInView={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.05 }}
                         >
-                          <CheckCircle2 className="h-4 w-4 text-primary mr-3 flex-shrink-0" />
+                          <CheckCircle2 className="h-4 w-4 text-primary mr-3 shrink-0" />
                           <span>{feature}</span>
                         </motion.li>
                       ))}
@@ -592,7 +592,7 @@ export function LocalServiceLanding() {
             viewport={{ once: true }}
             className="mt-20"
           >
-            <div className="bg-gradient-to-r from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8 border">
+            <div className="bg-linear-to-r from-primary/5 to-primary/10 rounded-2xl p-6 sm:p-8 border">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                 {whyChooseUs.map((feature, i) => (
                   <div key={i} className="flex items-center gap-4">
@@ -611,7 +611,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED PORTFOLIO ================= */}
-      <section id="work" className="py-20 bg-gradient-to-b from-muted/20 to-background">
+      <section id="work" className="py-20 bg-linear-to-b from-muted/20 to-background">
         <div className="container max-w-7xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -661,7 +661,7 @@ export function LocalServiceLanding() {
                     className="group"
                   >
                     <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
-                      <div className="relative h-48 overflow-hidden bg-gradient-to-br from-primary/10 to-primary/5">
+                      <div className="relative h-48 overflow-hidden bg-linear-to-br from-primary/10 to-primary/5">
                         <div 
                           className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
                           style={{ backgroundImage: `url(${project.image})` }}
@@ -730,7 +730,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= PROCESS SECTION ================= */}
-      <section id="process" className="py-20 bg-gradient-to-b from-background to-muted/10">
+      <section id="process" className="py-20 bg-linear-to-b from-background to-muted/10">
         <div className="container max-w-6xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -753,7 +753,7 @@ export function LocalServiceLanding() {
 
           <div className="relative">
             {/* Timeline line - Hidden on mobile, visible on md+ */}
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-primary via-blue-500 to-primary hidden md:block"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-0.5 bg-linear-to-b from-primary via-blue-500 to-primary hidden md:block"></div>
             
             <div className="space-y-12 md:space-y-0">
               {process.map((step, i) => (
@@ -772,7 +772,7 @@ export function LocalServiceLanding() {
                     <Card className="border-2 hover:shadow-lg transition-shadow">
                       <CardHeader>
                         <div className="flex items-center gap-4 md:gap-6">
-                          <div className={`w-16 h-16 rounded-xl ${step.color} flex items-center justify-center flex-shrink-0`}>
+                          <div className={`w-16 h-16 rounded-xl ${step.color} flex items-center justify-center shrink-0`}>
                             <step.icon className="h-7 w-7" />
                           </div>
                           <div className="flex-1">
@@ -806,7 +806,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED PAIN POINTS ================= */}
-      <section className="py-20 bg-gradient-to-b from-background to-red-50/20">
+      <section className="py-20 bg-linear-to-b from-background to-red-50/20">
         <div className="container max-w-6xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -840,7 +840,7 @@ export function LocalServiceLanding() {
                 <Card className={cn("h-full border-2 transition-all", point.color)}>
                   <CardHeader>
                     <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-lg bg-red-100 flex-shrink-0">
+                      <div className="p-3 rounded-lg bg-red-100 shrink-0">
                         <point.icon className="h-7 w-7 text-red-600" />
                       </div>
                       <div>
@@ -855,7 +855,7 @@ export function LocalServiceLanding() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="bg-gradient-to-r from-green-50 to-white p-4 rounded-lg border border-green-200">
+                    <div className="bg-linear-to-r from-green-50 to-white p-4 rounded-lg border border-green-200">
                       <div className="flex items-center gap-2 mb-2">
                         <CheckCircle2 className="h-5 w-5 text-green-600" />
                         <span className="text-sm font-semibold text-green-700">Our Solution</span>
@@ -893,7 +893,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED WHY CHOOSE US ================= */}
-      <section className="py-20 bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5">
+      <section className="py-20 bg-linear-to-r from-primary/5 via-primary/10 to-primary/5">
         <div className="container max-w-7xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -929,12 +929,12 @@ export function LocalServiceLanding() {
               >
                 <Card className={cn(
                   "h-full transition-all duration-300 hover:border-primary/50",
-                  item.highlight ? "border-primary/30 bg-gradient-to-br from-primary/5 to-white" : ""
+                  item.highlight ? "border-primary/30 bg-linear-to-br from-primary/5 to-white" : ""
                 )}>
                   <CardHeader>
                     <div className="flex items-start gap-4">
                       <div className={cn(
-                        "p-3 rounded-xl flex-shrink-0",
+                        "p-3 rounded-xl shrink-0",
                         item.highlight 
                           ? "bg-primary/20 border border-primary/30" 
                           : "bg-primary/10"
@@ -967,7 +967,7 @@ export function LocalServiceLanding() {
             viewport={{ once: true }}
             className="mt-20"
           >
-            <Card className="border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-white overflow-hidden">
+            <Card className="border-2 border-primary/30 bg-linear-to-br from-primary/5 to-white overflow-hidden">
               <div className="p-8 sm:p-12 text-center">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-6">
                   <Clock className="h-8 w-8 text-primary" />
@@ -1031,7 +1031,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED TESTIMONIALS ================= */}
-      <section className="py-20 bg-gradient-to-b from-muted/10 to-background">
+      <section className="py-20 bg-linear-to-b from-muted/10 to-background">
         <div className="container max-w-6xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0 }}
@@ -1104,7 +1104,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED CONTACT ================= */}
-      <section id="contact" className="py-20 sm:py-24 bg-gradient-to-b from-background to-primary/5">
+      <section id="contact" className="py-20 sm:py-24 bg-linear-to-b from-background to-primary/5">
         <div className="container max-w-4xl mx-auto px-3 sm:px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -1236,24 +1236,24 @@ export function LocalServiceLanding() {
               </Card>
 
               {/* Quick Info Card */}
-              <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+              <Card className="bg-linear-to-br from-primary/5 to-primary/10 border-primary/20">
                 <CardContent className="p-6">
                   <h4 className="font-bold text-lg mb-4">Why Contact Us Today?</h4>
                   <ul className="space-y-3">
                     <li className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
                       <span className="text-sm">Free website audit & consultation</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
                       <span className="text-sm">Custom quote within 1 hour</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
                       <span className="text-sm">No commitment required</span>
                     </li>
                     <li className="flex items-center gap-3">
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
                       <span className="text-sm">Start development within 24 hours</span>
                     </li>
                   </ul>
@@ -1265,7 +1265,7 @@ export function LocalServiceLanding() {
       </section>
 
       {/* ================= ENHANCED FOOTER ================= */}
-      <footer className="border-t bg-gradient-to-b from-background to-muted/20 py-8">
+      <footer className="border-t bg-linear-to-b from-background to-muted/20 py-8">
         <div className="container max-w-6xl mx-auto px-3 sm:px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">

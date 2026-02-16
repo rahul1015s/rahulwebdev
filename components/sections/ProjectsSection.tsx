@@ -7,16 +7,7 @@ import { ExternalLink } from "lucide-react";
    Data
 --------------------------------------------- */
 const projects: WorkProject[] = [
-  {
-    title: "PortfolioGenix",
-    description:
-      "PortfolioGenix helps you create developer-friendly portfolios and ATS-friendly resumes — without design skills, complex tools, or hosting headaches.",
-    tech: ["React", "Next.js", "Node.js", "Tailwind CSS", "Vercel", "Framer Motion"],
-    live: "https://portfoliogenix.rahulwebdev.in/",
-    github: "https://github.com/rahul1015s/PortfolioGenix",
-    status: "live",
-  },
-  {
+   {
     title: "Gen-Notes",
     description:
       "Secure MERN PWA for note-taking with offline support, JWT authentication, and REST APIs.",
@@ -25,14 +16,24 @@ const projects: WorkProject[] = [
     github: "https://github.com/rahul1015s/Gen-Notes",
     status: "live",
   },
+   
   {
     title: "AtoZ Market",
     description:
       "Serverless e-commerce platform with Firebase authentication and modern UI patterns.",
     tech: ["React", "Firebase", "Redux", "Vite"],
-    live: "https://atoz-market.vercel.app/",
-    github: "https://github.com/rahul1015s/AtoZ-market",
+    live: "https://atozmarket2-0.vercel.app/",
+    github: "Not public yet",
     status: "development",
+  },
+  {
+    title: "PortfolioGenix",
+    description:
+      "PortfolioGenix helps you create developer-friendly portfolios and ATS-friendly resumes — without design skills, complex tools, or hosting headaches.",
+    tech: ["React", "Next.js", "Node.js", "Tailwind CSS", "Vercel", "Framer Motion"],
+    live: "https://portfoliogenix.rahulwebdev.in/",
+    github: "https://github.com/rahul1015s/PortfolioGenix",
+    status: "live",
   },
 ];
 

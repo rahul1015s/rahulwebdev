@@ -95,7 +95,7 @@ export function ProfileCard({
       </div>
 
       {/* Label */}
-      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
+      <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full border border-border bg-card px-3 py-7 text-xs text-muted-foreground">
         <StatusDot />
         {label}
       </div>

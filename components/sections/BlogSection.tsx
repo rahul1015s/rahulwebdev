@@ -34,14 +34,7 @@ const getCachedBlogPosts = unstable_cache(
       .lean()
       .exec();
 
-    const totalPosts = await Post.countDocuments({ published: true });
-
-    if (!docs || docs.length === 0) {
-      const allDocs = await Post.find({}).sort({ createdAt: -1 }).limit(3).lean().exec();
-      return { docs: allDocs, totalPosts };
-    }
-
-    return { docs, totalPosts };
+    return { docs };
   },
   ["blog-posts"],
   { 
