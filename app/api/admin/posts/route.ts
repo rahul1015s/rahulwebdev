@@ -124,7 +124,7 @@ export async function POST(req: Request) {
     
     await doc.save()
     const populated = await Post.findById(doc._id).populate('category').populate('tags')
-    revalidateTag('blog-posts')
+    revalidateTag('blog-posts', 'max')
     revalidatePath('/blog')
     if (populated?.slug) revalidatePath(`/blog/${populated.slug}`)
     return NextResponse.json({ ok: true, post: populated })

@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue, SelectLa
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { newsletterTemplates, getAllCategories } from '@/lib/newsletter-templates';
+import api from '@/lib/api';
+import { getApiErrorMessage } from '@/lib/api-error';
 
 export default function NewsletterAdmin() {
   const [subject, setSubject] = useState('');
@@ -48,29 +50,25 @@ export default function NewsletterAdmin() {
     setMessage('');
 
     try {
-      const response = await fetch('/api/newsletter/send', {
-        method: 'POST',
+      const response = await api.post('/api/newsletter/send', { subject, content }, {
         headers: {
-          'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.NEXT_PUBLIC_ADMIN_TOKEN || 'admin-token'}`
-        },
-        body: JSON.stringify({ subject, content }),
+        }
       });
+      const data = response.data;
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (data?.error) {
+        setStatus('error');
+        setMessage(data.error || 'Failed to send newsletter');
+      } else {
         setStatus('success');
         setMessage(`Newsletter sent to ${data.stats.sent} subscribers`);
         setSubject('');
         setContent('');
-      } else {
-        setStatus('error');
-        setMessage(data.error || 'Failed to send newsletter');
       }
     } catch (error) {
       setStatus('error');
-      setMessage('Network error. Please try again.');
+      setMessage(getApiErrorMessage(error, 'Network error. Please try again.'));
     }
   };
 

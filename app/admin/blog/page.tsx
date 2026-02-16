@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import PostRow from '@/components/admin/PostRow'
 import PostTable from '@/components/admin/PostTable'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 export const metadata = { title: 'Blog Management — Rahul Verma' }
 
@@ -29,14 +31,12 @@ export default async function BlogManagementPage({
     if (search) params.set('search', search)
     if (status && status !== 'all') params.set('status', status)
     const queryString = params.toString()
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL ?? ''}/api/admin/posts${queryString ? `?${queryString}` : ''}`
-
-    const res = await fetch(url, { cache: 'no-store' })
-    const data = await res.json()
+    const res = await api.get(`/api/admin/posts${queryString ? `?${queryString}` : ''}`)
+    const data = res.data
     if (data?.ok && Array.isArray(data.posts)) posts = data.posts
     else error = data?.error || 'Failed to load posts'
   } catch (e) {
-    error = 'Network error loading posts'
+    error = getApiErrorMessage(e, 'Network error loading posts')
   }
 
   const publishedPosts = posts.filter(p => p.published)

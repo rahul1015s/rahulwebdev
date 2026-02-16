@@ -148,6 +148,9 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     title: `${post.title} - Rahul Verma`,
     description: enhancedDescription,
     keywords,
+    alternates: {
+      canonical: `https://rahulwebdev.in/blog/${slug}`,
+    },
     authors: [{ name: "Rahul Verma" }],
     openGraph: {
       title: post.title,

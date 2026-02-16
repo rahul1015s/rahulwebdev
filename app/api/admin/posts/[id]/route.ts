@@ -63,7 +63,7 @@ export async function PATCH(req: Request, { params }: { params: any }) {
 
     const updated = await Post.findByIdAndUpdate(id, update, { new: true }).populate('category').populate('tags')
     if (!updated) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
-    revalidateTag('blog-posts')
+    revalidateTag('blog-posts', 'max')
     revalidatePath('/blog')
     if (updated.slug) revalidatePath(`/blog/${updated.slug}`)
     return NextResponse.json({ ok: true, post: updated })
@@ -78,7 +78,7 @@ export async function DELETE(req: Request, { params }: { params: any }) {
     await connectDB()
     const deleted = await Post.findByIdAndDelete(id)
     if (!deleted) return NextResponse.json({ ok: false, error: 'not found' }, { status: 404 })
-    revalidateTag('blog-posts')
+    revalidateTag('blog-posts', 'max')
     revalidatePath('/blog')
     if (deleted.slug) revalidatePath(`/blog/${deleted.slug}`)
     return NextResponse.json({ ok: true })

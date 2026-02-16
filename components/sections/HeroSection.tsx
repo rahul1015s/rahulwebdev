@@ -62,7 +62,7 @@ export default function HeroSection() {
         </motion.div>
 
         {/* Name */}
-        <motion.h1
+        <motion.h2
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, duration: 0.5 }}
@@ -72,7 +72,7 @@ export default function HeroSection() {
           <span className="relative text-primary">
             Rahul Verma
           </span>
-        </motion.h1>
+        </motion.h2>
 
         {/* Role */}
         <motion.p

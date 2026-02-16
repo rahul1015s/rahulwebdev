@@ -4,6 +4,8 @@ import NovelEditor from '@/components/admin/NovelEditor'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Button } from '@/components/ui/button'
 import { X } from 'lucide-react'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 interface Category {
   _id: string
@@ -42,11 +44,11 @@ export default function NewPostPage() {
   // Fetch categories and tags on mount
   useEffect(() => {
     Promise.all([
-      fetch('/api/categories').then(r => r.json()),
-      fetch('/api/tags').then(r => r.json())
-    ]).then(([cats, tgs]) => {
-      setCategories(cats)
-      setAllTags(tgs)
+      api.get('/api/categories'),
+      api.get('/api/tags')
+    ]).then(([catsResponse, tagsResponse]) => {
+      setCategories(catsResponse.data)
+      setAllTags(tagsResponse.data)
       setLoadingCategories(false)
     }).catch(err => {
       console.error('Failed to fetch categories/tags:', err)
@@ -59,20 +61,16 @@ export default function NewPostPage() {
     setLoading(true)
     setMessage(null)
     try {
-      const res = await fetch('/api/admin/posts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          title, 
-          slug, 
-          content, 
-          image, 
-          published,
-          category: selectedCategory || null,
-          tags: selectedTags.map(t => t._id)
-        })
+      const res = await api.post('/api/admin/posts', { 
+        title, 
+        slug, 
+        content, 
+        image, 
+        published,
+        category: selectedCategory || null,
+        tags: selectedTags.map(t => t._id)
       })
-      const data = await res.json()
+      const data = res.data
       if (data.ok) {
         setMessage('✓ Post created successfully')
         // Clear form and reset editor
@@ -92,7 +90,7 @@ export default function NewPostPage() {
         setMessage(`✗ Error: ${data.error || 'unknown'}`)
       }
     } catch (err: any) {
-      setMessage(`✗ ${String(err.message || err)}`)
+      setMessage(`✗ ${getApiErrorMessage(err)}`)
     } finally {
       setLoading(false)
     }
@@ -124,12 +122,8 @@ export default function NewPostPage() {
 
     setCreatingCategory(true)
     try {
-      const res = await fetch('/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: newCategoryName })
-      })
-      const data = await res.json()
+      const res = await api.post('/api/categories', { name: newCategoryName })
+      const data = res.data
       if (data._id) {
         setCategories([...categories, data])
         setSelectedCategory(data._id)
@@ -137,7 +131,7 @@ export default function NewPostPage() {
         setShowNewCategoryModal(false)
       }
     } catch (err) {
-      console.error('Failed to create category:', err)
+      console.error('Failed to create category:', getApiErrorMessage(err))
     } finally {
       setCreatingCategory(false)
     }

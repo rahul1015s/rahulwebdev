@@ -7,6 +7,8 @@ import { Badge } from '@/components/ui/badge'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Checkbox } from '@/components/ui/checkbox'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 
 interface Props { posts: any[] }
@@ -49,14 +51,14 @@ export default function PostTable({ posts }: Props) {
     setBulkDeleting(true)
     try {
       const deletePromises = selectedPosts.map(id =>
-        fetch(`/api/admin/posts/${id}`, { method: 'DELETE' })
+        api.delete(`/api/admin/posts/${id}`)
       )
 
       await Promise.all(deletePromises)
       setSelectedPosts([])
       window.location.reload()
     } catch (err: any) {
-      alert(`Bulk delete failed: ${err.message || err}`)
+      alert(`Bulk delete failed: ${getApiErrorMessage(err)}`)
     } finally {
       setBulkDeleting(false)
     }
@@ -64,34 +66,30 @@ export default function PostTable({ posts }: Props) {
 
   const handleTogglePublish = async (post: any) => {
     try {
-      const res = await fetch(`/api/admin/posts/${post._id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: !post.published })
-      })
-      const data = await res.json()
+      const res = await api.patch(`/api/admin/posts/${post._id}`, { published: !post.published })
+      const data = res.data
       if (data.ok) {
         window.location.reload()
       } else {
         alert(`Failed to update status: ${data.error}`)
       }
     } catch (err: any) {
-      alert(String(err.message || err))
+      alert(getApiErrorMessage(err))
     }
   }
 
   const handleDelete = async (post: any) => {
     if (!confirm('Delete this post? This action cannot be undone.')) return
     try {
-      const res = await fetch(`/api/admin/posts/${post._id}`, { method: 'DELETE' })
-      const data = await res.json()
+      const res = await api.delete(`/api/admin/posts/${post._id}`)
+      const data = res.data
       if (data.ok) {
         window.location.reload()
       } else {
         alert(`Delete failed: ${data.error}`)
       }
     } catch (err: any) {
-      alert(String(err.message || err))
+      alert(getApiErrorMessage(err))
     }
   }
 

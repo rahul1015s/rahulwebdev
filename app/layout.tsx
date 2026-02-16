@@ -1,102 +1,101 @@
-import type { Metadata } from "next"
-import dynamic from "next/dynamic"
-import { Inter, Space_Grotesk } from "next/font/google"
-import { ThemeProvider } from "@/providers/ThemeProvider"
-import { AuthProvider } from "@/providers/AuthProvider"
-import { AnalyticsProvider } from "@/providers/AnalyticsProvider"
-import "./globals.css"
-import Navbar from "@/components/layout/Navbar"
+import type { Metadata, Viewport } from "next";
+import dynamic from "next/dynamic";
+import { Inter, Space_Grotesk } from "next/font/google";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
+import { AnalyticsProvider } from "@/providers/AnalyticsProvider";
+import "./globals.css";
+import Navbar from "@/components/layout/Navbar";
 
-// Optimize font loading - variable fonts with reduced weight variants
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap", // Use system font while loading
-})
+  display: "swap",
+});
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
   display: "swap",
-})
+});
 
-// Lazy load Toaster as it's not critical for initial render
-const Toaster = dynamic(() => import("sonner").then(mod => ({ default: mod.Toaster })), {
-  loading: () => null
-})
+const Toaster = dynamic(
+  () => import("sonner").then((mod) => ({ default: mod.Toaster })),
+  { loading: () => null }
+);
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://rahulwebdev.in'),
+  metadataBase: new URL("https://rahulwebdev.in"),
   title: {
-    default: "Rahul Verma | Full Stack Developer",
-    template: "%s | Rahul Verma"
+    default: "Rahul Verma | Freelance Full Stack Developer in Patna, Bihar",
+    template: "%s | Rahul Verma",
   },
-  description: "Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies. Explore my portfolio, projects, and insights on web development.",
+  description:
+    "Rahul Verma (rahul1015s) is a freelance full stack developer in Patna, Bihar, India. Building fast, SEO-focused web apps with React, Next.js, Node.js, and MongoDB.",
   keywords: [
     "Rahul Verma",
-    "Full Stack Developer",
-    "Web Developer",
-    "React Developer",
-    "Next.js Developer",
-    "Node.js Developer",
-    "JavaScript Developer",
-    "TypeScript Developer",
-    "Portfolio",
-    "Web Development",
-    "Software Engineer",
-    "Frontend Developer",
-    "Backend Developer",
-    "MERN Stack",
-    "Self-taught Developer"
+    "rahul1015s",
+    "rahulwebdev.in",
+    "Rahul Verma web developer",
+    "Freelance web developer in Patna",
+    "Web developer in Bihar",
+    "Full stack developer Patna",
+    "Freelance full stack developer India",
+    "React developer",
+    "Next.js developer",
+    "Node.js developer",
+    "MongoDB developer",
   ],
   authors: [{ name: "Rahul Verma" }],
   creator: "Rahul Verma",
-  publisher: "Rahul Verma",
+  publisher: "Rahul Web Development",
   formatDetection: {
     email: false,
-    address: false,
-    telephone: false,
+    address: true,
+    telephone: true,
   },
-  category: "technology",
-  classification: "Web Development Portfolio",
+  category: "Professional Services",
+  applicationName: "Rahul Web Development",
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://rahulwebdev.in',
-    title: 'Rahul Verma | Full Stack Developer',
-    description: 'Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies.',
-    siteName: 'Rahul Verma Portfolio',
+    type: "website",
+    locale: "en_IN",
+    url: "https://rahulwebdev.in",
+    title: "Rahul Verma | Freelance Full Stack Developer in Patna, Bihar",
+    description:
+      "Freelance full stack web developer from Patna, Bihar helping businesses build performant websites and web apps.",
+    siteName: "Rahul Web Development",
     images: [
       {
-        url: '/rahul.jpg',
+        url: "/rahul.jpg",
         width: 1200,
         height: 630,
-        alt: 'Rahul Verma Portfolio',
+        alt: "Rahul Verma - Freelance Full Stack Developer in Patna, Bihar",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Rahul Verma | Full Stack Developer',
-    description: 'Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies.',
-    images: ['/rahul.jpg'],
-    creator: '@rahulwebdev',
+    card: "summary_large_image",
+    title: "Rahul Verma | Freelance Full Stack Developer in Patna, Bihar",
+    description:
+      "Rahul Verma (rahul1015s) builds SEO-friendly React and Next.js web apps for businesses in Patna, Bihar, and India.",
+    images: ["/rahul.jpg"],
+    creator: "@rahul1015s",
   },
   verification: {
-    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && {
-      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
-    }),
+    google:
+      process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+      "google-site-verification-code",
     ...(process.env.NEXT_PUBLIC_YANDEX_VERIFICATION && {
       yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION,
     }),
@@ -105,126 +104,116 @@ export const metadata: Metadata = {
     }),
   },
   alternates: {
-    canonical: 'https://rahulwebdev.in',
+    canonical: "/",
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
+  manifest: "/manifest.json",
   other: {
-    'theme-color': '#10b981',
-    'msapplication-TileColor': '#10b981',
-    'application-name': 'Rahul Verma Portfolio',
-    'apple-mobile-web-app-capable': 'yes',
-    'apple-mobile-web-app-status-bar-style': 'default',
-    'apple-mobile-web-app-title': 'Rahul Verma',
-    'mobile-web-app-capable': 'yes',
-    // AI and LLM-friendly meta tags
-    'color-scheme': 'light dark',
-    'charset': 'utf-8',
-    'viewport': 'width=device-width, initial-scale=1, maximum-scale=5',
-    // Prevent crawlers from indexing duplicate content
-    'googlebot': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-    'bingbot': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-    // Language and locale hints for search engines
-    'language': 'English',
+    "theme-color": "#10b981",
+    "msapplication-TileColor": "#10b981",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-title": "Rahul Verma",
+    "color-scheme": "light dark",
+    "geo.region": "IN-BR",
+    "geo.placename": "Patna, Bihar, India",
   },
-}
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#10b981",
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
-  // Main Person schema for author
-  const personSchema = {
+  const schemaGraph = {
     "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Rahul Verma",
-    "jobTitle": "Full Stack Developer",
-    "description": "Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies",
-    "url": "https://rahulwebdev.in",
-    "image": "https://rahulwebdev.in/rahul.jpg",
-    "sameAs": [
-      "https://github.com/rahul1015s",
-      "https://linkedin.com/in/rahul1015s",
-      "https://twitter.com/rahul1015s"
-    ],
-    "email": "hello@rahulwebdev.in",
-    "knowsAbout": [
-      "JavaScript",
-      "TypeScript",
-      "React",
-      "Next.js",
-      "Node.js",
-      "MongoDB",
-      "Express.js",
-      "Web Development",
-      "Full Stack Development",
-      "MERN Stack",
-      "REST API",
-      "GraphQL",
-      "SQL",
-      "Git",
-      "Tailwind CSS",
-      "Web Design",
-      "UI/UX Development"
-    ],
-    "hasOccupation": {
-      "@type": "Occupation",
-      "name": "Full Stack Developer",
-      "occupationLocation": {
-        "@type": "City",
-        "name": "Patna",
-        "addressCountry": "IN"
-      }
-    },
-    "alumniOf": {
-      "@type": "EducationalOrganization",
-      "name": "Self-taught / Online Learning"
-    }
-  };
-
-  // Organization schema
-  const organizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Rahul Verma Portfolio",
-    "url": "https://rahulwebdev.in",
-    "logo": "https://rahulwebdev.in/logo.png",
-    "description": "Full Stack Web Developer portfolio showcasing projects, skills, and expertise in modern web technologies",
-    "sameAs": [
-      "https://github.com/rahul1015s",
-      "https://linkedin.com/in/rahul1015s",
-      "https://twitter.com/rahul1015s"
-    ],
-    "contact": {
-      "@type": "ContactPoint",
-      "contactType": "Professional Services",
-      "email": "hello@rahulwebdev.in"
-    }
-  };
-
-  // WebSite schema with SearchAction
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Rahul Verma Portfolio",
-    "url": "https://rahulwebdev.in",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://rahulwebdev.in/search?q={search_term_string}"
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://rahulwebdev.in/#person",
+        name: "Rahul Verma",
+        alternateName: ["rahul1015s", "Rahul Verma web developer"],
+        url: "https://rahulwebdev.in",
+        image: "https://rahulwebdev.in/rahul.jpg",
+        jobTitle: "Full Stack Developer",
+        worksFor: { "@id": "https://rahulwebdev.in/#localbusiness" },
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Patna",
+          addressRegion: "Bihar",
+          addressCountry: "India",
+        },
+        sameAs: [
+          "https://github.com/rahul1015s",
+          "https://linkedin.com/in/rahul1015s",
+        ],
       },
-      "query-input": "required name=search_term_string"
-    },
-    "author": {
-      "@type": "Person",
-      "name": "Rahul Verma"
-    }
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://rahulwebdev.in/#professional-service",
+        name: "Rahul Verma Freelance Web Development Services",
+        provider: { "@id": "https://rahulwebdev.in/#person" },
+        url: "https://rahulwebdev.in",
+        areaServed: [
+          { "@type": "City", name: "Patna" },
+          { "@type": "State", name: "Bihar" },
+          { "@type": "Country", name: "India" },
+        ],
+        serviceType: [
+          "Web Development",
+          "Full Stack Development",
+          "React Development",
+          "Next.js Development",
+        ],
+      },
+      {
+        "@type": "LocalBusiness",
+        "@id": "https://rahulwebdev.in/#localbusiness",
+        name: "Rahul Web Development",
+        url: "https://rahulwebdev.in",
+        image: "https://rahulwebdev.in/rahul.jpg",
+        areaServed: ["Patna, Bihar, India"],
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Patna",
+          addressRegion: "Bihar",
+          addressCountry: "India",
+        },
+        makesOffer: [
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Web Development" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Full Stack Development" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "React Development" },
+          },
+          {
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: "Next.js Development" },
+          },
+        ],
+      },
+    ],
   };
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Tag Manager */}
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -234,42 +223,24 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-5GC7W3LN');`,
           }}
         />
-        {/* End Google Tag Manager */}
-
-        {/* Person Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personSchema),
-          }}
-        />
-        {/* Organization Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
-        />
-        {/* Website Schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
+            __html: JSON.stringify(schemaGraph),
           }}
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}>
-        {/* Google Tag Manager (noscript) */}
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+      >
         <noscript>
           <iframe
             src="https://www.googletagmanager.com/ns.html?id=GTM-5GC7W3LN"
             height="0"
             width="0"
-            style={{ display: 'none', visibility: 'hidden' }}
+            style={{ display: "none", visibility: "hidden" }}
           ></iframe>
         </noscript>
-        {/* End Google Tag Manager (noscript) */}
-        
         <AnalyticsProvider>
           <ThemeProvider
             attribute="class"
@@ -286,5 +257,5 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </AnalyticsProvider>
       </body>
     </html>
-  )
+  );
 }

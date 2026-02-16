@@ -39,13 +39,26 @@ const ContactSection = dynamic(() => import('@/components/sections/ContactSectio
 })
 
 export const metadata: Metadata = {
-  title: 'Rahul Verma - Full Stack Developer',
-  description: 'Portfolio of Rahul Verma, a passionate Full Stack Developer specializing in modern web technologies, React, Next.js, and more.',
+  title: 'Rahul Verma - Freelance Full Stack Developer in Patna, Bihar',
+  description:
+    'Rahul Verma is a freelance full stack developer in Patna, Bihar, India specializing in React, Next.js, Node.js, and MongoDB for business websites and web apps.',
+  keywords: [
+    'Rahul1015s',
+    'Rahul Verma web developer',
+    'Freelance web developer in Patna',
+    'Web developer in Bihar',
+    'Full stack developer Patna',
+    'rahulwebdev.in',
+  ],
+  alternates: {
+    canonical: 'https://rahulwebdev.in/',
+  },
   openGraph: {
-    title: 'Rahul Verma - Full Stack Developer',
-    description: 'Portfolio of Rahul Verma, a passionate Full Stack Developer specializing in modern web technologies, React, Next.js, and more.',
+    title: 'Rahul Verma - Freelance Full Stack Developer in Patna, Bihar',
+    description:
+      'Freelance full stack web development services by Rahul Verma in Patna, Bihar for startups, professionals, and local businesses.',
     url: 'https://rahulwebdev.in',
-    siteName: 'Rahul Verma Portfolio',
+    siteName: 'Rahul Web Development',
     images: [
       {
         url: '/og-home.svg',
@@ -54,13 +67,14 @@ export const metadata: Metadata = {
         alt: 'Rahul Verma Portfolio Preview',
       },
     ],
-    locale: 'en_US',
+    locale: 'en_IN',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Rahul Verma - Full Stack Developer',
-    description: 'Portfolio of Rahul Verma, a passionate Full Stack Developer specializing in modern web technologies, React, Next.js, and more.',
+    title: 'Rahul Verma - Freelance Full Stack Developer in Patna, Bihar',
+    description:
+      'Freelance full stack developer in Patna, Bihar building high-performance web apps with React and Next.js.',
     images: ['/og-home.svg'],
   },
 }
@@ -69,8 +83,8 @@ const page = () => {
   const portfolioStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Rahul Verma Portfolio",
-    "description": "Full Stack Developer portfolio showcasing projects, skills, and experience",
+    "name": "Rahul Web Development",
+    "description": "Freelance full stack web developer portfolio for Patna, Bihar and India clients.",
     "url": "https://rahulwebdev.in",
     "author": {
       "@type": "Person",
@@ -96,6 +110,7 @@ const page = () => {
           __html: JSON.stringify(portfolioStructuredData),
         }}
       />
+      
       <HeroSection />
       <ExperienceSection />
       <ProofOfWork />

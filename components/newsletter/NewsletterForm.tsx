@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Check, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import api from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 /* ---------------------------------------------
    Types
@@ -83,19 +85,15 @@ export default function NewsletterForm({
     setErrorMessage("");
 
     try {
-      const res = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          name: name || undefined,
-          source: location,
-        }),
+      const res = await api.post("/api/newsletter/subscribe", {
+        email,
+        name: name || undefined,
+        source: location,
       });
 
-      const data = await res.json();
+      const data = res.data;
 
-      if (res.ok) {
+      if (!data?.error) {
         setStatus("success");
         setEmail("");
         setName("");
@@ -104,9 +102,9 @@ export default function NewsletterForm({
         setStatus("error");
         setErrorMessage(data?.error || "Something went wrong.");
       }
-    } catch {
+    } catch (error) {
       setStatus("error");
-      setErrorMessage("Network error. Try again.");
+      setErrorMessage(getApiErrorMessage(error, "Network error. Try again."));
     }
   };
 

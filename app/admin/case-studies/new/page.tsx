@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react'
 import NovelEditor from '@/components/admin/NovelEditor'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 export default function NewCaseStudyPage() {
   const [name, setName] = useState('')
@@ -43,35 +45,31 @@ export default function NewCaseStudyPage() {
       const solutionsArray = solutions.split(',').map(s => s.trim()).filter(Boolean)
       const resultsArray = results.split(',').map(s => s.trim()).filter(Boolean)
 
-      const res = await fetch('/api/admin/case-studies', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          slug,
-          tagline,
-          description,
-          content,
-          coverImage,
-          gallery: galleryArray,
-          stack: stackArray,
-          liveUrl,
-          githubUrl,
-          featured,
-          category: categoryArray,
-          deliverables: deliverablesArray,
-          timeline,
-          client,
-          team: teamArray,
-          challenges: challengesArray,
-          solutions: solutionsArray,
-          results: resultsArray,
-          published,
-          order
-        })
+      const res = await api.post('/api/admin/case-studies', {
+        name,
+        slug,
+        tagline,
+        description,
+        content,
+        coverImage,
+        gallery: galleryArray,
+        stack: stackArray,
+        liveUrl,
+        githubUrl,
+        featured,
+        category: categoryArray,
+        deliverables: deliverablesArray,
+        timeline,
+        client,
+        team: teamArray,
+        challenges: challengesArray,
+        solutions: solutionsArray,
+        results: resultsArray,
+        published,
+        order
       })
 
-      const data = await res.json()
+      const data = res.data
       if (data.ok) {
         setMessage('✓ Case study created')
         setName('')
@@ -101,7 +99,7 @@ export default function NewCaseStudyPage() {
         setMessage(`✗ Error: ${data.error || 'unknown'}`)
       }
     } catch (err: any) {
-      setMessage(String(err.message || err))
+      setMessage(getApiErrorMessage(err))
     } finally {
       setLoading(false)
     }
