@@ -131,7 +131,7 @@ export default function NovelEditor({ value, onChange }: Props) {
           extensions={defaultExtensions}
           editorProps={{
             attributes: {
-              class: 'prose dark:prose-invert focus:outline-none max-w-full px-6 py-5 min-h-96 text-base leading-relaxed'
+              class: 'prose dark:prose-invert focus:outline-none max-w-full px-4 py-4 min-h-96 text-base leading-relaxed'
             }
           }}
         >

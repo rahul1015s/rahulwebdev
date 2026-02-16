@@ -3,6 +3,8 @@ import React, { useEffect, useState, use as reactUse } from 'react'
 import { useRouter } from 'next/navigation'
 import NovelEditor from '@/components/admin/NovelEditor'
 import { Checkbox } from '@/components/ui/checkbox'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 export default function EditPostPage({ params }: any) {
   const resolvedParams = reactUse(params as Promise<any>)
@@ -21,8 +23,8 @@ export default function EditPostPage({ params }: any) {
     let mounted = true
     ;(async () => {
       try {
-        const res = await fetch(`/api/admin/posts/${id}`)
-        const data = await res.json()
+        const res = await api.get(`/api/admin/posts/${id}`)
+        const data = res.data
         if (data?.ok && data.post && mounted) {
           setTitle(data.post.title || '')
           setSlug(data.post.slug || '')
@@ -33,7 +35,7 @@ export default function EditPostPage({ params }: any) {
           setMessage('Failed to load post')
         }
       } catch (err: any) {
-        setMessage(String(err.message || err))
+        setMessage(getApiErrorMessage(err))
       } finally {
         if (mounted) setLoading(false)
       }
@@ -45,15 +47,9 @@ export default function EditPostPage({ params }: any) {
     e.preventDefault()
     setSaving(true)
     try {
-      const res = await fetch(`/api/admin/posts/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, slug, content, image, published })
-      })
-      let data: any = null
-      try { data = await res.json() } catch (e) { console.error('Save: failed to parse JSON', e) }
-
-      if (res.ok && data?.ok !== false) {
+      const res = await api.patch(`/api/admin/posts/${id}`, { title, slug, content, image, published })
+      const data = res.data
+      if (data?.ok !== false) {
         setMessage('✓ Saved')
         // Optionally navigate back to admin list after save
         setTimeout(() => {
@@ -61,11 +57,11 @@ export default function EditPostPage({ params }: any) {
           router.push('/admin/blog')
         }, 800)
       } else {
-        console.error('Save failed', { status: res.status, data })
-        setMessage(`✗ ${data?.error || `HTTP ${res.status}`}`)
+        console.error('Save failed', data)
+        setMessage(`✗ ${data?.error || 'Save failed'}`)
       }
     } catch (err: any) {
-      setMessage(String(err.message || err))
+      setMessage(getApiErrorMessage(err))
     } finally {
       setSaving(false)
     }

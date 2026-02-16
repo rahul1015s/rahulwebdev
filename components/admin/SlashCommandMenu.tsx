@@ -10,6 +10,7 @@ import {
   Code,
   Minus,
   Image as ImageIcon,
+  Grid3x3,
 } from "lucide-react"
 import { createSuggestionItems } from "novel"
 import { Selection } from "prosemirror-state"
@@ -167,6 +168,20 @@ export const suggestionItems = createSuggestionItems([
           .setImage({ src: url })
           .run()
       }
+    },
+  },
+  {
+    title: "Table",
+    description: "Insert a 3x3 table",
+    searchTerms: ["table", "data", "grid"],
+    icon: <Grid3x3 size={18} />,
+    command: ({ editor, range }: any) => {
+      editor
+        .chain()
+        .focus()
+        .deleteRange(range)
+        .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+        .run()
     },
   },
 ])

@@ -8,10 +8,37 @@ import { normalizeImageUrl } from "@/utils/url-utils";
 import { Calendar, Clock, ArrowLeft, Eye, Tag, User } from "lucide-react";
 import ActionButtons from "./ActionButtons";
 import { Metadata } from 'next';
+import { Types } from "mongoose";
 
 interface PostPageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }
+
+type RichTextNode = {
+  type?: string;
+  text?: string;
+  attrs?: { src?: string; alt?: string };
+  content?: RichTextNode[];
+};
+
+const getNodeText = (content?: RichTextNode[]) =>
+  (content ?? []).map((c) => c.text || "").join("").trim();
+
+const normalizeTagStrings = (tags: unknown): string[] => {
+  if (!Array.isArray(tags)) return [];
+  return tags
+    .map((tag) => {
+      if (typeof tag === "string") return tag;
+      if (tag instanceof Types.ObjectId) return tag.toString();
+      if (tag && typeof tag === "object" && "_id" in tag) {
+        const maybeId = (tag as { _id?: unknown })._id;
+        if (maybeId instanceof Types.ObjectId) return maybeId.toString();
+        if (typeof maybeId === "string") return maybeId;
+      }
+      return "";
+    })
+    .filter(Boolean);
+};
 
 // Generate metadata for each blog post
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
@@ -40,19 +67,19 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   try {
     if (typeof post.content === "string") {
       const json = JSON.parse(post.content);
-      const nodes = json?.content || [];
+      const nodes: RichTextNode[] = json?.content || [];
 
       // Find first meaningful text content
       for (const node of nodes) {
-        if (node.type === "paragraph" && node.content?.length > 0) {
-          const text = node.content.map((c: any) => c.text || "").join("").trim();
+        if (node.type === "paragraph" && (node.content?.length ?? 0) > 0) {
+          const text = getNodeText(node.content);
           if (text.length > 20) { // Only use substantial paragraphs
             excerpt = text;
             break;
           }
-        } else if (node.type === "heading" && node.content?.length > 0 && !excerpt) {
+        } else if (node.type === "heading" && (node.content?.length ?? 0) > 0 && !excerpt) {
           // Fallback to heading if no good paragraph found
-          excerpt = node.content.map((c: any) => c.text || "").join("").trim();
+          excerpt = getNodeText(node.content);
         }
       }
 
@@ -87,7 +114,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   if (ogImage.startsWith('/api/og/') && typeof post.content === "string") {
     try {
       const json = JSON.parse(post.content);
-      const nodes = json?.content || [];
+      const nodes: RichTextNode[] = json?.content || [];
 
       // Look for first image in content
       for (const node of nodes) {
@@ -106,8 +133,9 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   }
 
   // Create keywords from tags for better SEO
-  const keywords = (post.tags && Array.isArray(post.tags) && post.tags.length > 0)
-    ? post.tags.join(", ")
+  const normalizedTags = normalizeTagStrings(post.tags);
+  const keywords = (normalizedTags.length > 0)
+    ? normalizedTags.join(", ")
     : "web development, programming, technology, React, Next.js";
 
   // Enhanced description with read time if available
@@ -120,6 +148,9 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     title: `${post.title} - Rahul Verma`,
     description: enhancedDescription,
     keywords,
+    alternates: {
+      canonical: `https://rahulwebdev.in/blog/${slug}`,
+    },
     authors: [{ name: "Rahul Verma" }],
     openGraph: {
       title: post.title,
@@ -139,7 +170,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       publishedTime: post.createdAt?.toISOString(),
       modifiedTime: post.updatedAt?.toISOString(),
       authors: ["Rahul Verma"],
-      tags: post.tags || [],
+      tags: normalizedTags,
     },
     twitter: {
       card: "summary_large_image",
@@ -152,7 +183,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
       "article:author": "Rahul Verma" as string,
       ...(post.createdAt && { "article:published_time": post.createdAt.toISOString() as string }),
       ...(post.updatedAt && { "article:modified_time": post.updatedAt.toISOString() as string }),
-      ...(post.tags && Array.isArray(post.tags) && post.tags.length > 0 && { "article:tag": post.tags.join(",") as string }),
+      ...(normalizedTags.length > 0 && { "article:tag": normalizedTags.join(",") as string }),
     },
   };
 }
@@ -170,6 +201,7 @@ export default async function PostPage({ params }: PostPageProps) {
   }
 
   if (!post) return notFound();
+  const normalizedTags = normalizeTagStrings(post.tags);
 
   /** COVER IMAGE LOGIC */
   let coverImage: string | null = null;
@@ -179,7 +211,7 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!coverImage && typeof post.content === "string") {
     try {
       const json = JSON.parse(post.content);
-      const firstImage = json?.content?.find((n: any) => n.type === "image");
+      const firstImage = (json?.content as RichTextNode[] | undefined)?.find((n) => n.type === "image");
       if (firstImage?.attrs?.src) {
         coverImage = normalizeImageUrl(firstImage.attrs.src);
       }
@@ -207,19 +239,19 @@ export default async function PostPage({ params }: PostPageProps) {
   try {
     if (typeof post.content === "string") {
       const json = JSON.parse(post.content);
-      const nodes = json?.content || [];
+      const nodes: RichTextNode[] = json?.content || [];
 
       // Find first meaningful text content
       for (const node of nodes) {
-        if (node.type === "paragraph" && node.content?.length > 0) {
-          const text = node.content.map((c: any) => c.text || "").join("").trim();
+        if (node.type === "paragraph" && (node.content?.length ?? 0) > 0) {
+          const text = getNodeText(node.content);
           if (text.length > 20) { // Only use substantial paragraphs
             excerpt = text;
             break;
           }
-        } else if (node.type === "heading" && node.content?.length > 0 && !excerpt) {
+        } else if (node.type === "heading" && (node.content?.length ?? 0) > 0 && !excerpt) {
           // Fallback to heading if no good paragraph found
-          excerpt = node.content.map((c: any) => c.text || "").join("").trim();
+          excerpt = getNodeText(node.content);
         }
       }
 
@@ -295,7 +327,7 @@ export default async function PostPage({ params }: PostPageProps) {
       "@type": "WebPage",
       "@id": `https://rahulwebdev.in/blog/${slug}`
     },
-    "keywords": post.tags?.join(", ") || "",
+    "keywords": normalizedTags.join(", "),
     "articleSection": "Technology",
     "url": `https://rahulwebdev.in/blog/${slug}`
   };
@@ -308,9 +340,9 @@ export default async function PostPage({ params }: PostPageProps) {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
       {/* Back Button with animation */}
-      <div className="mb-8 sm:mb-10">
+      <div className="mb-6 sm:mb-7">
         <Link
           href="/blog"
           className="group inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-900 transition-all duration-300 pl-1"
@@ -324,10 +356,10 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Header */}
-      <header className="mb-10 sm:mb-12 lg:mb-16">
+      <header className="mb-8 sm:mb-10 lg:mb-12">
         {/* Title with gradient text effect */}
-        <div className="relative mb-6">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-foreground">
+        <div className="relative mb-4 sm:mb-5">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-foreground">
             {post.title}
           </h1>
           {/* Gradient overlay for text effect */}
@@ -335,7 +367,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
 
         {/* Meta information */}
-        <div className="flex flex-wrap items-center gap-4 mb-8 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-muted-foreground">
           <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full group hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-200">
             <Calendar size={14} className="group-hover:text-emerald-600 transition-colors duration-200" />
             <time className="group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-200">
@@ -361,7 +393,7 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
 
         {/* Cover Image with hover effect */}
-        <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-80 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg group mb-8">
+        <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg group mb-6">
           {/* Loading gradient */}
           <div className="absolute inset-0 bg-linear-to-r from-emerald-100/20 to-cyan-100/20 animate-pulse" />
           
@@ -387,9 +419,9 @@ export default async function PostPage({ params }: PostPageProps) {
         </div>
 
         {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-6">
-            {post.tags.slice(0, 5).map((tag: string, index: number) => (
+        {normalizedTags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {normalizedTags.slice(0, 5).map((tag: string, index: number) => (
               <span
                 key={index}
                 className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded-full hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors duration-200 group"
@@ -403,22 +435,22 @@ export default async function PostPage({ params }: PostPageProps) {
       </header>
 
       {/* Content with enhanced styling */}
-      <article className="prose prose-gray dark:prose-invert max-w-none mb-12 sm:mb-16 lg:mb-20 
+      <article className="prose prose-gray dark:prose-invert max-w-none mb-10 sm:mb-12 lg:mb-16 
         prose-headings:scroll-mt-20
-        prose-h2:text-2xl sm:prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-10 prose-h2:mb-4
-        prose-h3:text-xl sm:prose-h3:text-2xl prose-h3:font-semibold prose-h3:mt-8 prose-h3:mb-3
-        prose-p:text-base sm:prose-p:text-lg prose-p:leading-relaxed prose-p:my-4
+        prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-5 prose-h2:mb-2.5
+        prose-h3:text-base sm:prose-h3:text-lg prose-h3:font-semibold prose-h3:mt-4 prose-h3:mb-2
+        prose-p:text-base prose-p:leading-relaxed prose-p:my-2.5
         prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:text-emerald-700 hover:prose-a:underline
         prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
         prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:shadow-lg
         prose-img:rounded-xl prose-img:shadow-lg prose-img:mx-auto
         prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:pl-4 prose-blockquote:italic
-        prose-ul:my-4 prose-li:my-1">
+        prose-ul:my-2.5 prose-li:my-0.5">
         <PostContent content={post.content} />
       </article>
 
       {/* Action buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-4 py-6 border-y border-gray-200 dark:border-gray-800 mb-10">
+      <div className="flex flex-wrap items-center justify-between gap-4 py-5 border-y border-gray-200 dark:border-gray-800 mb-8">
         <Link
           href="/blog"
           className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium shadow-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
@@ -432,7 +464,7 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Author info */}
-      <div className="bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-10 border border-emerald-200/50 dark:border-emerald-800/50">
+      <div className="bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8 border border-emerald-200/50 dark:border-emerald-800/50">
         <div className="flex items-start sm:items-center gap-4 sm:gap-6 flex-col sm:flex-row">
           <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
             <User className="w-8 h-8 text-emerald-600" />
@@ -455,9 +487,9 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Related posts suggestion */}
-      <div className="text-center py-8">
-        <h3 className="text-lg sm:text-xl font-semibold mb-4">Enjoyed this article?</h3>
-        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+      <div className="text-center py-6">
+        <h3 className="text-lg sm:text-xl font-semibold mb-3">Enjoyed this article?</h3>
+        <p className="text-muted-foreground mb-5 max-w-md mx-auto">
           Check out more articles on similar topics in the blog section.
         </p>
         <Link

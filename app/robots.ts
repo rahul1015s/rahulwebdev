@@ -1,50 +1,38 @@
 import type { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://rahulwebdev.in";
+  const siteUrl = "https://rahulwebdev.in";
 
   return {
     rules: [
-      // Default rules
       {
         userAgent: "*",
-        allow: "/",
+        allow: ["/", "/blog", "/case-studies", "/freelance-web-developer-patna"],
         disallow: [
           "/admin/",
           "/api/admin/",
           "/api/auth/",
-          "/verify-email/",
-          "/private/",
-          "/*.pdf$",
+          "/verify-email",
+          "/_next/",
         ],
-        crawlDelay: 1,
       },
-
-      // Googlebot (crawl-delay ignored anyway)
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/"],
+        disallow: ["/admin/", "/api/admin/", "/api/auth/"],
       },
-
-      // Bingbot
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/"],
-        crawlDelay: 1,
+        disallow: ["/admin/", "/api/admin/", "/api/auth/"],
       },
-
-      // AI / LLM crawlers (explicit allow)
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },
       { userAgent: "OpenAI", allow: "/" },
       { userAgent: "Googlebot-Extended", allow: "/" },
-      { userAgent: "AppleBot", allow: "/" },
-      { userAgent: "CCBot", allow: "/" },
-      { userAgent: "Claude-Web", allow: "/" },
       { userAgent: "anthropic-ai", allow: "/" },
       { userAgent: "Perplexity", allow: "/" },
+      { userAgent: "CCBot", allow: "/" },
     ],
 
     sitemap: `${siteUrl}/sitemap.xml`,

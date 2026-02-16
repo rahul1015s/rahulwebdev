@@ -19,6 +19,7 @@ export async function GET() {
     '/blog',
     '/case-studies',
     '/resume',
+    "/freelance-web-developer-patna"
   ];
 
   // Dynamic pages from database

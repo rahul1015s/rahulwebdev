@@ -6,6 +6,8 @@ import { BlogListRow } from "@/components/blog/BlogListRow";
 import { processPosts } from "@/lib/blog-utils";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 import { generateBreadcrumbStructuredData } from "@/lib/seo";
+import api from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 function extractExcerpt(content: any): string {
   if (typeof content !== "string") return "Read the full article…";
@@ -33,14 +35,10 @@ export default function BlogPage() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await fetch("/api/blog");
-        if (!response.ok) {
-          throw new Error("Failed to fetch posts");
-        }
-        const data = await response.json();
-        setPosts(data);
+        const response = await api.get("/api/blog");
+        setPosts(response.data);
       } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error("Error fetching posts:", getApiErrorMessage(error));
         setPosts([]);
       } finally {
         setLoading(false);

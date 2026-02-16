@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import api from "@/lib/api"
+import { getApiErrorMessage } from "@/lib/api-error"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,18 +24,14 @@ export default function DeleteCaseStudyButton({ id }: { id: string }) {
     try {
       setLoading(true)
 
-      const res = await fetch(`/api/admin/case-studies/${id}`, {
-        method: "DELETE",
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data?.error || "Delete failed")
+      const res = await api.delete(`/api/admin/case-studies/${id}`)
+      if (res.data?.ok === false) {
+        throw new Error(res.data?.error || "Delete failed")
       }
 
       window.location.reload()
     } catch (err: any) {
-      alert(err.message)
+      alert(getApiErrorMessage(err))
     } finally {
       setLoading(false)
     }

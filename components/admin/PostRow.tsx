@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 interface Props { post: any }
 
@@ -19,25 +21,20 @@ export default function PostRow({ post }: Props) {
     if (!confirm('Delete this post? This action cannot be undone.')) return
     setLoading(true)
     try {
-      const res = await fetch(`/api/admin/posts/${post._id}`, { method: 'DELETE' })
-      let data: any = null
-      try {
-        data = await res.json()
-      } catch (e) {
-        console.error('Delete: failed to parse JSON response', e)
-      }
+      const res = await api.delete(`/api/admin/posts/${post._id}`)
+      const data = res.data
 
-      if (res.ok && data?.ok !== false) {
+      if (data?.ok !== false) {
         setRemoved(true)
-        console.log('Delete successful', { status: res.status, data })
+        console.log('Delete successful', data)
       } else {
-        const errMsg = data?.error || `HTTP ${res.status}`
-        console.error('Delete failed', { status: res.status, data })
+        const errMsg = data?.error || 'Delete failed'
+        console.error('Delete failed', data)
         alert(`Delete failed: ${errMsg}`)
       }
     } catch (err: any) {
       console.error('Delete request error', err)
-      alert(String(err.message || err))
+      alert(getApiErrorMessage(err))
     } finally {
       setLoading(false)
     }
@@ -46,28 +43,23 @@ export default function PostRow({ post }: Props) {
   async function handleTogglePublish() {
     setUpdating(true)
     try {
-      const res = await fetch(`/api/admin/posts/${post._id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: !post.published })
-      })
-      let data: any = null
-      try { data = await res.json() } catch (e) { console.error('Toggle: failed to parse JSON', e) }
+      const res = await api.patch(`/api/admin/posts/${post._id}`, { published: !post.published })
+      const data = res.data
 
-      if (res.ok && data?.ok !== false) {
+      if (data?.ok !== false) {
         // Update the post object to reflect the change
         post.published = !post.published
         // Force re-render by updating state
         setUpdating(false)
         window.location.reload() // Simple way to refresh the UI
       } else {
-        const errMsg = data?.error || `HTTP ${res.status}`
-        console.error('Toggle failed', { status: res.status, data })
+        const errMsg = data?.error || 'Update failed'
+        console.error('Toggle failed', data)
         alert(`Failed to update status: ${errMsg}`)
       }
     } catch (err: any) {
       console.error('Toggle request error', err)
-      alert(String(err.message || err))
+      alert(getApiErrorMessage(err))
     } finally {
       setUpdating(false)
     }

@@ -10,6 +10,10 @@ import {
   Command,
   renderItems,
 } from "novel"
+import { Table } from "@tiptap/extension-table"
+import { TableRow } from "@tiptap/extension-table-row"
+import { TableHeader } from "@tiptap/extension-table-header"
+import { TableCell } from "@tiptap/extension-table-cell"
 import { InputRule } from "@tiptap/core"
 import { UploadImagesPlugin } from "novel"
 import { suggestionItems } from "./SlashCommandMenu"
@@ -119,6 +123,28 @@ export const defaultExtensions = [
       class: "flex items-start my-4",
     },
     nested: true,
+  }),
+  Table.configure({
+    resizable: true,
+    handleWidth: 4,
+    HTMLAttributes: {
+      class: "border-collapse table-auto w-full border border-gray-300 dark:border-gray-700",
+    },
+  }),
+  TableRow.configure({
+    HTMLAttributes: {
+      class: "border-b border-gray-300 dark:border-gray-700",
+    },
+  }),
+  TableHeader.configure({
+    HTMLAttributes: {
+      class: "bg-gray-100 dark:bg-gray-800 font-semibold text-foreground border border-gray-300 dark:border-gray-700 px-4 py-2 text-left",
+    },
+  }),
+  TableCell.configure({
+    HTMLAttributes: {
+      class: "border border-gray-300 dark:border-gray-700 px-4 py-2 text-foreground/90",
+    },
   }),
   Command.configure({
     suggestion: {

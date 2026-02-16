@@ -41,6 +41,9 @@ export async function generateMetadata({ params }: { params: any }): Promise<Met
   return {
     title: `${study.name} — Case Study | Rahul Verma`,
     description,
+    alternates: {
+      canonical: `https://rahulwebdev.in/case-studies/${slug}`,
+    },
     openGraph: {
       title: `${study.name} — Case Study`,
       description,

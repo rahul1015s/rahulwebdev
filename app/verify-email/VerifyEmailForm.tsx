@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, CheckCircle, XCircle, Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import api from "@/lib/api";
+import { getApiErrorMessage } from "@/lib/api-error";
 
 export default function VerifyEmailForm() {
   const [otp, setOtp] = useState("");
@@ -28,27 +29,21 @@ export default function VerifyEmailForm() {
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/auth/sign-in/email-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const response = await api.post("/api/auth/sign-in/email-otp", {
           email: email || "",
           otp: otp.trim(),
-        }),
       });
 
-      const result = await response.json();
+      const result = response.data;
 
-      if (!response.ok || result.error) {
+      if (result?.error) {
         toast.error(result.error?.message || "Verification failed");
       } else {
         toast.success("Email verified successfully!");
         router.push("/login?verified=true");
       }
     } catch (error) {
-      toast.error("Verification failed. Please try again.");
+      toast.error(getApiErrorMessage(error, "Verification failed. Please try again."));
     } finally {
       setIsLoading(false);
     }

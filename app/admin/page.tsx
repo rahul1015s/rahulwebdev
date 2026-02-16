@@ -2,13 +2,14 @@ import Link from 'next/link'
 import { FileText, BookOpen, Briefcase, Mail, Users, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { LogoutButton } from '@/components/auth/LogoutButton'
+import api from '@/lib/api'
 
 export const metadata = { title: 'Admin — Rahul Verma' }
 
 async function getStats() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ''}/api/admin/stats`, { cache: 'no-store' })
-    const data = await res.json()
+    const res = await api.get('/api/admin/stats')
+    const data = res.data
     if (data?.ok) return data.stats
   } catch (e) {
     console.error('Failed to fetch stats:', e)

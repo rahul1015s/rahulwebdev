@@ -3,6 +3,8 @@
 import React, { useEffect, useState, use } from 'react'
 import { useRouter } from 'next/navigation'
 import NovelEditor from '@/components/admin/NovelEditor'
+import api from '@/lib/api'
+import { getApiErrorMessage } from '@/lib/api-error'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -39,8 +41,8 @@ export default function EditCaseStudyPage({ params }: Props) {
     let mounted = true
     async function load() {
       try {
-        const res = await fetch(`/api/admin/case-studies/${id}`)
-        const data = await res.json()
+        const res = await api.get(`/api/admin/case-studies/${id}`)
+        const data = res.data
         if (!mounted) return
         if (data.ok && data.caseStudy) {
           const s = data.caseStudy
@@ -76,7 +78,7 @@ export default function EditCaseStudyPage({ params }: Props) {
           setMessage('Failed to load')
         }
       } catch (err: any) {
-        setMessage(String(err.message || err))
+        setMessage(getApiErrorMessage(err))
       } finally {
         setLoading(false)
       }
@@ -99,34 +101,30 @@ export default function EditCaseStudyPage({ params }: Props) {
       const solutionsArray = solutions.split(',').map(s=>s.trim()).filter(Boolean)
       const resultsArray = results.split(',').map(s=>s.trim()).filter(Boolean)
 
-      const res = await fetch(`/api/admin/case-studies/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          slug,
-          tagline,
-          description,
-          content,
-          coverImage,
-          gallery: galleryArray,
-          stack: stackArray,
-          liveUrl,
-          githubUrl,
-          featured,
-          category: categoryArray,
-          deliverables: deliverablesArray,
-          timeline,
-          client,
-          team: teamArray,
-          challenges: challengesArray,
-          solutions: solutionsArray,
-          results: resultsArray,
-          published,
-          order
-        })
+      const res = await api.put(`/api/admin/case-studies/${id}`, {
+        name,
+        slug,
+        tagline,
+        description,
+        content,
+        coverImage,
+        gallery: galleryArray,
+        stack: stackArray,
+        liveUrl,
+        githubUrl,
+        featured,
+        category: categoryArray,
+        deliverables: deliverablesArray,
+        timeline,
+        client,
+        team: teamArray,
+        challenges: challengesArray,
+        solutions: solutionsArray,
+        results: resultsArray,
+        published,
+        order
       })
-      const data = await res.json()
+      const data = res.data
       if (data.ok) {
         setMessage('✓ Saved')
         setTimeout(()=>router.push('/admin/case-studies'), 800)
@@ -134,7 +132,7 @@ export default function EditCaseStudyPage({ params }: Props) {
         setMessage(`✗ ${data.error || 'Save failed'}`)
       }
     } catch (err: any) {
-      setMessage(String(err.message || err))
+      setMessage(getApiErrorMessage(err))
     } finally {
       setSaving(false)
     }
