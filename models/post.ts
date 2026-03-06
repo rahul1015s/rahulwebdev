@@ -1,4 +1,6 @@
 import mongoose, { Schema, models, model } from 'mongoose'
+import '@/models/category'
+import '@/models/tag'
 
 export interface IPost {
   title: string
