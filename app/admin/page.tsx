@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import { FileText, BookOpen, Briefcase, Mail, Users, LogOut } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { FileText, Briefcase, Mail, SlidersHorizontal } from 'lucide-react'
 import { LogoutButton } from '@/components/auth/LogoutButton'
 
 export const metadata = { title: 'Admin — Rahul Verma' }
@@ -63,6 +62,16 @@ export default async function AdminPage() {
             <h2 className="font-semibold text-lg">Newsletter</h2>
           </div>
           <p className="text-sm text-muted-foreground">Send newsletters to subscribers.</p>
+        </Link>
+
+        <Link href="/admin/site-settings" className="group rounded-lg border border-border/50 p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-200 bg-card/50 hover:bg-card">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+              <SlidersHorizontal className="w-5 h-5" />
+            </div>
+            <h2 className="font-semibold text-lg">Landing Toggle</h2>
+          </div>
+          <p className="text-sm text-muted-foreground">Choose which landing page variant is shown on the homepage.</p>
         </Link>
       </div>
 

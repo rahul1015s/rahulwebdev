@@ -1,4 +1,3 @@
-
 import ProjectsSection from '@/components/sections/ProjectsSection'
 import HeroSection from '@/components/sections/HeroSection'
 import ProofOfWork from '@/components/sections/ProofOfWork'
@@ -6,7 +5,10 @@ import SkillsSection from '@/components/sections/SkillSection'
 import AboutSection from '@/components/sections/AboutSection'
 import ContactSection from '@/components/sections/ContactSection'
 import BlogSection from '@/components/sections/BlogSection'
+import LandingNebula from '@/components/landing/LandingNebula'
+import LandingGrid from '@/components/landing/LandingGrid'
 import { Metadata } from 'next'
+import { getActiveLandingVariant } from '@/lib/site-settings'
 
 export const metadata: Metadata = {
   title: 'Rahul Verma - Full Stack Developer',
@@ -35,7 +37,9 @@ export const metadata: Metadata = {
   },
 }
 
-const page = () => {
+export default async function Page() {
+  const activeLandingVariant = await getActiveLandingVariant()
+
   const portfolioStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -58,6 +62,34 @@ const page = () => {
     }
   };
 
+  if (activeLandingVariant === 'nebula') {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(portfolioStructuredData),
+          }}
+        />
+        <LandingNebula />
+      </>
+    )
+  }
+
+  if (activeLandingVariant === 'grid') {
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(portfolioStructuredData),
+          }}
+        />
+        <LandingGrid />
+      </>
+    )
+  }
+
   return (
     <>
       <script
@@ -78,5 +110,3 @@ const page = () => {
     </>
   )
 }
-
-export default page
