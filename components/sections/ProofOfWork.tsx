@@ -60,6 +60,13 @@ export default function ProofOfWork() {
     }
   }, [total]);
 
+  const handleTrackScroll = useCallback(() => {
+    if (!trackRef.current) return;
+    const width = trackRef.current.clientWidth || 1;
+    const next = Math.round(trackRef.current.scrollLeft / width);
+    setActive(Math.max(0, Math.min(total - 1, next)));
+  }, [total]);
+
   /* Auto slide - only on client */
   useEffect(() => {
     if (!isMounted) return;
@@ -109,54 +116,51 @@ export default function ProofOfWork() {
           <div
             ref={trackRef}
             className="
-              flex overflow-x-hidden
+              flex overflow-x-auto scroll-smooth no-scrollbar
               snap-x snap-mandatory
             "
+            onScroll={handleTrackScroll}
           >
             {projects.map((project) => (
               <div
                 key={project.title}
-                className="w-full shrink-0 snap-center px-1"
+                className="w-full shrink-0 snap-center px-0.5"
               >
                 <ProjectCard {...project} />
               </div>
             ))}
           </div>
 
-          {/* Arrows */}
-          <button
-            onClick={() => goTo(active - 1)}
-            className="
-              absolute left-2 top-1/2 -translate-y-1/2
-              rounded-full bg-background/80 backdrop-blur
-              p-2 shadow
-            "
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
+          <div className="mt-3 flex items-center justify-center gap-2">
+            <button
+              onClick={() => goTo(active - 1)}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-background"
+              aria-label="Previous project"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
 
-          <button
-            onClick={() => goTo(active + 1)}
-            className="
-              absolute right-2 top-1/2 -translate-y-1/2
-              rounded-full bg-background/80 backdrop-blur
-              p-2 shadow
-            "
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
+            {/* Dots */}
+            <div className="mx-1 flex justify-center gap-2">
+              {projects.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className={`h-1.5 rounded-full transition ${
+                    active === i ? "w-4 bg-primary" : "w-1.5 bg-muted"
+                  }`}
+                  aria-label={`Go to slide ${i + 1}`}
+                />
+              ))}
+            </div>
 
-          {/* Dots */}
-          <div className="mt-4 flex justify-center gap-2">
-            {projects.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                className={`h-1.5 w-1.5 rounded-full transition ${
-                  active === i ? "bg-primary w-4" : "bg-muted"
-                }`}
-              />
-            ))}
+            <button
+              onClick={() => goTo(active + 1)}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border/70 bg-background"
+              aria-label="Next project"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
           </div>
         </div>
 

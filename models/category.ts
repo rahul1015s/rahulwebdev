@@ -16,12 +16,13 @@ const CategorySchema = new Schema<ICategory>(
       required: [true, 'Category name is required'],
       unique: true,
       trim: true,
-      minlength: [3, 'Name must be at least 3 characters'],
+      minlength: [2, 'Name must be at least 2 characters'],
     },
     slug: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
+      sparse: true,
       lowercase: true,
       trim: true,
       index: true, // CRITICAL for URL lookups
@@ -38,16 +39,26 @@ const CategorySchema = new Schema<ICategory>(
   { timestamps: true }
 )
 
-// Auto-generate slug from name
-CategorySchema.pre('save', function (this: ICategory) {
-  if (!this.isModified('name')) return
-  
-  this.slug = this.name
+function slugifyCategoryName(name: string) {
+  return name
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+}
+
+// Ensure slug exists before validation, so required checks never fail.
+CategorySchema.pre('validate', function (this: ICategory) {
+  if (this.slug && this.slug.trim()) return
+  if (!this.name) return
+  this.slug = slugifyCategoryName(this.name)
+})
+
+// Keep slug in sync when name changes.
+CategorySchema.pre('save', function (this: ICategory) {
+  if (!this.isModified('name')) return
+  this.slug = slugifyCategoryName(this.name)
 })
 
 const Category = (models.Category as mongoose.Model<ICategory>) || model<ICategory>('Category', CategorySchema)

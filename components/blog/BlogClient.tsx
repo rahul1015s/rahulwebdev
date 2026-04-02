@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { BlogControls } from "@/components/blog/BlogControls";
 import { BlogListRow } from "@/components/blog/BlogListRow";
+import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { processPosts } from "@/lib/blog-utils";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
@@ -31,6 +32,7 @@ export default function BlogClient({ posts = [] }: Props) {
   const [sort, setSort] = useState<
     "newest" | "oldest" | "title-asc" | "title-desc"
   >("newest");
+  const [view, setView] = useState<"list" | "card">("list");
 
   /* ---------------- TAGS ---------------- */
   const allTags = useMemo(() => {
@@ -68,31 +70,57 @@ export default function BlogClient({ posts = [] }: Props) {
         sort={sort}
         setSort={setSort}
         tags={allTags}
+        view={view}
+        setView={setView}
       />
 
       {/* List */}
       {visiblePosts.length > 0 ? (
-        <div className="space-y-3">
-          {visiblePosts.map((p: any) => (
-            <BlogListRow
-              key={p._id?.toString()}
-              href={`/blog/${p.slug || p._id}`}
-              title={p.title}
-              excerpt={extractExcerpt(p.content)}
-              tags={p.tags || ["Article"]}
-              readTime={p.readTime || "5 min"}
-              date={
-                p.createdAt
-                  ? new Date(p.createdAt).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })
-                  : undefined
-              }
-            />
-          ))}
-        </div>
+        view === "list" ? (
+          <div className="space-y-3">
+            {visiblePosts.map((p: any) => (
+              <BlogListRow
+                key={p._id?.toString()}
+                href={`/blog/${p.slug || p._id}`}
+                title={p.title}
+                excerpt={extractExcerpt(p.content)}
+                tags={p.tags || ["Article"]}
+                readTime={p.readTime || "5 min"}
+                date={
+                  p.createdAt
+                    ? new Date(p.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : undefined
+                }
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+            {visiblePosts.map((p: any) => (
+              <BlogPostCard
+                key={p._id?.toString()}
+                href={`/blog/${p.slug || p._id}`}
+                title={p.title}
+                excerpt={extractExcerpt(p.content)}
+                tags={p.tags || ["Article"]}
+                readTime={p.readTime || "5 min"}
+                date={
+                  p.createdAt
+                    ? new Date(p.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })
+                    : undefined
+                }
+              />
+            ))}
+          </div>
+        )
       ) : (
         <div className="py-20 text-center text-sm text-muted-foreground">
           No posts found.

@@ -20,11 +20,11 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
     case 'heading':
       const level = node.attrs?.level || 1
       const headingClassesMap: Record<number, string> = {
-        1: 'text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mt-6 sm:mt-7 md:mt-8 mb-3 sm:mb-3.5 md:mb-4 first:mt-0 group relative scroll-mt-16 sm:scroll-mt-20',
-        2: 'text-lg sm:text-xl md:text-2xl font-bold tracking-tight mt-4 sm:mt-5 md:mt-6 mb-2.5 sm:mb-3 group relative scroll-mt-16 sm:scroll-mt-20',
-        3: 'text-base sm:text-lg md:text-xl font-semibold tracking-tight mt-3 sm:mt-4 md:mt-5 mb-2 sm:mb-2.5 group relative scroll-mt-16 sm:scroll-mt-20',
+        1: 'mt-6 mb-2.5 first:mt-0 text-xl sm:text-2xl font-semibold tracking-tight group relative scroll-mt-16 sm:scroll-mt-20',
+        2: 'mt-5 mb-2 text-lg sm:text-xl font-semibold tracking-tight group relative scroll-mt-16 sm:scroll-mt-20',
+        3: 'mt-4 mb-2 text-base sm:text-lg font-semibold tracking-tight group relative scroll-mt-16 sm:scroll-mt-20',
       }
-      const headingClasses = headingClassesMap[level as keyof typeof headingClassesMap] || 'text-lg sm:text-xl font-semibold tracking-tight mt-4 sm:mt-6 mb-2 sm:mb-3 group relative'
+      const headingClasses = headingClassesMap[level as keyof typeof headingClassesMap] || 'mt-4 mb-2 text-base sm:text-lg font-semibold tracking-tight group relative'
       
       const renderHeading = (tag: string) => {
         const HeadingMap: Record<string, any> = {
@@ -39,69 +39,47 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
 
     case 'paragraph':
       return (
-        <motion.p 
+        <p
           key={key}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.02 }}
-          className="text-sm sm:text-base md:text-base leading-6 sm:leading-6.5 md:leading-7 text-foreground/90 my-2 sm:my-2.5 md:my-3 first:mt-0 hover:text-foreground transition-colors duration-200"
+          className="my-2 text-[15px] leading-7 text-foreground/90 first:mt-0"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
-        </motion.p>
+        </p>
       )
 
     case 'bulletList':
       return (
-        <motion.ul 
+        <ul
           key={key}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.03 }}
-          className="list-disc list-outside space-y-1 sm:space-y-1.5 my-2.5 sm:my-3 md:my-3.5 ml-4 sm:ml-5 md:ml-6"
+          className="my-2.5 ml-5 list-outside list-disc space-y-1"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
-        </motion.ul>
+        </ul>
       )
 
     case 'orderedList':
       return (
-        <motion.ol 
+        <ol
           key={key}
-          initial={{ opacity: 0, x: -10 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: index * 0.03 }}
-          className="list-decimal list-outside space-y-1 sm:space-y-1.5 my-2.5 sm:my-3 md:my-3.5 ml-4 sm:ml-5 md:ml-6"
+          className="my-2.5 ml-5 list-outside list-decimal space-y-1"
           start={node.attrs?.start || 1}
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
-        </motion.ol>
+        </ol>
       )
 
     case 'listItem':
       return (
-        <motion.li 
+        <li
           key={key}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: index * 0.04 }}
-          className="text-sm sm:text-base leading-6 sm:leading-6.5 text-foreground/90 mb-0.5 sm:mb-1 pl-1 hover:text-foreground transition-colors duration-200"
+          className="mb-0.5 pl-0.5 text-[15px] leading-7 text-foreground/90"
         >
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
-        </motion.li>
+        </li>
       )
 
     case 'horizontalRule':
-      return (
-        <motion.div 
-          key={key}
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="my-5 sm:my-6"
-        >
-          <div className="h-px w-full bg-linear-to-r from-transparent via-emerald-500/30 to-transparent" />
-        </motion.div>
-      )
+      return <div key={key} className="my-5 h-px w-full bg-border" />
 
     case 'text':
       let text: React.ReactNode = node.text || ''
@@ -110,7 +88,7 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
         for (let i = node.marks.length - 1; i >= 0; i--) {
           const mark = node.marks[i]
           if (mark.type === 'bold') {
-            text = <strong className="font-semibold text-foreground bg-emerald-50 dark:bg-emerald-900/20 px-0.5 sm:px-1 rounded hover:bg-emerald-100 dark:hover:bg-emerald-900/30 transition-colors duration-200">{text}</strong>
+            text = <strong className="font-semibold text-foreground">{text}</strong>
           } else if (mark.type === 'italic') {
             text = <em className="italic text-foreground/95">{text}</em>
           } else if (mark.type === 'code') {
@@ -133,18 +111,12 @@ function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0):
 
     case 'blockquote':
       return (
-        <motion.blockquote 
+        <blockquote
           key={key}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.4 }}
-          className="border-l-3 sm:border-l-4 border-emerald-500/50 pl-4 sm:pl-6 md:pl-8 py-2 sm:py-3 italic my-3.5 sm:my-4 md:my-5 text-foreground/80 bg-linear-to-r from-emerald-50/50 to-transparent dark:from-emerald-900/10 rounded-r-lg relative group hover:border-emerald-500/70 transition-colors duration-300"
+          className="my-4 border-l-2 border-emerald-500/60 pl-4 italic text-foreground/80"
         >
-          <div className="absolute -left-1.5 sm:-left-2 top-2 sm:top-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            ❝
-          </div>
           {node.content?.map((child: any, i: number) => renderProsemirrorNode(child, i, depth + 1))}
-        </motion.blockquote>
+        </blockquote>
       )
 
     case 'table':
@@ -211,7 +183,7 @@ function InlineCode({ text }: { text: string }) {
 
   return (
     <motion.code 
-      className="relative bg-gray-900 text-gray-100 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-xs sm:text-sm font-mono group hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
+      className="relative cursor-pointer rounded bg-slate-100 px-1.5 py-0.5 text-xs font-mono text-slate-900 transition-colors duration-200 group hover:bg-slate-200 dark:bg-slate-800/70 dark:text-slate-100 dark:hover:bg-slate-700"
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={handleCopy}
@@ -289,10 +261,10 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="relative my-3 sm:my-4 md:my-5 rounded-lg sm:rounded-xl overflow-hidden border border-gray-800 shadow-lg md:shadow-xl group bg-gray-950"
+      className="group relative my-3 overflow-hidden rounded-lg border border-slate-300 shadow-sm dark:border-slate-700 dark:shadow-lg sm:my-4 md:my-5 sm:rounded-xl bg-slate-100 dark:bg-slate-800/60"
     >
       {/* Code header - RESPONSIVE */}
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-gray-900 px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-300 bg-slate-200 px-3 py-2 dark:border-slate-700 dark:bg-slate-800 sm:px-4 sm:py-3">
         <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
           <div className="flex gap-1 shrink-0">
             <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
@@ -301,7 +273,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           </div>
           
           {language && (
-            <span className="ml-2 text-xs sm:text-sm font-mono text-gray-400 truncate max-w-30` sm:max-w-50 md:max-w-none">
+            <span className="ml-2 truncate font-mono text-xs text-slate-500 dark:text-slate-400 sm:text-sm max-w-30` sm:max-w-50 md:max-w-none">
               {language}
             </span>
           )}
@@ -318,13 +290,13 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           {shouldExpand && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="p-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors duration-200 group/expand flex items-center justify-center"
+              className="group/expand flex items-center justify-center rounded-lg bg-slate-300 p-1.5 transition-colors duration-200 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600"
               aria-label={expanded ? "Collapse code" : "Expand code"}
             >
               {expanded ? (
-                <Minimize2 size={12} className="sm:size-4 text-gray-400 group-hover/expand:text-gray-300" />
+                <Minimize2 size={12} className="text-slate-600 dark:text-slate-300 sm:size-4" />
               ) : (
-                <Maximize2 size={12} className="sm:size-4 text-gray-400 group-hover/expand:text-gray-300" />
+                <Maximize2 size={12} className="text-slate-600 dark:text-slate-300 sm:size-4" />
               )}
             </button>
           )}
@@ -332,7 +304,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           {/* Copy button */}
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-1.5 rounded-lg bg-emerald-900/30 hover:bg-emerald-800/50 text-emerald-400 hover:text-emerald-300 transition-all duration-200 text-xs sm:text-sm"
+            className="flex items-center gap-1.5 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-xs text-emerald-700 transition-all duration-200 hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-800/50 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
             aria-label={copied ? "Code copied" : "Copy code"}
           >
             {copied ? (
@@ -355,11 +327,11 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
         relative overflow-auto
         ${shouldExpand && !expanded ? 'max-h-64 sm:max-h-80 md:max-h-96' : ''}
         ${shouldExpand ? 'transition-all duration-300 ease-out' : ''}
-        scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900
+        scrollbar-thin scrollbar-thumb-slate-400 dark:scrollbar-thumb-slate-600 scrollbar-track-slate-200 dark:scrollbar-track-slate-800
       `}>
         {/* Horizontal scroll indicator */}
         {showScrollHint && (
-          <div className="sticky top-0 left-0 z-10 w-full h-1 bg-linear-to-r from-transparent via-gray-700/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+          <div className="pointer-events-none sticky left-0 top-0 z-10 h-1 w-full bg-linear-to-r from-transparent via-slate-400/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:via-slate-600/60" />
         )}
         
         <div className="relative">
@@ -372,11 +344,11 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
               py-3 sm:py-4
               pr-3 sm:pr-4
               text-right
-              text-gray-500
+              text-slate-500 dark:text-slate-400
               font-mono
               text-xs sm:text-sm
-              border-r border-gray-800
-              bg-gray-950
+              border-r border-slate-300 dark:border-slate-700
+              bg-slate-100 dark:bg-slate-800/60
               z-10
             ">
               {Array.from({ length: codeLines }, (_, i) => i + 1).map(line => (
@@ -404,7 +376,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
               <code className="
                 font-mono
                 text-xs sm:text-sm md:text-base
-                text-gray-100
+                text-slate-900 dark:text-slate-100
                 leading-5 sm:leading-6 md:leading-7
                 whitespace-pre
                 block
@@ -422,8 +394,8 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
             sm:hidden
             absolute bottom-2 right-2
             px-2 py-1
-            bg-gray-900/90 backdrop-blur-sm
-            text-gray-400 text-xs
+            bg-slate-200/95 dark:bg-slate-800/90 backdrop-blur-sm
+            text-slate-600 dark:text-slate-300 text-xs
             rounded-full
             flex items-center gap-1
             animate-pulse
@@ -440,13 +412,13 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           hidden sm:flex
           absolute bottom-3 right-3
           px-2 py-1
-          bg-gray-900/80 backdrop-blur-sm
-          text-gray-400 text-xs
+            bg-slate-200/85 dark:bg-slate-800/80 backdrop-blur-sm
+            text-slate-600 dark:text-slate-300 text-xs
           rounded
           items-center gap-1
         ">
           <span>{codeLines} lines</span>
-          {!expanded && <span className="text-gray-500">•</span>}
+          {!expanded && <span className="text-slate-500 dark:text-slate-400">•</span>}
           {!expanded && <span className="text-emerald-400">+</span>}
         </div>
       )}
@@ -457,7 +429,7 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
           sm:hidden
           absolute inset-x-0 bottom-0
           h-16
-          bg-linear-to-t from-gray-950 via-gray-950/90 to-transparent
+          bg-linear-to-t from-slate-100 via-slate-100/90 to-transparent dark:from-slate-800/60 dark:via-slate-800/50
           flex items-end justify-center
           pb-3
           pointer-events-none
@@ -468,13 +440,13 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
               pointer-events-auto
               text-xs
               text-emerald-400
-              bg-gray-900/90 backdrop-blur-sm
+              bg-slate-200/95 dark:bg-slate-800/90 backdrop-blur-sm
               px-4 py-2
               rounded-full
               flex items-center gap-2
-              hover:bg-gray-800/90
+              hover:bg-slate-300/90 dark:hover:bg-slate-700/90
               transition-colors duration-200
-              border border-gray-800
+              border border-slate-300 dark:border-slate-700
               shadow-lg
             "
           >

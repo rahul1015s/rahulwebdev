@@ -340,93 +340,71 @@ export default async function PostPage({ params }: PostPageProps) {
           __html: JSON.stringify(articleStructuredData),
         }}
       />
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
-      {/* Back Button with animation */}
-      <div className="mb-6 sm:mb-7">
+      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+      <div className="mb-4 sm:mb-5">
         <Link
           href="/blog"
-          className="group inline-flex items-center gap-2 text-sm font-medium text-emerald-700 hover:text-emerald-900 transition-all duration-300 pl-1"
+          className="group inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-900 transition-colors"
         >
-          <span className="group-hover:-translate-x-1 transition-transform duration-300">
-            <ArrowLeft size={18} />
+          <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
+            <ArrowLeft size={16} />
           </span>
           Back to blog
-          <span className="h-px w-0 group-hover:w-16 bg-emerald-600 transition-all duration-300 ml-2" />
         </Link>
       </div>
 
-      {/* Header */}
-      <header className="mb-8 sm:mb-10 lg:mb-12">
-        {/* Title with gradient text effect */}
-        <div className="relative mb-4 sm:mb-5">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight tracking-tight text-foreground">
+      <header className="mb-7 sm:mb-8">
+        <div className="mb-3 sm:mb-4">
+          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl md:text-4xl">
             {post.title}
           </h1>
-          {/* Gradient overlay for text effect */}
-          <div className="absolute -top-4 -left-4 w-32 h-32 bg-emerald-500/10 rounded-full blur-3xl -z-10" />
         </div>
 
-        {/* Meta information */}
-        <div className="flex flex-wrap items-center gap-3 mb-6 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full group hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-200">
-            <Calendar size={14} className="group-hover:text-emerald-600 transition-colors duration-200" />
-            <time className="group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-200">
+        <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
+            <Calendar size={13} />
+            <time>
               {formattedDate}
             </time>
           </div>
 
           {post.readTime && (
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full group hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-200">
-              <Clock size={14} className="group-hover:text-emerald-600 transition-colors duration-200" />
-              <span className="group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-200">
+            <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
+              <Clock size={13} />
+              <span>
                 {post.readTime}
               </span>
             </div>
           )}
 
-          <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1.5 rounded-full group hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors duration-200">
-            <Eye size={14} className="group-hover:text-emerald-600 transition-colors duration-200" />
-            <span className="group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors duration-200">
+          <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
+            <Eye size={13} />
+            <span>
               Read
             </span>
           </div>
         </div>
 
-        {/* Cover Image with hover effect */}
-        <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72 rounded-xl sm:rounded-2xl overflow-hidden shadow-lg group mb-6">
-          {/* Loading gradient */}
-          <div className="absolute inset-0 bg-linear-to-r from-emerald-100/20 to-cyan-100/20 animate-pulse" />
-          
+        <div className="relative mb-5 h-48 w-full overflow-hidden rounded-xl border border-border/60 bg-muted sm:h-56 md:h-64">
           <Image
             src={coverImage}
             alt={post.title}
             fill
             priority
             unoptimized={coverImage.startsWith("http")}
-            className="object-contain group-hover:scale-105 transition-transform duration-700"
+            className="object-contain"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
           />
-          
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
-          {/* Image corner accent */}
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="p-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg">
-              <span className="text-xs font-medium text-emerald-700">📸</span>
-            </div>
-          </div>
         </div>
 
-        {/* Tags */}
         {normalizedTags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="mb-2 flex flex-wrap gap-1.5">
             {normalizedTags.slice(0, 5).map((tag: string, index: number) => (
               <span
                 key={index}
-                className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 text-xs font-medium rounded-full hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors duration-200 group"
+                className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
               >
-                <Tag size={12} className="group-hover:rotate-12 transition-transform duration-200" />
+                <Tag size={11} />
                 {tag}
               </span>
             ))}
@@ -434,28 +412,27 @@ export default async function PostPage({ params }: PostPageProps) {
         )}
       </header>
 
-      {/* Content with enhanced styling */}
-      <article className="prose prose-gray dark:prose-invert max-w-none mb-10 sm:mb-12 lg:mb-16 
+      <article className="prose prose-gray dark:prose-invert max-w-none mb-9 sm:mb-10 
         prose-headings:scroll-mt-20
-        prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-5 prose-h2:mb-2.5
-        prose-h3:text-base sm:prose-h3:text-lg prose-h3:font-semibold prose-h3:mt-4 prose-h3:mb-2
-        prose-p:text-base prose-p:leading-relaxed prose-p:my-2.5
+        prose-h2:text-xl prose-h2:font-semibold prose-h2:mt-5 prose-h2:mb-2
+        prose-h3:text-lg prose-h3:font-semibold prose-h3:mt-4 prose-h3:mb-2
+        prose-p:text-sm prose-p:leading-7 prose-p:my-2
         prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:text-emerald-700 hover:prose-a:underline
-        prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-        prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:shadow-lg
-        prose-img:rounded-xl prose-img:shadow-lg prose-img:mx-auto
-        prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:pl-4 prose-blockquote:italic
-        prose-ul:my-2.5 prose-li:my-0.5">
+        prose-code:bg-slate-100 dark:prose-code:bg-slate-800/70 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+        prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800/60 prose-pre:text-slate-900 dark:prose-pre:text-slate-100 prose-pre:rounded-lg prose-pre:border prose-pre:border-border/60
+        prose-img:rounded-lg prose-img:mx-auto
+        prose-blockquote:border-l-2 prose-blockquote:border-emerald-500 prose-blockquote:pl-3 prose-blockquote:italic
+        prose-ul:my-2 prose-li:my-0.5">
         <PostContent content={post.content} />
       </article>
 
       {/* Action buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-4 py-5 border-y border-gray-200 dark:border-gray-800 mb-8">
+      <div className="mb-7 flex flex-wrap items-center justify-between gap-3 border-y border-gray-200 py-4 dark:border-gray-800">
         <Link
           href="/blog"
-          className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium shadow-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-300"
+          className="group inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
         >
-          <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform duration-300" />
+          <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
           Back to Articles
         </Link>
 
@@ -464,14 +441,14 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Author info */}
-      <div className="bg-linear-to-r from-emerald-50 to-cyan-50 dark:from-emerald-900/20 dark:to-cyan-900/20 rounded-xl sm:rounded-2xl p-6 sm:p-8 mb-8 border border-emerald-200/50 dark:border-emerald-800/50">
+      <div className="mb-7 rounded-xl border border-emerald-200/50 bg-linear-to-r from-emerald-50 to-cyan-50 p-5 dark:border-emerald-800/50 dark:from-emerald-900/20 dark:to-cyan-900/20 sm:p-6">
         <div className="flex items-start sm:items-center gap-4 sm:gap-6 flex-col sm:flex-row">
-          <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm">
-            <User className="w-8 h-8 text-emerald-600" />
+          <div className="rounded-full bg-white p-2.5 shadow-sm dark:bg-gray-800">
+            <User className="h-6 w-6 text-emerald-600" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg sm:text-xl font-semibold mb-2">Rahul Verma</h3>
-            <p className="text-muted-foreground text-sm sm:text-base mb-3">
+            <h3 className="mb-1 text-lg font-semibold">Rahul Verma</h3>
+            <p className="mb-2 text-sm text-muted-foreground">
               Full Stack Developer passionate about building modern web applications. 
               Sharing insights on React, Next.js, and web development.
             </p>
@@ -487,17 +464,17 @@ export default async function PostPage({ params }: PostPageProps) {
       </div>
 
       {/* Related posts suggestion */}
-      <div className="text-center py-6">
-        <h3 className="text-lg sm:text-xl font-semibold mb-3">Enjoyed this article?</h3>
-        <p className="text-muted-foreground mb-5 max-w-md mx-auto">
+      <div className="py-4 text-center">
+        <h3 className="mb-2 text-lg font-semibold">Enjoyed this article?</h3>
+        <p className="mx-auto mb-4 max-w-md text-sm text-muted-foreground">
           Check out more articles on similar topics in the blog section.
         </p>
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-linear-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-medium rounded-lg shadow-lg hover:shadow-xl hover:shadow-emerald-500/25 transition-all duration-300 group"
+          className="group inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
         >
           Explore More Articles
-          <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+          <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
         </Link>
       </div>
     </div>

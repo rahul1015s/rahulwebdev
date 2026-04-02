@@ -20,8 +20,9 @@ const TagSchema = new Schema<ITag>(
     },
     slug: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
+      sparse: true,
       lowercase: true,
       trim: true,
       index: true, // CRITICAL for URL lookups
@@ -34,16 +35,25 @@ const TagSchema = new Schema<ITag>(
   { timestamps: true }
 )
 
-// Auto-generate slug from name
-TagSchema.pre('save', function (this: ITag) {
-  if (!this.isModified('name')) return
-  
-  this.slug = this.name
+function slugifyTagName(name: string) {
+  return name
     .toLowerCase()
     .trim()
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+}
+
+TagSchema.pre('validate', function (this: ITag) {
+  if (this.slug && this.slug.trim()) return
+  if (!this.name) return
+  this.slug = slugifyTagName(this.name)
+})
+
+// Auto-generate slug from name
+TagSchema.pre('save', function (this: ITag) {
+  if (!this.isModified('name')) return
+  this.slug = slugifyTagName(this.name)
 })
 
 // Prevent duplicates

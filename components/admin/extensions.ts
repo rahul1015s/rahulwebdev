@@ -22,17 +22,17 @@ export const defaultExtensions = [
   StarterKit.configure({
     bulletList: {
       HTMLAttributes: {
-        class: "list-disc list-outside leading-3 -mt-2",
+        class: "list-disc list-outside leading-6 my-2",
       },
     },
     orderedList: {
       HTMLAttributes: {
-        class: "list-decimal list-outside leading-3 -mt-2",
+        class: "list-decimal list-outside leading-6 my-2",
       },
     },
     listItem: {
       HTMLAttributes: {
-        class: "leading-normal -mb-2",
+        class: "leading-6 my-0.5",
       },
     },
     blockquote: {
@@ -48,12 +48,12 @@ export const defaultExtensions = [
     },
     codeBlock: {
       HTMLAttributes: {
-        class: "rounded-sm bg-muted border p-5 font-mono font-medium",
+        class: "rounded-md border border-border/60 bg-slate-100 dark:bg-slate-800/60 p-3 font-mono text-sm",
       },
     },
     code: {
       HTMLAttributes: {
-        class: "rounded-md bg-muted px-1.5 py-1 font-mono font-medium",
+        class: "rounded bg-slate-100 dark:bg-slate-800/70 px-1 py-0.5 font-mono",
         spellcheck: "false",
       },
     },

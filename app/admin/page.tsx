@@ -26,66 +26,66 @@ export default async function AdminPage() {
   const stats = await getStats()
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12 mt-14">
-      <div className="mb-8 flex justify-between items-center">
+    <div className="mx-auto mt-14 max-w-6xl px-4 py-8">
+      <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Manage content and site settings.</p>
+          <h1 className="mb-1 text-2xl font-semibold">Admin Dashboard</h1>
+          <p className="text-sm text-muted-foreground">Manage content and site settings.</p>
         </div>
         <LogoutButton />
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Link href="/admin/blog" className="group rounded-lg border border-border/50 p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-200 bg-card/50 hover:bg-card">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-              <FileText className="w-5 h-5" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Link href="/admin/blog" className="group rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card hover:shadow-md">
+          <div className="mb-2.5 flex items-center gap-2.5">
+            <div className="rounded-md bg-primary/10 p-2 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <FileText className="h-4 w-4" />
             </div>
-            <h2 className="font-semibold text-lg">Blog Posts</h2>
+            <h2 className="text-base font-semibold">Blog Posts</h2>
           </div>
           <p className="text-sm text-muted-foreground">Create, edit and manage blog posts.</p>
         </Link>
 
-        <Link href="/admin/case-studies" className="group rounded-lg border border-border/50 p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-200 bg-card/50 hover:bg-card">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-              <Briefcase className="w-5 h-5" />
+        <Link href="/admin/case-studies" className="group rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card hover:shadow-md">
+          <div className="mb-2.5 flex items-center gap-2.5">
+            <div className="rounded-md bg-primary/10 p-2 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <Briefcase className="h-4 w-4" />
             </div>
-            <h2 className="font-semibold text-lg">Case Studies</h2>
+            <h2 className="text-base font-semibold">Case Studies</h2>
           </div>
           <p className="text-sm text-muted-foreground">Manage project case studies and portfolios.</p>
         </Link>
 
-        <Link href="/admin/newsletter" className="group rounded-lg border border-border/50 p-6 hover:shadow-lg hover:border-primary/20 transition-all duration-200 bg-card/50 hover:bg-card">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 rounded-md bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-              <Mail className="w-5 h-5" />
+        <Link href="/admin/newsletter" className="group rounded-lg border border-border/50 bg-card/50 p-4 transition-all duration-200 hover:border-primary/20 hover:bg-card hover:shadow-md">
+          <div className="mb-2.5 flex items-center gap-2.5">
+            <div className="rounded-md bg-primary/10 p-2 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+              <Mail className="h-4 w-4" />
             </div>
-            <h2 className="font-semibold text-lg">Newsletter</h2>
+            <h2 className="text-base font-semibold">Newsletter</h2>
           </div>
           <p className="text-sm text-muted-foreground">Send newsletters to subscribers.</p>
         </Link>
       </div>
 
       {/* Quick Stats Section */}
-      <div className="mt-12">
-        <h2 className="text-xl font-semibold mb-6">Quick Overview</h2>
+      <div className="mt-8">
+        <h2 className="mb-4 text-lg font-semibold">Quick Overview</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.posts.published}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.posts.published}</div>
             <div className="text-sm text-muted-foreground">Published Posts</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.caseStudies.total}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.caseStudies.total}</div>
             <div className="text-sm text-muted-foreground">Case Studies</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.subscribers.total}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.subscribers.total}</div>
             <div className="text-sm text-muted-foreground">Total Subscribers</div>
             <div className="text-xs text-muted-foreground mt-1">{stats.subscribers.active} Active subscribers</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.newsletters.sent}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.newsletters.sent}</div>
             <div className="text-sm text-muted-foreground">Newsletters Sent</div>
             <div className="text-xs text-muted-foreground mt-1">{stats.newsletters.sent} Total campaigns</div>
           </div>
@@ -93,21 +93,21 @@ export default async function AdminPage() {
 
         {/* Additional Stats Row */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mt-4">
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.posts.drafts}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.posts.drafts}</div>
             <div className="text-sm text-muted-foreground">Draft Posts</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.caseStudies.drafts}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.caseStudies.drafts}</div>
             <div className="text-sm text-muted-foreground">Draft Case Studies</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.newsletters.openRate}%</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.newsletters.openRate}%</div>
             <div className="text-sm text-muted-foreground">Open Rate</div>
             <div className="text-xs text-muted-foreground mt-1">{stats.newsletters.openRate}% Average open rate</div>
           </div>
-          <div className="rounded-lg border border-border/50 p-4 bg-card/50">
-            <div className="text-2xl font-bold text-primary">{stats.subscribers.total - stats.subscribers.active}</div>
+          <div className="rounded-lg border border-border/50 bg-card/50 p-4">
+            <div className="text-xl font-semibold text-primary">{stats.subscribers.total - stats.subscribers.active}</div>
             <div className="text-sm text-muted-foreground">Inactive Subscribers</div>
           </div>
         </div>

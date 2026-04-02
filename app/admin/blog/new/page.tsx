@@ -40,6 +40,16 @@ export default function NewPostPage() {
   const [showNewCategoryModal, setShowNewCategoryModal] = useState(false)
   const [newCategoryName, setNewCategoryName] = useState('')
   const [creatingCategory, setCreatingCategory] = useState(false)
+  const [categoryMessage, setCategoryMessage] = useState<string | null>(null)
+  const [slugTouched, setSlugTouched] = useState(false)
+
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
 
   // Fetch categories and tags on mount
   useEffect(() => {
@@ -55,6 +65,10 @@ export default function NewPostPage() {
       setLoadingCategories(false)
     })
   }, [])
+
+  useEffect(() => {
+    if (!slugTouched) setSlug(slugify(title))
+  }, [title, slugTouched])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -76,6 +90,7 @@ export default function NewPostPage() {
         // Clear form and reset editor
         setTitle('')
         setSlug('')
+        setSlugTouched(false)
         setContent('')
         setImage('')
         setPublished(false)
@@ -121,48 +136,66 @@ export default function NewPostPage() {
     if (!newCategoryName.trim()) return
 
     setCreatingCategory(true)
+    setCategoryMessage(null)
     try {
       const res = await api.post('/api/categories', { name: newCategoryName })
       const data = res.data
       if (data._id) {
-        setCategories([...categories, data])
+        setCategories((prev) =>
+          [...prev, data].sort((a, b) => a.name.localeCompare(b.name))
+        )
         setSelectedCategory(data._id)
         setNewCategoryName('')
         setShowNewCategoryModal(false)
+        setCategoryMessage(`Category "${data.name}" created`)
+        setTimeout(() => setCategoryMessage(null), 2500)
       }
-    } catch (err) {
-      console.error('Failed to create category:', getApiErrorMessage(err))
+    } catch (err: any) {
+      const message = getApiErrorMessage(err)
+      const existingCategory = err?.response?.data?.category
+      if (existingCategory?._id) {
+        setSelectedCategory(existingCategory._id)
+        setShowNewCategoryModal(false)
+        setCategoryMessage(`Category "${existingCategory.name}" already exists and is selected`)
+        setTimeout(() => setCategoryMessage(null), 2500)
+      } else {
+        setCategoryMessage(message)
+      }
+      console.error('Failed to create category:', message)
     } finally {
       setCreatingCategory(false)
     }
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-16">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight mb-2">Create New Post</h1>
-        <p className="text-muted-foreground">Write and publish your next blog post</p>
+    <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight mb-1">Create New Post</h1>
+        <p className="text-sm text-muted-foreground">Write and publish your next blog post</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold mb-2">Title *</label>
+          <label className="mb-1.5 block text-sm font-medium">Title *</label>
           <input 
             required
             value={title} 
             onChange={(e) => setTitle(e.target.value)} 
             placeholder="Enter post title..."
-            className="w-full rounded-lg border border-border/50 px-4 py-2.5 bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all" 
+            className="h-10 w-full rounded-md border border-border/60 px-3 text-sm bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all" 
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2">Slug (optional)</label>
+          <label className="mb-1.5 block text-sm font-medium">Slug (optional)</label>
           <input 
             value={slug} 
-            onChange={(e) => setSlug(e.target.value)} 
+            onChange={(e) => {
+              setSlugTouched(true)
+              setSlug(slugify(e.target.value))
+            }}
             placeholder="leave-blank-for-auto-slug"
-            className="w-full rounded-lg border border-border/50 px-4 py-2.5 bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all text-xs text-muted-foreground" 
+            className="h-10 w-full rounded-md border border-border/60 px-3 text-sm text-muted-foreground bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all" 
           />
           <p className="text-xs text-muted-foreground mt-1">Leave blank and slug will be auto-generated from title</p>
         </div>
@@ -173,26 +206,25 @@ export default function NewPostPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2">Image URL (optional)</label>
+          <label className="mb-1.5 block text-sm font-medium">Image URL (optional)</label>
           <input
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="https://... or drive://fileId"
-            className="w-full rounded-lg border border-border/50 px-4 py-2.5 text-sm"
+            className="h-10 w-full rounded-md border border-border/60 px-3 text-sm"
           />
           <p className="text-xs text-muted-foreground mt-1">Optional cover image or featured image URL</p>
         </div>
 
         {/* Category Selector */}
         <div>
-          <label className="block text-sm font-semibold mb-2">Category *</label>
+          <label className="mb-1.5 block text-sm font-medium">Category (optional)</label>
           <div className="flex gap-2">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               disabled={loadingCategories}
-              className="flex-1 rounded-lg border border-border/50 px-4 py-2.5 bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
-              required
+              className="h-10 flex-1 rounded-md border border-border/60 px-3 bg-background text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
             >
               <option value="">Select a category...</option>
               {categories.map(cat => (
@@ -204,36 +236,38 @@ export default function NewPostPage() {
             <button
               type="button"
               onClick={() => setShowNewCategoryModal(true)}
-              className="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition-colors"
+              className="h-10 px-3 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium transition-colors"
             >
               + New
             </button>
           </div>
           {loadingCategories && <p className="text-xs text-muted-foreground mt-1">Loading categories...</p>}
+          {categoryMessage && <p className="mt-1 text-xs text-emerald-700 dark:text-emerald-400">{categoryMessage}</p>}
         </div>
 
         {/* Create Category Modal */}
         {showNewCategoryModal && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowNewCategoryModal(false)}>
-            <div className="bg-background rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
-              <h3 className="text-lg font-semibold mb-4">Create New Category</h3>
+            <div className="bg-background rounded-lg p-5 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+              <h3 className="text-base font-semibold mb-3">Create New Category</h3>
               <input
                 autoFocus
                 type="text"
                 value={newCategoryName}
                 onChange={(e) => setNewCategoryName(e.target.value)}
                 placeholder="Category name..."
-                className="w-full rounded-lg border border-border/50 px-4 py-2.5 bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all mb-4"
+                className="h-10 w-full rounded-md border border-border/60 px-3 bg-background text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all mb-3"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleCreateCategory()
                   if (e.key === 'Escape') setShowNewCategoryModal(false)
                 }}
               />
+              {categoryMessage && <p className="mb-2 text-xs text-red-600">{categoryMessage}</p>}
               <div className="flex gap-2 justify-end">
                 <button
                   type="button"
                   onClick={() => setShowNewCategoryModal(false)}
-                  className="px-4 py-2 rounded-lg border border-border/50 hover:bg-muted transition-colors text-sm"
+                  className="h-9 px-3 rounded-md border border-border/50 hover:bg-muted transition-colors text-sm"
                 >
                   Cancel
                 </button>
@@ -241,7 +275,7 @@ export default function NewPostPage() {
                   type="button"
                   onClick={handleCreateCategory}
                   disabled={!newCategoryName.trim() || creatingCategory}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium transition-colors"
+                  className="h-9 px-3 rounded-md bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium transition-colors"
                 >
                   {creatingCategory ? 'Creating...' : 'Create'}
                 </button>
@@ -252,7 +286,7 @@ export default function NewPostPage() {
 
         {/* Tags Selector */}
         <div>
-          <label className="block text-sm font-semibold mb-2">Tags</label>
+          <label className="mb-1.5 block text-sm font-medium">Tags</label>
           <div className="relative">
             <input
               type="text"
@@ -263,12 +297,12 @@ export default function NewPostPage() {
               }}
               onFocus={() => setShowTagDropdown(true)}
               placeholder="Type to search and add tags..."
-              className="w-full rounded-lg border border-border/50 px-4 py-2.5 bg-background focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
+              className="h-10 w-full rounded-md border border-border/60 px-3 bg-background text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 transition-all"
             />
             
             {/* Dropdown suggestions */}
             {showTagDropdown && filteredTags.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border/50 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-border/50 rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
                 {filteredTags.map(tag => (
                   <div
                     key={tag._id}
@@ -277,7 +311,7 @@ export default function NewPostPage() {
                       handleAddTag(tag)
                       setShowTagDropdown(false)
                     }}
-                    className="px-4 py-2 hover:bg-muted transition-colors text-sm cursor-pointer"
+                    className="px-3 py-2 hover:bg-muted transition-colors text-sm cursor-pointer"
                   >
                     {tag.name}
                   </div>
@@ -292,7 +326,7 @@ export default function NewPostPage() {
               {selectedTags.map(tag => (
                 <div
                   key={tag._id}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-sm"
+                  className="inline-flex items-center gap-2 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 rounded-full text-xs"
                 >
                   {tag.name}
                   <button
@@ -308,7 +342,7 @@ export default function NewPostPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-3 p-4 rounded-lg border border-border/50 bg-muted/30" suppressHydrationWarning>
+        <div className="flex items-center gap-3 p-3 rounded-md border border-border/50 bg-muted/20" suppressHydrationWarning>
           <Checkbox
             id="published"
             checked={published}
@@ -322,11 +356,11 @@ export default function NewPostPage() {
           </span>
         </div>
 
-        <div className="flex items-center gap-4 pt-6">
+        <div className="flex items-center gap-3 pt-3">
           <button 
             disabled={loading || !title || !content} 
             type="submit" 
-            className="px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="h-10 px-5 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
           >
             {loading ? 'Creating...' : 'Create Post'}
           </button>
