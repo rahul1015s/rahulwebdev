@@ -123,7 +123,7 @@ export default function NovelEditor({ value, onChange }: Props) {
   const BubbleItem = EditorBubbleItem
 
   return (
-    <div className="rounded-lg border border-border/50 bg-card/30 backdrop-blur-sm overflow-hidden shadow-sm">
+    <div className="overflow-hidden rounded-md border border-border/60 bg-background shadow-sm">
       <Root>
         <Content
           initialContent={initialContent}
@@ -131,25 +131,30 @@ export default function NovelEditor({ value, onChange }: Props) {
           extensions={defaultExtensions}
           editorProps={{
             attributes: {
-              class: 'prose dark:prose-invert focus:outline-none max-w-full px-4 py-4 min-h-96 text-base leading-relaxed'
+              class:
+                'prose prose-sm dark:prose-invert max-w-none focus:outline-none px-4 py-3 min-h-[300px] text-[15px] leading-7 ' +
+                '[&_p]:my-2 [&_ul]:my-2 [&_ol]:my-2 [&_li]:my-0.5 ' +
+                '[&_pre]:rounded-md [&_pre]:border [&_pre]:border-border/60 [&_pre]:bg-slate-100 [&_pre]:p-3 ' +
+                'dark:[&_pre]:bg-slate-800/60 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1 [&_code]:py-0.5 ' +
+                'dark:[&_code]:bg-slate-800/70'
             }
           }}
         >
-          <Command className="z-50 h-auto max-h-[330px] w-72 overflow-y-auto rounded-lg border border-border/50 bg-background/95 backdrop-blur-sm px-2 py-2 shadow-lg transition-all">
+          <Command className="z-50 h-auto max-h-[300px] w-72 overflow-y-auto rounded-md border border-border/50 bg-background px-1.5 py-1.5 shadow-md transition-all">
             <CommandEmpty className="px-3 py-2 text-sm text-muted-foreground">No results</CommandEmpty>
             <CommandList>
               {suggestionItems.map((item: any) => (
                 <CommandItem
                   value={item.title}
                   onCommand={(val: any) => item.command(val)}
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm hover:bg-accent/50 aria-selected:bg-accent aria-selected:text-accent-foreground cursor-pointer transition-colors"
+                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent/50 aria-selected:bg-accent aria-selected:text-accent-foreground cursor-pointer transition-colors"
                   key={item.title}
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md border border-border/50 bg-muted/50 shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-md border border-border/50 bg-muted/50 shrink-0">
                     {item.icon}
                   </div>
                   <div>
-                    <p className="font-semibold text-sm">{item.title}</p>
+                    <p className="text-sm font-medium">{item.title}</p>
                     <p className="text-xs text-muted-foreground leading-tight">{item.description}</p>
                   </div>
                 </CommandItem>
@@ -157,22 +162,22 @@ export default function NovelEditor({ value, onChange }: Props) {
             </CommandList>
           </Command>
           {Bubble && BubbleItem && (
-            <Bubble className="absolute z-50 -translate-y-2 transform rounded-lg bg-card/95 dark:bg-card/95 backdrop-blur-xl px-4 py-3 shadow-xl border border-border/50 flex items-center gap-1 flex-wrap max-w-sm">
+            <Bubble className="absolute z-50 -translate-y-2 transform rounded-md bg-card px-2 py-1.5 shadow-lg border border-border/60 flex items-center gap-0.5 flex-wrap max-w-sm">
               <div className="flex items-center gap-1">
                 <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleBold().run()} className="p-1 rounded hover:bg-muted/60" title="Bold">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><Bold size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><Bold size={15} /></button>
                 </BubbleItem>
 
                 <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleItalic().run()} className="p-1 rounded hover:bg-muted/60" title="Italic">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><Italic size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><Italic size={15} /></button>
                 </BubbleItem>
 
                 <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleStrike().run()} className="p-1 rounded hover:bg-muted/60" title="Strikethrough">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm">S</button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm">S</button>
                 </BubbleItem>
               </div>
 
-              <div className="h-6 w-px bg-muted/40 mx-1" />
+              <div className="mx-1 h-5 w-px bg-muted/40" />
 
               <div className="flex items-center gap-1">
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().setNode('heading',{level:1}).run()} className="p-1 rounded hover:bg-muted/60" title="Heading 1">
@@ -190,31 +195,31 @@ export default function NovelEditor({ value, onChange }: Props) {
 
               <div className="flex items-center gap-1">
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleBulletList().run()} className="p-1 rounded hover:bg-muted/60" title="Bulleted list">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><ListIcon size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><ListIcon size={15} /></button>
                 </BubbleItem>
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleOrderedList().run()} className="p-1 rounded hover:bg-muted/60" title="Numbered list">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><ListOrderedIcon size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><ListOrderedIcon size={15} /></button>
                 </BubbleItem>
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleBlockquote().run()} className="p-1 rounded hover:bg-muted/60" title="Quote">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><QuoteIcon size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><QuoteIcon size={15} /></button>
                 </BubbleItem>
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleCodeBlock().run()} className="p-1 rounded hover:bg-muted/60" title="Code block">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><CodeIcon size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><CodeIcon size={15} /></button>
                 </BubbleItem>
               </div>
 
-              <div className="h-6 w-px bg-muted/40 mx-1" />
+              <div className="mx-1 h-5 w-px bg-muted/40" />
 
               <div className="flex items-center gap-1">
                 <BubbleItem onSelect={(editor: any)=>{
                     const url = prompt('Enter URL')
                     if(url) editor.chain().focus().setLink({href:url}).run()
                   }} className="p-1 rounded hover:bg-muted/60" title="Insert link">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><LinkIcon size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><LinkIcon size={15} /></button>
                 </BubbleItem>
 
                 <BubbleItem onSelect={(editor: any)=>editor.chain().focus().unsetLink().run()} className="p-1 rounded hover:bg-muted/60" title="Remove link">
-                  <button className="flex h-8 w-8 items-center justify-center rounded text-sm"><X size={16} /></button>
+                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><X size={15} /></button>
                 </BubbleItem>
               </div>
             </Bubble>
@@ -224,4 +229,3 @@ export default function NovelEditor({ value, onChange }: Props) {
     </div>
   )
 }
-

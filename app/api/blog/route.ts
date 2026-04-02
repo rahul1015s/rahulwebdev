@@ -4,8 +4,7 @@ import Post from '@/models/post';
 import '@/models/category';
 import '@/models/tag';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 300;
 
 export async function GET() {
   try {
@@ -13,6 +12,8 @@ export async function GET() {
 
     const posts = await Post.find({ published: true })
       .sort({ createdAt: -1 })
+      .select('title slug content tags readTime createdAt')
+      .populate({ path: 'tags', select: 'name' })
       .lean();
 
     const normalizedPosts = posts.map((post) => ({
@@ -33,9 +34,6 @@ export async function GET() {
 
     return NextResponse.json(normalizedPosts, {
       status: 200,
-      headers: {
-        'Cache-Control': 'no-store, max-age=0',
-      },
     });
   } catch (error) {
     console.error('Error fetching posts:', error);

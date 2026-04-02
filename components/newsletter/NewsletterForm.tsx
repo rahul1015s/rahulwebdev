@@ -188,33 +188,31 @@ export default function NewsletterForm({
      Default (Centered Card)
   --------------------------------------------- */
   return (
-    <div className="relative mx-auto max-w-lg overflow-hidden rounded-xl border bg-card p-5 sm:p-6">
+    <section className="relative mx-auto max-w-3xl overflow-hidden rounded-xl border border-border/70 bg-card p-4 sm:p-5">
       <NewsletterGridSVG />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.08),transparent_55%)]" />
 
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md border bg-muted">
-            <Mail className="h-4 w-4" />
+      <div className="relative z-10 grid gap-4 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+        <div>
+          <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-2.5 py-1 text-xs font-medium">
+            <Mail className="h-3.5 w-3.5" />
+            Newsletter
           </div>
-          <span className="text-sm font-medium">Newsletter</span>
+          <h3 className="text-xl font-semibold leading-tight sm:text-2xl">
+            Weekly engineering notes
+          </h3>
+          <p className="mt-2 max-w-sm text-sm text-muted-foreground">
+            Practical lessons from real projects, shipped once a week. No spam.
+          </p>
         </div>
 
-        <h3 className="text-lg font-semibold mb-1">
-          Engineering notes & updates
-        </h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Occasional writing on web development and things I learn while
-          building.
-        </p>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-3">
+        <form onSubmit={handleSubmit} className="space-y-2.5 rounded-lg border border-border/60 bg-background/60 p-3 sm:p-4">
           <Input
             placeholder="Your name (optional)"
             value={name}
             onChange={(e) => setName(e.target.value)}
             disabled={status === "loading"}
+            className="h-9 text-sm"
           />
           <Input
             type="email"
@@ -223,46 +221,46 @@ export default function NewsletterForm({
             onChange={(e) => setEmail(e.target.value)}
             disabled={status === "loading"}
             required
+            className="h-9 text-sm"
           />
 
-          <Button className="w-full" disabled={status === "loading"}>
+          <Button className="h-9 w-full text-sm" disabled={status === "loading"}>
             {status === "loading" ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
                 Subscribe
-                <Send className="h-4 w-4 ml-2" />
+                <Send className="ml-1.5 h-4 w-4" />
               </>
             )}
           </Button>
+
+          <AnimatePresence>
+            {status === "success" && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-1 flex items-center gap-2 text-xs text-primary"
+              >
+                <Check className="h-3.5 w-3.5" />
+                You’re subscribed.
+              </motion.div>
+            )}
+
+            {status === "error" && (
+              <motion.div
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                className="mt-1 text-xs text-destructive"
+              >
+                {errorMessage}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </form>
-
-        {/* States */}
-        <AnimatePresence>
-          {status === "success" && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-3 flex items-center gap-2 text-sm"
-            >
-              <Check className="h-4 w-4 text-primary" />
-              You’re subscribed.
-            </motion.div>
-          )}
-
-          {status === "error" && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-3 text-sm text-destructive"
-            >
-              {errorMessage}
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }

@@ -19,6 +19,14 @@ export default function EditPostPage({ params }: any) {
   const [published, setPublished] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
 
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+
   useEffect(() => {
     let mounted = true
     ;(async () => {
@@ -70,25 +78,25 @@ export default function EditPostPage({ params }: any) {
   if (loading) return <div className="p-8">Loading…</div>
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight mb-2">Edit Post</h1>
+    <div className="mx-auto max-w-3xl px-4 py-10">
+      <div className="mb-6">
+        <h1 className="mb-1 text-2xl font-semibold tracking-tight">Edit Post</h1>
       </div>
 
-      <form onSubmit={handleSave} className="space-y-6">
+      <form onSubmit={handleSave} className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold mb-2">Title *</label>
-          <input required value={title} onChange={(e) => setTitle(e.target.value)} className="w-full rounded-lg border px-4 py-2.5" />
+          <label className="mb-1.5 block text-sm font-medium">Title *</label>
+          <input required value={title} onChange={(e) => setTitle(e.target.value)} className="h-10 w-full rounded-md border border-border/60 px-3 text-sm" />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2">Slug</label>
-          <input value={slug} onChange={(e) => setSlug(e.target.value)} className="w-full rounded-lg border px-4 py-2.5 text-sm text-muted-foreground" />
+          <label className="mb-1.5 block text-sm font-medium">Slug</label>
+          <input value={slug} onChange={(e) => setSlug(slugify(e.target.value))} className="h-10 w-full rounded-md border border-border/60 px-3 text-sm text-muted-foreground" />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold mb-2">Image URL (optional)</label>
-          <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://... or drive://fileId" className="w-full rounded-lg border px-4 py-2.5 text-sm" />
+          <label className="mb-1.5 block text-sm font-medium">Image URL (optional)</label>
+          <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://... or drive://fileId" className="h-10 w-full rounded-md border border-border/60 px-3 text-sm" />
           <p className="text-xs text-muted-foreground mt-1">Optional cover/featured image URL</p>
         </div>
 
@@ -97,7 +105,7 @@ export default function EditPostPage({ params }: any) {
           <NovelEditor value={content} onChange={setContent} />
         </div>
 
-        <div className="flex items-center gap-3 p-4 rounded-lg border border-border/50 bg-muted/30">
+        <div className="flex items-center gap-3 rounded-md border border-border/50 bg-muted/20 p-3">
           <Checkbox
             id="published"
             checked={published}
@@ -111,8 +119,8 @@ export default function EditPostPage({ params }: any) {
           </span>
         </div>
 
-        <div className="flex items-center gap-4 pt-6">
-          <button disabled={saving || !title || !content} type="submit" className="px-6 py-2.5 rounded-lg bg-primary text-white">
+        <div className="flex items-center gap-3 pt-3">
+          <button disabled={saving || !title || !content} type="submit" className="h-10 rounded-md bg-primary px-5 text-sm font-medium text-white">
             {saving ? 'Saving...' : 'Save Changes'}
           </button>
           {message && <div className={`text-sm font-medium ${message.includes('✓') ? 'text-green-600' : 'text-red-600'}`}>{message}</div>}

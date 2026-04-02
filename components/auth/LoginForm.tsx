@@ -59,23 +59,23 @@ export function LoginForm() {
 
   return (
     <AuthCard>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <h1 className="text-2xl font-semibold">Welcome back</h1>
+          <h1 className="text-xl font-semibold tracking-tight">Welcome back</h1>
           <p className="text-sm text-muted-foreground">
             Login to your admin dashboard
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
-                className="pl-10"
+                className="h-9 pl-9 text-sm"
                 placeholder="you@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -87,11 +87,11 @@ export function LoginForm() {
           <div className="space-y-1">
             <Label htmlFor="password">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 id="password"
                 type="password"
-                className="pl-10"
+                className="h-9 pl-9 text-sm"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -107,7 +107,7 @@ export function LoginForm() {
           </div>
 
           <motion.div whileTap={{ scale: 0.97 }}>
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="h-9 w-full text-sm" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
