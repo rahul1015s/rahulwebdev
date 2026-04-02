@@ -7,14 +7,14 @@ import { Button } from '@/components/ui/button'
 
 const labels: Record<LandingVariant, string> = {
   classic: 'Classic Portfolio',
-  nebula: 'Nebula 3D',
-  grid: 'Grid 3D',
+  nebula: 'Nebula',
+  grid: 'Grid',
 }
 
 const descriptions: Record<LandingVariant, string> = {
   classic: 'Existing full portfolio layout with sections.',
-  nebula: 'Three.js hero scene with cosmic visuals and CTA.',
-  grid: 'Three.js wireframe style with a product-like pitch block.',
+  nebula: 'Animated hero scene with cosmic visuals and CTA.',
+  grid: 'Wireframe style layout with a product-like pitch block.',
 }
 
 export default function LandingVariantForm({
