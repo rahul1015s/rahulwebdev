@@ -13,7 +13,7 @@ export default function LandingGrid() {
       <div className="mx-auto grid min-h-[100dvh] max-w-6xl items-center gap-10 px-6 py-24 text-slate-100 md:grid-cols-[1.1fr_0.9fr]">
         <section>
           <p className="mb-5 inline-flex rounded-full border border-cyan-300/30 bg-cyan-500/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-cyan-100">
-            Three.js Experimental
+            Experimental Variant
           </p>
           <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
             Landing pages that feel alive, not static templates.
@@ -42,7 +42,7 @@ export default function LandingGrid() {
           <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-100">Launch Controls</h2>
           <ul className="mt-6 space-y-4 text-sm text-slate-200">
             <li className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-4 py-3">Realtime landing-page switching</li>
-            <li className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-4 py-3">3D scenes with responsive rendering</li>
+            <li className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-4 py-3">Dynamic visual scenes with responsive rendering</li>
             <li className="rounded-lg border border-slate-700/60 bg-slate-800/60 px-4 py-3">Built for experimentation and speed</li>
           </ul>
         </aside>

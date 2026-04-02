@@ -12,7 +12,7 @@ export default function LandingNebula() {
 
       <div className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col justify-center px-6 py-24 text-white">
         <p className="mb-4 inline-flex w-fit rounded-full border border-sky-300/40 bg-sky-500/20 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.15em]">
-          Interactive 3D Landing
+          Interactive Landing
         </p>
         <h1 className="max-w-3xl text-4xl font-semibold tracking-tight sm:text-6xl">
           Building pixel-perfect products with motion, depth, and performance.
