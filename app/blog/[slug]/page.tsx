@@ -5,10 +5,11 @@ import PostContent from "@/components/blog/PostContent";
 import Link from "next/link";
 import Image from "next/image";
 import { normalizeImageUrl } from "@/utils/url-utils";
-import { Calendar, Clock, ArrowLeft, Eye, Tag, User } from "lucide-react";
+import { Calendar, Clock, ArrowLeft, Tag, User } from "lucide-react";
 import ActionButtons from "./ActionButtons";
 import { Metadata } from 'next';
 import { Types } from "mongoose";
+import PostVisitorCount from "@/components/blog/PostVisitorCount";
 
 interface PostPageProps {
   params: Promise<{ slug: string }> | { slug: string };
@@ -377,12 +378,7 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           )}
 
-          <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
-            <Eye size={13} />
-            <span>
-              Read
-            </span>
-          </div>
+          <PostVisitorCount slug={slug} />
         </div>
 
         <div className="relative mb-5 h-48 w-full overflow-hidden rounded-xl border border-border/60 bg-muted sm:h-56 md:h-64">

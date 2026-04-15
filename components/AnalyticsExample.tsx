@@ -3,7 +3,7 @@
 import { trackEvent } from '@/lib/analytics'
 
 /**
- * 🔥 Microsoft Clarity Example Component
+ *   Microsoft Clarity Example Component
  * Shows how to track various user interactions with Clarity
  * 
  * These events will appear in your Clarity dashboard
@@ -60,7 +60,7 @@ export function AnalyticsExample() {
   return (
     <div className="space-y-6 p-6 bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
       <div className="space-y-2">
-        <h3 className="text-lg font-bold">🔥 Clarity Analytics Examples</h3>
+        <h3 className="text-lg font-bold">  Clarity Analytics Examples</h3>
         <p className="text-sm text-slate-600 dark:text-slate-400">
           Click buttons below to send events to Clarity. Check console (F12) for confirmation.
         </p>
@@ -118,7 +118,7 @@ export function AnalyticsExample() {
 
       <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded border border-amber-200 dark:border-amber-800">
         <p className="text-sm text-amber-800 dark:text-amber-200">
-          🔥 Data will appear in your Clarity dashboard after 5-10 minutes
+            Data will appear in your Clarity dashboard after 5-10 minutes
         </p>
       </div>
     </div>

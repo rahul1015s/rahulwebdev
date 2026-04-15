@@ -9,17 +9,40 @@ import {
 import { useEffect, useState } from "react";
 
 /* ---------------------------------------------
-   Visitor Counter (local)
+   Visitor Hook (REAL + SAFE)
 --------------------------------------------- */
 function useVisitorCount() {
   const [count, setCount] = useState<number | null>(null);
 
   useEffect(() => {
-    const key = "portfolio_visits";
-    let visits = Number(localStorage.getItem(key) || 0);
-    visits += 1;
-    localStorage.setItem(key, visits.toString());
-    setCount(visits);
+    let isMounted = true;
+    const visited =
+      typeof window !== "undefined"
+        ? sessionStorage.getItem("visited")
+        : null;
+    const endpoint = visited ? "/api/visitors?get=true" : "/api/visitors";
+
+    fetch(endpoint)
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error("Failed to fetch visitor count"))))
+      .then((data) => {
+        const nextCount = typeof data?.count === "number" ? data.count : 0;
+        if (isMounted) {
+          setCount(nextCount);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setCount(0);
+        }
+      });
+
+    if (!visited && typeof window !== "undefined") {
+      sessionStorage.setItem("visited", "true");
+    }
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return count;
@@ -42,14 +65,17 @@ const currentYear = new Date().getFullYear();
 /* ---------------------------------------------
    Component
 --------------------------------------------- */
-export default function Footer() {
+export default function ContactFooter() {
   const visitors = useVisitorCount();
 
   return (
-    <footer id="contact" className="mt-20 border-t border-border/40 pt-14 pb-8">
+    <footer
+      id="contact"
+      className="mt-20 border-t border-border/40 pt-14 pb-8"
+    >
       <div className="max-w-5xl mx-auto px-6">
 
-        {/* 🔥 CTA */}
+        {/*   CTA */}
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-semibold">
             Let’s build something{" "}
@@ -82,10 +108,10 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 🔥 MIDDLE */}
+        {/*   MIDDLE */}
         <div className="grid md:grid-cols-2 gap-10">
 
-          {/* NAVIGATE */}
+          {/* NAVIGATION */}
           <div>
             <p className="text-xs tracking-wider text-muted-foreground mb-4">
               NAVIGATE
@@ -104,8 +130,8 @@ export default function Footer() {
             </div>
 
             <p className="mt-5 text-sm text-muted-foreground max-w-sm">
-              Designed and built with a focus on simplicity, performance,
-              and real-world usability.
+              Designed and built with a focus on simplicity,
+              performance, and real-world usability.
             </p>
           </div>
 
@@ -160,7 +186,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 🔥 BOTTOM */}
+        {/*   BOTTOM */}
         <div className="mt-10 pt-5 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
 
           <p>
@@ -168,7 +194,7 @@ export default function Footer() {
           </p>
 
           <p suppressHydrationWarning>
-            {visitors
+            {visitors !== null
               ? `You’re visitor #${visitors.toLocaleString()}`
               : "Counting visitors..."}
           </p>

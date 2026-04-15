@@ -1,5 +1,5 @@
 /**
- * Microsoft Clarity Integration 🔥
+ * Microsoft Clarity Integration  
  * Free & powerful heatmap analytics - no credit card needed
  * 
  * Features:

@@ -52,7 +52,7 @@ export const newsletterTemplates: NewsletterTemplate[] = [
               </div>
 
               <div class="highlight">
-                <h4>🔥 Featured Content</h4>
+                <h4>  Featured Content</h4>
                 <p>[Highlight something special this week]</p>
               </div>
 

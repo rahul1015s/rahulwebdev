@@ -88,7 +88,7 @@ export default function ProjectsSection() {
           </p>
         </div>
 
-        {/* 🔥 Clean List */}
+        {/*   Clean List */}
         <div className="divide-y divide-border/30">
           {projects.map((project, index) => (
             <WorkCard
