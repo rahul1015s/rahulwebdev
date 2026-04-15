@@ -7,7 +7,7 @@ import { initClarity } from '@/lib/analytics'
  * Analytics Provider Component
  * Initializes Microsoft Clarity for heatmap tracking
  * 
- * 🔥 Microsoft Clarity - Completely FREE
+ *   Microsoft Clarity - Completely FREE
  * - Session recording with heatmaps
  * - Click heatmaps
  * - Scroll heatmaps
