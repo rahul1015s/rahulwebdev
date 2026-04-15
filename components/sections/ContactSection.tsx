@@ -1,117 +1,179 @@
 "use client";
 
-import { motion } from "framer-motion";
 import {
-  MessageSquare,
-  MessageCircle,
-  Mail,
-  Linkedin,
   Github,
-  Star,
+  Linkedin,
+  Mail,
+  MessageCircle,
 } from "lucide-react";
-import { ContactHaloSVG } from "../contact/ContactHaloSVG";
-import { ContactButton } from "../contact/ContactButton";
-import NewsletterForm from "../newsletter/NewsletterForm";
+import { useEffect, useState } from "react";
 
-export default function ContactSection() {
+/* ---------------------------------------------
+   Visitor Counter (local)
+--------------------------------------------- */
+function useVisitorCount() {
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const key = "portfolio_visits";
+    let visits = Number(localStorage.getItem(key) || 0);
+    visits += 1;
+    localStorage.setItem(key, visits.toString());
+    setCount(visits);
+  }, []);
+
+  return count;
+}
+
+/* ---------------------------------------------
+   Data
+--------------------------------------------- */
+const navLinks = [
+  { label: "Projects", href: "#projects" },
+  { label: "Skills", href: "#skills" },
+  { label: "About", href: "#about" },
+  { label: "Blog", href: "/blog" },
+  { label: "Resume", href: "/resume" },
+  { label: "Contact", href: "#contact" },
+];
+
+const currentYear = new Date().getFullYear();
+
+/* ---------------------------------------------
+   Component
+--------------------------------------------- */
+export default function Footer() {
+  const visitors = useVisitorCount();
+
   return (
-    <section id="contact" className="relative py-24 overflow-hidden bg-linear-to-b from-background via-card/20 to-background">
-      {/* Subtle SVG halo (theme-based) */}
-      <ContactHaloSVG />
+    <footer id="contact" className="mt-20 border-t border-border/40 pt-14 pb-8">
+      <div className="max-w-5xl mx-auto px-6">
 
-      <div className="mx-auto max-w-4xl px-6 text-center">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="mb-10"
-        >
-          <div className="flex items-center justify-center gap-2 text-primary mb-4">
-            <MessageSquare className="h-5 w-5" />
-            <span className="text-sm font-medium">Get in touch</span>
-          </div>
-
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-            Let's <span className="text-primary">Connect</span>
+        {/* 🔥 CTA */}
+        <div className="text-center mb-12">
+          <h2 className="text-2xl md:text-3xl font-semibold">
+            Let’s build something{" "}
+            <span className="text-primary">great</span>
           </h2>
 
-          <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-lg">
-            Whether you want to collaborate, hire, or just say hi —
-            I usually respond within 24 hours.
+          <p className="mt-2 text-sm text-muted-foreground">
+            Open to freelance, internships, and full-time roles.
           </p>
-        </motion.div>
 
-        {/* Action buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          {/* WhatsApp – only button that is visually primary */}
-          <ContactButton
+          <a
             href="https://wa.me/919135271562"
-            label="WhatsApp"
-            icon={MessageCircle}
-            variant="default"
-          />
+            target="_blank"
+            rel="noopener noreferrer"
+            className="
+              inline-flex items-center gap-2 mt-5
+              px-5 py-2.5 rounded-lg
+              bg-primary text-primary-foreground
+              text-sm font-medium
+              hover:opacity-90 transition
+            "
+          >
+            <MessageCircle className="h-4 w-4" />
+            Chat on WhatsApp
+          </a>
 
-          <ContactButton
-            href="mailto:hello@rahulwebdev.in"
-            label="Email"
-            icon={Mail}
-          />
+          <div className="mt-2 text-xs text-muted-foreground flex items-center justify-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+            Usually replies within a few hours
+          </div>
+        </div>
 
-          <ContactButton
-            href="https://www.linkedin.com/in/rahul1015s"
-            label="LinkedIn"
-            icon={Linkedin}
-          />
+        {/* 🔥 MIDDLE */}
+        <div className="grid md:grid-cols-2 gap-10">
 
-          <ContactButton
-            href="https://github.com/rahul1015s"
-            label="GitHub"
-            icon={Github}
-          />
-        </motion.div>
+          {/* NAVIGATE */}
+          <div>
+            <p className="text-xs tracking-wider text-muted-foreground mb-4">
+              NAVIGATE
+            </p>
 
-        {/* CTA + Newsletter */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4, delay: 0.25 }}
-          className="
-            mt-12 max-w-lg mx-auto
-            rounded-2xl border border-primary/20
-            bg-card/40 backdrop-blur-sm
-            p-6 hover:border-primary/40 hover:bg-card/60 transition-all duration-300
-          "
-        >
-          <p className="font-medium text-primary mb-3">
-            💬 Prefer instant replies? WhatsApp works best.
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground">
+              {navLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="hover:text-foreground transition"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+
+            <p className="mt-5 text-sm text-muted-foreground max-w-sm">
+              Designed and built with a focus on simplicity, performance,
+              and real-world usability.
+            </p>
+          </div>
+
+          {/* CONNECT */}
+          <div>
+            <p className="text-xs tracking-wider text-muted-foreground mb-4">
+              CONNECT
+            </p>
+
+            {/* Icons */}
+            <div className="flex items-center gap-3">
+              <a
+                href="https://github.com/rahul1015s"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-icon"
+              >
+                <Github className="h-4 w-4" />
+              </a>
+
+              <a
+                href="https://linkedin.com/in/rahul1015s"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-icon"
+              >
+                <Linkedin className="h-4 w-4" />
+              </a>
+
+              <a
+                href="mailto:hello@rahulwebdev.in"
+                className="footer-icon"
+              >
+                <Mail className="h-4 w-4" />
+              </a>
+            </div>
+
+            {/* WhatsApp */}
+            <a
+              href="https://wa.me/919135271562"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="
+                mt-4 inline-flex items-center gap-2
+                text-sm text-muted-foreground
+                hover:text-primary transition
+              "
+            >
+              <MessageCircle className="h-4 w-4" />
+              +91 91352 71562
+            </a>
+          </div>
+        </div>
+
+        {/* 🔥 BOTTOM */}
+        <div className="mt-10 pt-5 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+
+          <p>
+            © {currentYear} Rahul Verma. All rights reserved.
           </p>
 
-          <NewsletterForm variant="inline" location="portfolio" />
-        </motion.div>
-
-        {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="mt-14 pt-8 border-t border-border text-sm text-muted-foreground"
-        >
-          <div className="flex items-center justify-center gap-2">
-            <span>© {new Date().getFullYear()} Rahul Verma</span>
-            <Star className="h-4 w-4 text-primary/40" />
-            <span>Built with care</span>
-          </div>
-        </motion.div>
+          <p suppressHydrationWarning>
+            {visitors
+              ? `You’re visitor #${visitors.toLocaleString()}`
+              : "Counting visitors..."}
+          </p>
+        </div>
       </div>
-    </section>
+    </footer>
   );
 }

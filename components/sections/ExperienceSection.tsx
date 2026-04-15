@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { BriefcaseBusiness, CalendarDays, MapPin } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { BriefcaseBusiness, CalendarDays, MapPin, ChevronDown } from "lucide-react";
 
 const experiences = [
   {
@@ -49,71 +50,103 @@ const experiences = [
 ];
 
 export default function ExperienceSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  const toggle = (index: number) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
   return (
     <section className="py-16 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-8 sm:mb-10"
-        >
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Experience</h2>
-          <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base">
+        <div className="mb-10">
+          <h2 className="text-2xl font-semibold sm:text-3xl">Experience</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
             Professional experience building real-world products.
           </p>
-        </motion.div>
+        </div>
 
-        <div className="relative space-y-7 border-l border-border/70 pl-4 sm:space-y-8 sm:pl-8">
-          <div className="absolute bottom-0 left-0 top-0 hidden w-px bg-border/80 sm:block" />
+        <div className="relative space-y-6 border-l border-border pl-6">
+          {/* timeline line */}
+          <div className="absolute left-0 top-0 h-full w-px bg-border" />
 
-          {experiences.map((exp, index) => (
-            <motion.article
-              key={`${exp.company}-${exp.period}`}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.25, delay: index * 0.05 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="absolute left-[-21px] top-1.5 h-2.5 w-2.5 rounded-full border-2 border-primary bg-background sm:left-[-36px]" />
+          {experiences.map((exp, index) => {
+            const isOpen = openIndex === index;
 
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <h3 className="text-lg font-semibold leading-snug sm:text-xl">
-                    {exp.role} <span className="text-muted-foreground">·</span> {exp.company}
-                  </h3>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground sm:text-sm">
-                    <span className="inline-flex items-center gap-1">
-                      <CalendarDays className="h-3.5 w-3.5" />
-                      {exp.period}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <BriefcaseBusiness className="h-3.5 w-3.5" />
-                      {exp.type}
-                    </span>
+            return (
+              <div key={index} className="relative">
+
+                {/* header */}
+                <button
+                  onClick={() => toggle(index)}
+                  className="w-full text-left"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-semibold">
+                        {exp.role}{" "}
+                        <span className="text-muted-foreground">·</span>{" "}
+                        {exp.company}
+                      </h3>
+
+                      <div className="mt-1 flex flex-wrap gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <CalendarDays className="h-3.5 w-3.5" />
+                          {exp.period}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <BriefcaseBusiness className="h-3.5 w-3.5" />
+                          {exp.type}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <MapPin className="h-3.5 w-3.5" />
+                          {exp.location}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* arrow */}
+                    <ChevronDown
+                      className={`h-5 w-5 transition-transform duration-300 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
                   </div>
-                  <p className="mt-1 inline-flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
-                    <MapPin className="h-3.5 w-3.5" />
-                    {exp.location}
-                  </p>
-                </div>
+                </button>
+
+                {/* dropdown content */}
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="mt-3 space-y-3">
+                        <p className="text-sm text-muted-foreground">
+                          {exp.summary}
+                        </p>
+
+                        <ul className="space-y-2">
+                          {exp.highlights.map((item) => (
+                            <li
+                              key={item}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
+                              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" />
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-
-              <p className="mt-3 text-sm leading-6 text-muted-foreground sm:text-[15px]">
-                {exp.summary}
-              </p>
-
-              <ul className="mt-3 space-y-1.5">
-                {exp.highlights.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.article>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

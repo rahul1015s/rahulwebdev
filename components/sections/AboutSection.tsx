@@ -4,6 +4,16 @@ import { motion } from "framer-motion";
 import { ProfileCard } from "@/components/cards/ProfileCard";
 
 /* ---------------------------------------------
+   Tech Stack Icons
+--------------------------------------------- */
+const stack = [
+  { name: "React", icon: "devicon-react-original" },
+  { name: "Next.js", icon: "devicon-nextjs-plain" },
+  { name: "Node.js", icon: "devicon-nodejs-plain" },
+  { name: "MongoDB", icon: "devicon-mongodb-plain" },
+];
+
+/* ---------------------------------------------
    About Section
 --------------------------------------------- */
 export default function AboutSection() {
@@ -29,33 +39,41 @@ export default function AboutSection() {
             Rahul Verma
           </h2>
 
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            I’m a self-taught Full Stack Developer currently pursuing an MCA
-            (Master of Computer Applications). I transitioned from an Art History
-            background into software development — a shift that strengthened my
-            creativity, attention to detail, and system thinking.
+          {/* Role */}
+          <p className="mt-2 text-sm text-muted-foreground">
+            Full Stack Developer · MCA Student · India
+          </p>
+
+          {/* Bio */}
+          <p className="mt-5 text-muted-foreground leading-relaxed">
+            I’m a self-taught developer who transitioned from an Art History
+            background into software development. That shift shaped how I build —
+            combining structure with creativity and strong attention to detail.
           </p>
 
           <p className="mt-4 text-muted-foreground leading-relaxed">
-            I specialize in building scalable, production-ready applications
-            using React, Next.js, Node.js, and MongoDB, with a strong focus on
-            clean UI and maintainable architecture.
+            I focus on building scalable, production-ready applications with clean UI
+            and maintainable architecture. Most of my work revolves around modern
+            JavaScript stacks and real-world problem solving.
           </p>
 
-          <p className="mt-4 text-muted-foreground leading-relaxed">
-            I’m constantly learning, shipping projects, and collaborating on
-            meaningful work, aiming to grow within teams building impactful
-            software.
-          </p>
-
-          {/* Meta */}
-          <div className="mt-6 flex items-center gap-6 text-xs text-muted-foreground">
-            <span>Full Stack</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>MCA Student</span>
-            <span className="h-1 w-1 rounded-full bg-border" />
-            <span>India</span>
+          {/* Tech Stack */}
+          <div className="mt-6 flex flex-wrap gap-4">
+            {stack.map((tech) => (
+              <div
+                key={tech.name}
+                className="flex items-center gap-2 text-xs text-muted-foreground/70 hover:text-foreground transition"
+              >
+                <i className={`${tech.icon} text-base`} />
+                {tech.name}
+              </div>
+            ))}
           </div>
+
+          {/* Footer line */}
+          <p className="mt-6 text-sm text-muted-foreground">
+            Currently focused on building impactful products and growing with strong teams.
+          </p>
         </motion.div>
       </div>
     </section>

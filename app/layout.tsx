@@ -229,6 +229,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             __html: JSON.stringify(schemaGraph),
           }}
         />
+
+        <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+/>
       </head>
       <body
         className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}

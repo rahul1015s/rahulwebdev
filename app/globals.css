@@ -5,9 +5,7 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* ---------------------------------------------------
-   🌤 LIGHT MODE - Clean & Professional SaaS Fallback
----------------------------------------------------- */
+
 :root {
   --radius: 0.625rem;
 
@@ -437,4 +435,16 @@ h4 {
   h4 {
     @apply text-sm sm:text-sm md:text-base font-medium;
   }
+}
+
+
+i {
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.group:hover i {
+  filter: grayscale(0%);
+  opacity: 1;
 }
