@@ -46,11 +46,12 @@ export function LoginForm() {
         }
       } else {
         toast.success("Logged in successfully!");
-        router.replace("/admin");
+        const role = (data as { user?: { role?: string } } | null)?.user?.role;
+        router.replace(role === "admin" ? "/admin" : "/dashboard");
         router.refresh();
 
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during login");
     } finally {
       setIsLoading(false);
@@ -124,7 +125,7 @@ export function LoginForm() {
 
         <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-primary hover:underline">
               Sign up
             </Link>
