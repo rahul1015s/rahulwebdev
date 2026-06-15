@@ -1,5 +1,12 @@
-type Post = {
+export type Post = {
+  _id?: string;
   title: string;
+  slug?: string;
+  content?: unknown;
+  category?: {
+    name: string;
+    slug?: string;
+  } | null;
   tags?: string[];
   createdAt?: string | Date;
   readTime?: string;
@@ -17,16 +24,17 @@ export function searchPosts(posts: Post[], query: string) {
 
   return posts.filter((post) =>
     post.title.toLowerCase().includes(q) ||
+    post.category?.name.toLowerCase().includes(q) ||
     post.tags?.some((t) => t.toLowerCase().includes(q))
   );
 }
 
 /* ------------------------------
-   FILTER BY TAG
+   FILTER BY CATEGORY
 ------------------------------ */
-export function filterByTag(posts: Post[], tag: string | null) {
-  if (!tag) return posts;
-  return posts.filter((post) => post.tags?.includes(tag));
+export function filterByCategory(posts: Post[], category: string | null) {
+  if (!category) return posts;
+  return posts.filter((post) => post.category?.name === category);
 }
 
 /* ------------------------------
@@ -76,7 +84,7 @@ export function processPosts({
   let result = posts;
 
   result = searchPosts(result, query);
-  result = filterByTag(result, tag);
+  result = filterByCategory(result, tag);
   result = sortPosts(result, sort);
 
   return result;

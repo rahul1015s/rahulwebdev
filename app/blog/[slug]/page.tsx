@@ -1,230 +1,170 @@
+import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft, Calendar, Clock, Tag, User } from "lucide-react";
 import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import PostContent from "@/components/blog/PostContent";
-import Link from "next/link";
-import Image from "next/image";
-import { normalizeImageUrl } from "@/utils/url-utils";
-import { Calendar, Clock, ArrowLeft, Tag, User } from "lucide-react";
 import ActionButtons from "./ActionButtons";
-import { Metadata } from 'next';
-import { Types } from "mongoose";
 import PostVisitorCount from "@/components/blog/PostVisitorCount";
+import {
+  extractCoverImage,
+  extractExcerpt,
+  normalizeCategory,
+  normalizeTagNames,
+  toIsoString,
+} from "@/lib/blog-content";
+import { generateBreadcrumbStructuredData, convertReadTimeToISO8601 } from "@/lib/seo";
 
 interface PostPageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }
 
-type RichTextNode = {
-  type?: string;
-  text?: string;
-  attrs?: { src?: string; alt?: string };
-  content?: RichTextNode[];
+type PostDocument = {
+  title?: string;
+  slug?: string;
+  content?: unknown;
+  image?: string;
+  category?: unknown;
+  tags?: unknown;
+  tagNames?: string[];
+  metaTitle?: string;
+  metaDescription?: string;
+  readTime?: string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 };
 
-const getNodeText = (content?: RichTextNode[]) =>
-  (content ?? []).map((c) => c.text || "").join("").trim();
+async function resolveParams(params: PostPageProps["params"]) {
+  return params instanceof Promise ? await params : params;
+}
 
-const normalizeTagStrings = (tags: unknown): string[] => {
-  if (!Array.isArray(tags)) return [];
-  return tags
-    .map((tag) => {
-      if (typeof tag === "string") return tag;
-      if (tag instanceof Types.ObjectId) return tag.toString();
-      if (tag && typeof tag === "object" && "_id" in tag) {
-        const maybeId = (tag as { _id?: unknown })._id;
-        if (maybeId instanceof Types.ObjectId) return maybeId.toString();
-        if (typeof maybeId === "string") return maybeId;
-      }
-      return "";
-    })
-    .filter(Boolean);
-};
-
-// Generate metadata for each blog post
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  const unwrapped = params instanceof Promise ? await params : params;
-  const { slug } = unwrapped;
-
+async function getPost(slug: string) {
   await connectDB();
 
-  let post = await Post.findOne({ slug }).lean();
+  let post = (await Post.findOne({ slug, published: true }).lean()) as PostDocument | null;
 
   if (!post && /^[0-9a-fA-F]{24}$/.test(slug)) {
-    post = await Post.findById(slug).lean();
+    post = (await Post.findOne({ _id: slug, published: true }).lean()) as PostDocument | null;
   }
+
+  return post;
+}
+
+function buildSeoData(post: PostDocument, slug: string) {
+  const title = post.metaTitle?.trim() || post.title?.trim() || "Blog Post";
+  const description =
+    post.metaDescription?.trim() ||
+    extractExcerpt(
+      post.content,
+      post.readTime ? 138 : 160
+    ) ||
+    "Read this article by Rahul Verma on practical web development and modern SEO.";
+  const category = normalizeCategory(post.category);
+  const tags = normalizeTagNames(post.tags, post.tagNames);
+  const image = extractCoverImage(post.image, post.content);
+  const publishedTime = toIsoString(post.createdAt);
+  const modifiedTime = toIsoString(post.updatedAt) || publishedTime;
+  const canonicalPath = `/blog/${post.slug || slug}`;
+  const canonicalUrl = `https://rahulwebdev.in${canonicalPath}`;
+
+  return {
+    title,
+    description: post.readTime ? `${description} (${post.readTime} read)` : description,
+    category,
+    tags,
+    image,
+    publishedTime,
+    modifiedTime,
+    canonicalPath,
+    canonicalUrl,
+  };
+}
+
+export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+  const { slug } = await resolveParams(params);
+  const post = await getPost(slug);
 
   if (!post) {
     return {
-      title: "Post Not Found - Rahul Verma",
+      title: "Post Not Found",
       description: "The requested blog post could not be found.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  // Extract description from content (first paragraph or summary)
-  let description = "Read this insightful post by Rahul Verma on web development and technology.";
-  let excerpt = "";
-
-  try {
-    if (typeof post.content === "string") {
-      const json = JSON.parse(post.content);
-      const nodes: RichTextNode[] = json?.content || [];
-
-      // Find first meaningful text content
-      for (const node of nodes) {
-        if (node.type === "paragraph" && (node.content?.length ?? 0) > 0) {
-          const text = getNodeText(node.content);
-          if (text.length > 20) { // Only use substantial paragraphs
-            excerpt = text;
-            break;
-          }
-        } else if (node.type === "heading" && (node.content?.length ?? 0) > 0 && !excerpt) {
-          // Fallback to heading if no good paragraph found
-          excerpt = getNodeText(node.content);
-        }
-      }
-
-      if (excerpt) {
-        description = excerpt.length > 160 ? excerpt.substring(0, 157) + "..." : excerpt;
-      }
-    }
-  } catch (error) {
-    console.error("Error parsing post content for metadata:", error);
-  }
-
-  // OG Image Priority (highest to lowest):
-  // 1. Blog post's cover image (post.image)
-  // 2. First image found in blog content
-  // 3. Dynamic SVG with post title (fallback)
-  let ogImage = `/api/og/blog/${slug}?title=${encodeURIComponent(post.title)}&author=Rahul+Verma`; // Fallback dynamic OG image
-  let imageAlt = `${post.title} - Rahul Verma Blog`;
-
-  // Priority 1: Use the blog post's cover image if available
-  if (post.image && typeof post.image === 'string' && post.image.trim()) {
-    const normalizedImage = normalizeImageUrl(post.image);
-    if (normalizedImage && normalizedImage !== post.image) { // Check if normalization worked
-      ogImage = normalizedImage;
-      imageAlt = `${post.title} - Blog post cover image`;
-    } else if (post.image.startsWith('http') || post.image.startsWith('/')) {
-      ogImage = post.image;
-      imageAlt = `${post.title} - Blog post cover image`;
-    }
-  }
-
-  // Priority 2: Look for first image in blog content (only if no cover image)
-  if (ogImage.startsWith('/api/og/') && typeof post.content === "string") {
-    try {
-      const json = JSON.parse(post.content);
-      const nodes: RichTextNode[] = json?.content || [];
-
-      // Look for first image in content
-      for (const node of nodes) {
-        if (node.type === "image" && node.attrs?.src) {
-          const contentImage = normalizeImageUrl(node.attrs.src);
-          if (contentImage) {
-            ogImage = contentImage;
-            imageAlt = node.attrs?.alt || `${post.title} - Blog post image`;
-            break; // Use first image found
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error parsing blog content for OG image:", error);
-    }
-  }
-
-  // Create keywords from tags for better SEO
-  const normalizedTags = normalizeTagStrings(post.tags);
-  const keywords = (normalizedTags.length > 0)
-    ? normalizedTags.join(", ")
-    : "web development, programming, technology, React, Next.js";
-
-  // Enhanced description with read time if available
-  let enhancedDescription = description;
-  if (post.readTime && typeof post.readTime === 'string') {
-    enhancedDescription = `${description} (${post.readTime} read)`;
-  }
+  const seo = buildSeoData(post, slug);
 
   return {
-    title: `${post.title} - Rahul Verma`,
-    description: enhancedDescription,
-    keywords,
+    title: seo.title,
+    description: seo.description,
+    keywords:
+      seo.tags.length > 0
+        ? [...(seo.category?.name ? [seo.category.name] : []), ...seo.tags, "web development", "Next.js", "React", "technical blog"]
+        : [...(seo.category?.name ? [seo.category.name] : []), "web development", "Next.js", "React", "technical blog"],
     alternates: {
-      canonical: `https://rahulwebdev.in/blog/${slug}`,
+      canonical: seo.canonicalPath,
     },
-    authors: [{ name: "Rahul Verma" }],
+    authors: [{ name: "Rahul Verma", url: "https://rahulwebdev.in" }],
+    category: seo.category?.name || "Technology",
     openGraph: {
-      title: post.title,
-      description: enhancedDescription,
-      url: `https://rahulwebdev.in/blog/${slug}`,
-      siteName: "Rahul Verma Portfolio",
+      type: "article",
+      locale: "en_US",
+      url: seo.canonicalUrl,
+      siteName: "Rahul Web Development",
+      title: seo.title,
+      description: seo.description,
       images: [
         {
-          url: ogImage,
+          url: seo.image,
           width: 1200,
           height: 630,
-          alt: imageAlt,
+          alt: seo.title,
         },
       ],
-      locale: "en_US",
-      type: "article",
-      publishedTime: post.createdAt?.toISOString(),
-      modifiedTime: post.updatedAt?.toISOString(),
+      publishedTime: seo.publishedTime,
+      modifiedTime: seo.modifiedTime,
       authors: ["Rahul Verma"],
-      tags: normalizedTags,
+      tags: seo.tags,
     },
     twitter: {
       card: "summary_large_image",
-      title: post.title,
-      description: enhancedDescription,
-      images: [ogImage],
-      creator: "@rahulwebdev", // Add if you have a Twitter handle
+      title: seo.title,
+      description: seo.description,
+      images: [seo.image],
+      creator: "@rahul1015s",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
     other: {
-      "article:author": "Rahul Verma" as string,
-      ...(post.createdAt && { "article:published_time": post.createdAt.toISOString() as string }),
-      ...(post.updatedAt && { "article:modified_time": post.updatedAt.toISOString() as string }),
-      ...(normalizedTags.length > 0 && { "article:tag": normalizedTags.join(",") as string }),
+      "article:author": "Rahul Verma",
+      ...(seo.publishedTime && { "article:published_time": seo.publishedTime }),
+      ...(seo.modifiedTime && { "article:modified_time": seo.modifiedTime }),
+      ...(seo.tags.length > 0 && { "article:tag": seo.tags.join(", ") }),
     },
   };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const unwrapped = params instanceof Promise ? await params : params;
-  const { slug } = unwrapped;
-
-  await connectDB();
-
-  let post = await Post.findOne({ slug }).lean();
-
-  if (!post && /^[0-9a-fA-F]{24}$/.test(slug)) {
-    post = await Post.findById(slug).lean();
-  }
+  const { slug } = await resolveParams(params);
+  const post = await getPost(slug);
 
   if (!post) return notFound();
-  const normalizedTags = normalizeTagStrings(post.tags);
 
-  /** COVER IMAGE LOGIC */
-  let coverImage: string | null = null;
-
-  if (post.image) coverImage = normalizeImageUrl(post.image);
-
-  if (!coverImage && typeof post.content === "string") {
-    try {
-      const json = JSON.parse(post.content);
-      const firstImage = (json?.content as RichTextNode[] | undefined)?.find((n) => n.type === "image");
-      if (firstImage?.attrs?.src) {
-        coverImage = normalizeImageUrl(firstImage.attrs.src);
-      }
-    } catch {}
-  }
-
-  // SERVER-SAFE FALLBACK
-  if (!coverImage || typeof coverImage !== "string") {
-    coverImage = "/default-blog.png";
-  }
-
-  // Format date
+  const seo = buildSeoData(post, slug);
   const formattedDate = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
@@ -233,247 +173,174 @@ export default async function PostPage({ params }: PostPageProps) {
       })
     : "";
 
-  // Create description for structured data
-  let description = "Read this insightful post by Rahul Verma on web development and technology.";
-  let excerpt = "";
-
-  try {
-    if (typeof post.content === "string") {
-      const json = JSON.parse(post.content);
-      const nodes: RichTextNode[] = json?.content || [];
-
-      // Find first meaningful text content
-      for (const node of nodes) {
-        if (node.type === "paragraph" && (node.content?.length ?? 0) > 0) {
-          const text = getNodeText(node.content);
-          if (text.length > 20) { // Only use substantial paragraphs
-            excerpt = text;
-            break;
-          }
-        } else if (node.type === "heading" && (node.content?.length ?? 0) > 0 && !excerpt) {
-          // Fallback to heading if no good paragraph found
-          excerpt = getNodeText(node.content);
-        }
-      }
-
-      if (excerpt) {
-        description = excerpt.length > 160 ? excerpt.substring(0, 157) + "..." : excerpt;
-      }
-    }
-  } catch (error) {
-    console.error("Error parsing post content for structured data:", error);
-  }
-
-  // Enhanced description with read time if available
-  let enhancedDescription = description;
-  if (post.readTime && typeof post.readTime === 'string') {
-    enhancedDescription = `${description} (${post.readTime} read)`;
-  }
-
-  // OG Image Priority (highest to lowest):
-  // 1. Blog post's cover image (post.image)
-  // 2. First image found in blog content
-  // 3. Dynamic SVG with post title (fallback)
-  let ogImage = `/api/og/blog/${slug}?title=${encodeURIComponent(post.title)}&author=Rahul+Verma`; // Fallback dynamic OG image
-
-  // Priority 1: Use the blog post's cover image if available
-  if (post.image && typeof post.image === 'string' && post.image.trim()) {
-    const normalizedImage = normalizeImageUrl(post.image);
-    if (normalizedImage && normalizedImage !== post.image) { // Check if normalization worked
-      ogImage = normalizedImage;
-    } else if (post.image.startsWith('http') || post.image.startsWith('/')) {
-      ogImage = post.image;
-    }
-  }
-
-  // Priority 2: Look for first image in blog content (only if no cover image)
-  if (ogImage.startsWith('/api/og/') && typeof post.content === "string") {
-    try {
-      const json = JSON.parse(post.content);
-      const nodes = json?.content || [];
-
-      // Look for first image in content
-      for (const node of nodes) {
-        if (node.type === "image" && node.attrs?.src) {
-          const contentImage = normalizeImageUrl(node.attrs.src);
-          if (contentImage) {
-            ogImage = contentImage;
-            break; // Use first image found
-          }
-        }
-      }
-    } catch (error) {
-      console.error("Error parsing blog content for OG image:", error);
-    }
-  }
-
   const articleStructuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": post.title,
-    "description": enhancedDescription,
-    "image": ogImage,
-    "author": {
+    headline: seo.title,
+    description: seo.description,
+    image: [`https://rahulwebdev.in${seo.image}`.replace("https://rahulwebdev.inhttp", "http")],
+    datePublished: seo.publishedTime,
+    dateModified: seo.modifiedTime,
+    articleSection: seo.category?.name || "Web Development",
+    keywords: [...(seo.category?.name ? [seo.category.name] : []), ...seo.tags].join(", "),
+    author: {
       "@type": "Person",
-      "name": "Rahul Verma",
-      "url": "https://rahulwebdev.in"
+      name: "Rahul Verma",
+      url: "https://rahulwebdev.in",
     },
-    "publisher": {
+    publisher: {
       "@type": "Person",
-      "name": "Rahul Verma"
+      name: "Rahul Verma",
+      url: "https://rahulwebdev.in",
     },
-    "datePublished": post.createdAt?.toISOString(),
-    "dateModified": post.updatedAt?.toISOString(),
-    "mainEntityOfPage": {
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://rahulwebdev.in/blog/${slug}`
+      "@id": seo.canonicalUrl,
     },
-    "keywords": normalizedTags.join(", "),
-    "articleSection": "Technology",
-    "url": `https://rahulwebdev.in/blog/${slug}`
+    url: seo.canonicalUrl,
+    ...(post.readTime && {
+      timeRequired: convertReadTimeToISO8601(post.readTime),
+    }),
   };
+
+  const breadcrumbStructuredData = generateBreadcrumbStructuredData([
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog" },
+    { name: seo.title, url: seo.canonicalPath },
+  ]);
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleStructuredData),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
       />
-      <div className="mx-auto max-w-3xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-      <div className="mb-4 sm:mb-5">
-        <Link
-          href="/blog"
-          className="group inline-flex items-center gap-1.5 text-sm font-medium text-emerald-700 hover:text-emerald-900 transition-colors"
-        >
-          <span className="group-hover:-translate-x-0.5 transition-transform duration-200">
-            <ArrowLeft size={16} />
-          </span>
-          Back to blog
-        </Link>
-      </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+      />
 
-      <header className="mb-7 sm:mb-8">
-        <div className="mb-3 sm:mb-4">
-          <h1 className="text-2xl font-semibold leading-tight tracking-tight text-foreground sm:text-3xl md:text-4xl">
-            {post.title}
-          </h1>
-        </div>
+      <main className="bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.10),_transparent_32%),linear-gradient(180deg,rgba(250,252,255,1),rgba(255,255,255,1))] pb-16 dark:bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12),_transparent_22%),linear-gradient(180deg,rgba(2,6,23,1),rgba(3,7,18,1))]">
+        <div className="mx-auto max-w-5xl px-4 pt-10 sm:px-6 lg:px-8 lg:pt-14">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700 transition-colors hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to blog
+          </Link>
 
-        <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
-            <Calendar size={13} />
-            <time>
-              {formattedDate}
-            </time>
-          </div>
+          <header className="mt-6 overflow-hidden">
+            <div className="grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
+              <div className="p-6 sm:p-8 lg:p-10">
+                {(seo.category?.name || seo.tags.length > 0) && (
+                  <div className="mb-5 flex flex-wrap gap-2">
+                    {seo.category?.name && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/80 bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-500/15 dark:text-emerald-200">
+                        {seo.category.name}
+                      </span>
+                    )}
+                    {seo.tags.slice(0, 4).map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-500/10 dark:text-emerald-200"
+                      >
+                        <Tag className="h-3 w-3" />
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
-          {post.readTime && (
-            <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
-              <Clock size={13} />
-              <span>
-                {post.readTime}
-              </span>
+                <h1 className="max-w-3xl text-3xl font-semibold tracking-tight text-foreground sm:text-4xl lg:text-[2.9rem] lg:leading-[1.05]">
+                  {post.title}
+                </h1>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
+                  {seo.description}
+                </p>
+
+                <div className="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                  {formattedDate && (
+                    <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3.5 py-2">
+                      <Calendar className="h-4 w-4" />
+                      <time dateTime={seo.publishedTime}>{formattedDate}</time>
+                    </div>
+                  )}
+
+                  {post.readTime && (
+                    <div className="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3.5 py-2">
+                      <Clock className="h-4 w-4" />
+                      <span>{post.readTime}</span>
+                    </div>
+                  )}
+
+                  <PostVisitorCount slug={slug} />
+                </div>
+
+                <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-border/60 pt-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200">
+                      <User className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Rahul Verma</p>
+                      <p className="text-sm text-muted-foreground">
+                        Full stack developer writing about fast, SEO-focused web experiences.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="relative min-h-[280px] bg-muted lg:min-h-full">
+                <Image
+                  src={seo.image}
+                  alt={post.title || seo.title}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  unoptimized={seo.image.startsWith("http")}
+                  className="object-cover"
+                />
+              </div>
             </div>
-          )}
+          </header>
 
-          <PostVisitorCount slug={slug} />
-        </div>
+          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+            <article className="min-w-0 p-1 sm:p-0">
+              <div className="prose prose-slate max-w-none dark:prose-invert prose-headings:font-semibold prose-headings:tracking-tight prose-h2:mt-10 prose-h2:text-2xl prose-h3:mt-8 prose-h3:text-xl prose-p:text-[15px] prose-p:leading-8 prose-a:text-emerald-700 prose-a:no-underline hover:prose-a:text-emerald-800 hover:prose-a:underline prose-blockquote:border-emerald-500 prose-blockquote:bg-emerald-50/60 prose-blockquote:px-4 prose-blockquote:py-3 prose-blockquote:font-medium dark:prose-blockquote:bg-emerald-500/5 prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none prose-img:rounded-2xl prose-img:border prose-img:border-border/60">
+                <PostContent content={post.content} />
+              </div>
+            </article>
 
-        <div className="relative mb-5 h-48 w-full overflow-hidden rounded-xl border border-border/60 bg-muted sm:h-56 md:h-64">
-          <Image
-            src={coverImage}
-            alt={post.title}
-            fill
-            priority
-            unoptimized={coverImage.startsWith("http")}
-            className="object-contain"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 800px"
-          />
-        </div>
+            <aside className="space-y-4 lg:sticky lg:top-24">
+              <div className="p-1 sm:p-0">
+                <p className="text-sm font-semibold text-foreground">Share or save</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  If this article helped, save it for later or share it with someone working on SEO and frontend performance.
+                </p>
+                <div className="mt-4">
+                  <ActionButtons title={post.title || seo.title} slug={post.slug || slug} />
+                </div>
+              </div>
 
-        {normalizedTags.length > 0 && (
-          <div className="mb-2 flex flex-wrap gap-1.5">
-            {normalizedTags.slice(0, 5).map((tag: string, index: number) => (
-              <span
-                key={index}
-                className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
-              >
-                <Tag size={11} />
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </header>
-
-      <article className="prose prose-gray dark:prose-invert max-w-none mb-9 sm:mb-10 
-        prose-headings:scroll-mt-20
-        prose-h2:text-xl prose-h2:font-semibold prose-h2:mt-5 prose-h2:mb-2
-        prose-h3:text-lg prose-h3:font-semibold prose-h3:mt-4 prose-h3:mb-2
-        prose-p:text-sm prose-p:leading-7 prose-p:my-2
-        prose-a:text-emerald-600 prose-a:no-underline hover:prose-a:text-emerald-700 hover:prose-a:underline
-        prose-code:bg-slate-100 dark:prose-code:bg-slate-800/70 prose-code:px-1 prose-code:py-0.5 prose-code:rounded
-        prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800/60 prose-pre:text-slate-900 dark:prose-pre:text-slate-100 prose-pre:rounded-lg prose-pre:border prose-pre:border-border/60
-        prose-img:rounded-lg prose-img:mx-auto
-        prose-blockquote:border-l-2 prose-blockquote:border-emerald-500 prose-blockquote:pl-3 prose-blockquote:italic
-        prose-ul:my-2 prose-li:my-0.5">
-        <PostContent content={post.content} />
-      </article>
-
-      {/* Action buttons */}
-      <div className="mb-7 flex flex-wrap items-center justify-between gap-3 border-y border-gray-200 py-4 dark:border-gray-800">
-        <Link
-          href="/blog"
-          className="group inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-        >
-          <ArrowLeft size={15} className="group-hover:-translate-x-0.5 transition-transform duration-200" />
-          Back to Articles
-        </Link>
-
-        {/* Interactive Action Buttons */}
-        <ActionButtons title={post.title} slug={slug} />
-      </div>
-
-      {/* Author info */}
-      <div className="mb-7 rounded-xl border border-emerald-200/50 bg-linear-to-r from-emerald-50 to-cyan-50 p-5 dark:border-emerald-800/50 dark:from-emerald-900/20 dark:to-cyan-900/20 sm:p-6">
-        <div className="flex items-start sm:items-center gap-4 sm:gap-6 flex-col sm:flex-row">
-          <div className="rounded-full bg-white p-2.5 shadow-sm dark:bg-gray-800">
-            <User className="h-6 w-6 text-emerald-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="mb-1 text-lg font-semibold">Rahul Verma</h3>
-            <p className="mb-2 text-sm text-muted-foreground">
-              Full Stack Developer passionate about building modern web applications. 
-              Sharing insights on React, Next.js, and web development.
-            </p>
-            <Link
-              href="/#about"
-              className="inline-flex items-center gap-1 text-sm font-medium text-emerald-700 hover:text-emerald-900 transition-colors duration-200 group"
-            >
-              Learn more about me
-              <span className="group-hover:translate-x-1 transition-transform duration-200">→</span>
-            </Link>
+              <div className="p-1 sm:p-0">
+                <p className="text-sm font-semibold text-foreground">Continue reading</p>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  Explore more articles on React, Next.js, search visibility, and better product UX.
+                </p>
+                <Link
+                  href="/blog"
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-emerald-700 transition-colors hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
+                >
+                  Browse all posts
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </aside>
           </div>
         </div>
-      </div>
-
-      {/* Related posts suggestion */}
-      <div className="py-4 text-center">
-        <h3 className="mb-2 text-lg font-semibold">Enjoyed this article?</h3>
-        <p className="mx-auto mb-4 max-w-md text-sm text-muted-foreground">
-          Check out more articles on similar topics in the blog section.
-        </p>
-        <Link
-          href="/blog"
-          className="group inline-flex items-center gap-2 rounded-md bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
-        >
-          Explore More Articles
-          <span className="group-hover:translate-x-0.5 transition-transform duration-200">→</span>
-        </Link>
-      </div>
-    </div>
-  </>
+      </main>
+    </>
   );
 }

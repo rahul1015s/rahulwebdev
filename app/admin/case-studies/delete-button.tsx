@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import api from "@/lib/api"
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/alert-dialog"
 
 export default function DeleteCaseStudyButton({ id }: { id: string }) {
+  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   async function handleDelete() {
@@ -29,9 +31,9 @@ export default function DeleteCaseStudyButton({ id }: { id: string }) {
         throw new Error(res.data?.error || "Delete failed")
       }
 
-      window.location.reload()
-    } catch (err: any) {
-      alert(getApiErrorMessage(err))
+      router.refresh()
+    } catch (error: unknown) {
+      alert(getApiErrorMessage(error))
     } finally {
       setLoading(false)
     }

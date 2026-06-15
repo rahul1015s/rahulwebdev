@@ -1,7 +1,16 @@
 import type { NextConfig } from "next";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
+const imageKitEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
+const imageKitHostname = imageKitEndpoint ? new URL(imageKitEndpoint).hostname : null;
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  turbopack: {
+    root: projectRoot,
+  },
 
   // Compress and optimize output
   compress: true,
@@ -31,6 +40,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "pbs.twimg.com" },
       { protocol: "https", hostname: "raw.githubusercontent.com" },
       { protocol: "https", hostname: "github.com" },
+      ...(imageKitHostname ? [{ protocol: "https" as const, hostname: imageKitHostname }] : []),
     ],
 
     localPatterns: [

@@ -2,12 +2,26 @@
 import React, { useEffect, useState, use as reactUse } from 'react'
 import { useRouter } from 'next/navigation'
 import NovelEditor from '@/components/admin/NovelEditor'
+import CoverImageField from '@/components/admin/CoverImageField'
 import { Checkbox } from '@/components/ui/checkbox'
 import api from '@/lib/api'
 import { getApiErrorMessage } from '@/lib/api-error'
 
-export default function EditPostPage({ params }: any) {
-  const resolvedParams = reactUse(params as Promise<any>)
+type EditPostParams = Promise<{ id: string }> | { id: string }
+type PostResponse = {
+  ok?: boolean
+  error?: string
+  post?: {
+    title?: string
+    slug?: string
+    content?: string
+    image?: string
+    published?: boolean
+  }
+}
+
+export default function EditPostPage({ params }: { params: EditPostParams }) {
+  const resolvedParams = reactUse(params as Promise<{ id: string }>)
   const id = resolvedParams?.id
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -42,8 +56,8 @@ export default function EditPostPage({ params }: any) {
         } else {
           setMessage('Failed to load post')
         }
-      } catch (err: any) {
-        setMessage(getApiErrorMessage(err))
+      } catch (error: unknown) {
+        setMessage(getApiErrorMessage(error))
       } finally {
         if (mounted) setLoading(false)
       }
@@ -56,7 +70,7 @@ export default function EditPostPage({ params }: any) {
     setSaving(true)
     try {
       const res = await api.patch(`/api/admin/posts/${id}`, { title, slug, content, image, published })
-      const data = res.data
+      const data = res.data as PostResponse
       if (data?.ok !== false) {
         setMessage('✓ Saved')
         // Optionally navigate back to admin list after save
@@ -68,8 +82,8 @@ export default function EditPostPage({ params }: any) {
         console.error('Save failed', data)
         setMessage(`✗ ${data?.error || 'Save failed'}`)
       }
-    } catch (err: any) {
-      setMessage(getApiErrorMessage(err))
+    } catch (error: unknown) {
+      setMessage(getApiErrorMessage(error))
     } finally {
       setSaving(false)
     }
@@ -95,9 +109,7 @@ export default function EditPostPage({ params }: any) {
         </div>
 
         <div>
-          <label className="mb-1.5 block text-sm font-medium">Image URL (optional)</label>
-          <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="https://... or drive://fileId" className="h-10 w-full rounded-md border border-border/60 px-3 text-sm" />
-          <p className="text-xs text-muted-foreground mt-1">Optional cover/featured image URL</p>
+          <CoverImageField value={image} onChange={setImage} />
         </div>
 
         <div>

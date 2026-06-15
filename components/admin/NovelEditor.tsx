@@ -1,129 +1,124 @@
-"use client"
-import React, { useCallback, useState, useEffect } from 'react'
+"use client";
+
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Bold,
+  Code as CodeIcon,
   Italic,
   Link as LinkIcon,
-  X,
-  Heading1,
-  Heading2,
-  Heading3,
   List as ListIcon,
   ListOrdered as ListOrderedIcon,
   Quote as QuoteIcon,
-  Code as CodeIcon,
-} from 'lucide-react'
-import { defaultExtensions } from './extensions'
-import { suggestionItems } from './SlashCommandMenu'
-import type { JSONContent } from 'novel'
+  X,
+} from "lucide-react";
+import type { JSONContent } from "novel";
+import { defaultExtensions } from "./extensions";
+import { suggestionItems } from "./SlashCommandMenu";
 
 type Props = {
-  value: string
-  onChange: (v: string) => void
+  value: string;
+  onChange: (value: string) => void;
+};
+
+type NovelModule = Awaited<typeof import("novel")>;
+type BubbleEditor = {
+  chain: () => {
+    focus: () => {
+      toggleBold: () => { run: () => void };
+      toggleItalic: () => { run: () => void };
+      toggleBulletList: () => { run: () => void };
+      toggleOrderedList: () => { run: () => void };
+      toggleBlockquote: () => { run: () => void };
+      toggleCodeBlock: () => { run: () => void };
+      setLink: (attrs: { href: string }) => { run: () => void };
+      unsetLink: () => { run: () => void };
+    };
+  };
+};
+
+function parseInitialContent(value: string): JSONContent {
+  if (!value) return { type: "doc", content: [] };
+
+  try {
+    const parsed = JSON.parse(value);
+    if (parsed && parsed.type === "doc") return parsed;
+    return { type: "doc", content: [parsed] };
+  } catch {
+    return { type: "doc", content: [] };
+  }
 }
 
 export default function NovelEditor({ value, onChange }: Props) {
-  const [EditorRoot, setEditorRoot] = useState<any>(null)
-  const [EditorContent, setEditorContent] = useState<any>(null)
-  const [EditorCommand, setEditorCommand] = useState<any>(null)
-  const [EditorCommandEmpty, setEditorCommandEmpty] = useState<any>(null)
-  const [EditorCommandList, setEditorCommandList] = useState<any>(null)
-  const [EditorCommandItem, setEditorCommandItem] = useState<any>(null)
-  const [EditorBubble, setEditorBubble] = useState<any>(null)
-  const [EditorBubbleItem, setEditorBubbleItem] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [initialContent, setInitialContent] = useState<JSONContent | null>({ type: 'doc', content: [] })
-  const [loaded, setLoaded] = useState(false)
+  const [novel, setNovel] = useState<NovelModule | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const initialContent = useMemo(() => parseInitialContent(value), [value]);
 
   useEffect(() => {
-    let mounted = true
+    let mounted = true;
 
-    // Import Novel's composed components
-    import('novel')
-      .then((mod) => {
-        if (!mounted) return
-
-        if (mod.EditorRoot && mod.EditorContent) {
-          setEditorRoot(() => mod.EditorRoot)
-          setEditorContent(() => mod.EditorContent)
-          setEditorCommand(() => mod.EditorCommand)
-          setEditorCommandEmpty(() => mod.EditorCommandEmpty)
-          setEditorCommandList(() => mod.EditorCommandList)
-          setEditorCommandItem(() => mod.EditorCommandItem)
-          setEditorBubble(() => mod.EditorBubble)
-          setEditorBubbleItem(() => mod.EditorBubbleItem)
-          
-          // Parse initial content if value is provided
-          if (value) {
-            try {
-              const parsed = JSON.parse(value)
-              // Ensure it's a valid editor state with 'doc' node
-              if (parsed && parsed.type === 'doc') {
-                setInitialContent(parsed)
-              } else {
-                // Wrap in doc if not already
-                setInitialContent({ type: 'doc', content: [parsed] })
-              }
-            } catch {
-              // If not JSON, use empty doc
-              setInitialContent({ type: 'doc', content: [] })
-            }
-          } else {
-            // No value provided, use empty editor
-            setInitialContent({ type: 'doc', content: [] })
-          }
-          setLoaded(true)
-          return
+    import("novel")
+      .then((module) => {
+        if (!mounted) return;
+        if (!module.EditorRoot || !module.EditorContent) {
+          setError("Could not load the Novel editor exports.");
+          return;
         }
-
-        setError('Could not find EditorRoot or EditorContent exports in `novel`.')
+        setNovel(module);
       })
-      .catch((err) => {
-        setError('Failed to import `novel`. Make sure it is installed: `npm i novel`')
-      })
+      .catch(() => {
+        setError("Failed to load the editor. Make sure `novel` is installed correctly.");
+      });
 
-    return () => { mounted = false }
-  }, [value])
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
-  // Update handler to capture editor content
   const handleUpdate = useCallback(
-    ({ editor }: any) => {
-      const json = editor.getJSON()
-      onChange(JSON.stringify(json))
+    ({ editor }: { editor: { getJSON: () => unknown } }) => {
+      onChange(JSON.stringify(editor.getJSON()));
     },
     [onChange]
-  )
+  );
 
   if (error) {
     return (
-      <div className="rounded border p-3 bg-red-50">
-        <div className="mb-2 font-medium text-red-900">Novel editor error</div>
-        <div className="text-sm text-red-700">{error}</div>
-        <div className="mt-2 text-sm">
-          Check the Novel docs:{' '}
-          <a className="underline" href="https://novel.sh/docs" target="_blank" rel="noreferrer">
-            novel.sh/docs
-          </a>
-        </div>
+      <div className="rounded-xl border border-red-200 bg-red-50 p-4">
+        <p className="font-medium text-red-900">Novel editor error</p>
+        <p className="mt-1 text-sm text-red-700">{error}</p>
       </div>
-    )
+    );
   }
 
-  if (!EditorRoot || !EditorContent || !loaded) {
-    return <div className="rounded border p-3 text-muted-foreground">Loading editor…</div>
+  if (!novel?.EditorRoot || !novel?.EditorContent) {
+    return <div className="rounded-xl border border-border/70 bg-background p-4 text-sm text-muted-foreground">Loading editor...</div>;
   }
 
-  const Root = EditorRoot
-  const Content = EditorContent
-  const Command = EditorCommand
-  const CommandEmpty = EditorCommandEmpty
-  const CommandList = EditorCommandList
-  const CommandItem = EditorCommandItem
-  const Bubble = EditorBubble
-  const BubbleItem = EditorBubbleItem
+  const Root = novel.EditorRoot;
+  const Content = novel.EditorContent;
+  const Command = novel.EditorCommand;
+  const CommandEmpty = novel.EditorCommandEmpty;
+  const CommandList = novel.EditorCommandList;
+  const CommandItem = novel.EditorCommandItem;
+  const Bubble = novel.EditorBubble;
+  const BubbleItem = novel.EditorBubbleItem;
+  const withEditor =
+    (callback: (editor: BubbleEditor) => void) =>
+    (editor: unknown) =>
+      callback(editor as BubbleEditor);
 
   return (
-    <div className="overflow-hidden rounded-md border border-border/60 bg-background shadow-sm">
+    <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_24px_60px_-48px_rgba(15,23,42,0.45)]">
+      <div className="flex items-center justify-between border-b border-border/70 bg-muted/30 px-4 py-3">
+        <div>
+          <p className="text-sm font-medium">Writing canvas</p>
+          <p className="text-xs text-muted-foreground">Use `/` for blocks and select text for quick formatting.</p>
+        </div>
+        <div className="hidden rounded-full border border-border/70 px-3 py-1 text-xs text-muted-foreground sm:block">
+          Article-first editing
+        </div>
+      </div>
+
       <Root>
         <Content
           initialContent={initialContent}
@@ -132,100 +127,103 @@ export default function NovelEditor({ value, onChange }: Props) {
           editorProps={{
             attributes: {
               class:
-                'prose prose-sm dark:prose-invert max-w-none focus:outline-none px-4 py-3 min-h-[300px] text-[15px] leading-7 ' +
-                '[&_p]:my-2 [&_ul]:my-2 [&_ol]:my-2 [&_li]:my-0.5 ' +
-                '[&_pre]:rounded-md [&_pre]:border [&_pre]:border-border/60 [&_pre]:bg-slate-100 [&_pre]:p-3 ' +
-                'dark:[&_pre]:bg-slate-800/60 [&_code]:rounded [&_code]:bg-slate-100 [&_code]:px-1 [&_code]:py-0.5 ' +
-                'dark:[&_code]:bg-slate-800/70'
-            }
+                "prose prose-neutral dark:prose-invert max-w-none min-h-[420px] px-5 py-6 text-[16px] leading-8 outline-none sm:px-8 sm:py-8 sm:text-[17px] " +
+                "prose-headings:font-semibold prose-headings:tracking-tight prose-h1:text-4xl prose-h1:mb-4 prose-h1:mt-2 " +
+                "prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-3 prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-2 " +
+                "prose-p:my-4 prose-p:text-foreground/95 prose-ul:my-4 prose-ol:my-4 prose-li:my-1.5 " +
+                "prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:bg-emerald-50/60 prose-blockquote:px-4 prose-blockquote:py-3 dark:prose-blockquote:bg-emerald-500/5 " +
+                "prose-pre:rounded-xl prose-pre:border prose-pre:border-border/70 prose-pre:bg-slate-950 prose-pre:px-4 prose-pre:py-4 prose-pre:text-slate-100 " +
+                "prose-code:rounded prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:before:content-none prose-code:after:content-none " +
+                "prose-img:rounded-2xl prose-img:border prose-img:border-border/60",
+            },
           }}
         >
-          <Command className="z-50 h-auto max-h-[300px] w-72 overflow-y-auto rounded-md border border-border/50 bg-background px-1.5 py-1.5 shadow-md transition-all">
-            <CommandEmpty className="px-3 py-2 text-sm text-muted-foreground">No results</CommandEmpty>
-            <CommandList>
-              {suggestionItems.map((item: any) => (
-                <CommandItem
-                  value={item.title}
-                  onCommand={(val: any) => item.command(val)}
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-accent/50 aria-selected:bg-accent aria-selected:text-accent-foreground cursor-pointer transition-colors"
-                  key={item.title}
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-md border border-border/50 bg-muted/50 shrink-0">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p className="text-xs text-muted-foreground leading-tight">{item.description}</p>
-                  </div>
-                </CommandItem>
-              ))}
-            </CommandList>
-          </Command>
+          {Command && CommandEmpty && CommandList && CommandItem && (
+            <Command className="z-50 h-auto max-h-[320px] w-80 overflow-y-auto rounded-xl border border-border/70 bg-background p-2 shadow-xl">
+              <CommandEmpty className="px-3 py-2 text-sm text-muted-foreground">No results</CommandEmpty>
+              <CommandList>
+                {suggestionItems.map((item) => (
+                  <CommandItem
+                    value={item.title}
+                    onCommand={(value) =>
+                      (item.command as (payload: unknown) => void)(value)
+                    }
+                    className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition hover:bg-accent/50 aria-selected:bg-accent aria-selected:text-accent-foreground"
+                    key={item.title}
+                  >
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted/50">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">{item.title}</p>
+                      <p className="text-xs leading-tight text-muted-foreground">{item.description}</p>
+                    </div>
+                  </CommandItem>
+                ))}
+              </CommandList>
+            </Command>
+          )}
+
           {Bubble && BubbleItem && (
-            <Bubble className="absolute z-50 -translate-y-2 transform rounded-md bg-card px-2 py-1.5 shadow-lg border border-border/60 flex items-center gap-0.5 flex-wrap max-w-sm">
-              <div className="flex items-center gap-1">
-                <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleBold().run()} className="p-1 rounded hover:bg-muted/60" title="Bold">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><Bold size={15} /></button>
-                </BubbleItem>
+            <Bubble className="absolute z-50 flex max-w-sm flex-wrap items-center gap-1 rounded-xl border border-border/70 bg-card px-2 py-1.5 shadow-xl">
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleBold().run())} className="rounded p-1 hover:bg-muted/60" title="Bold">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <Bold size={15} />
+                </button>
+              </BubbleItem>
 
-                <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleItalic().run()} className="p-1 rounded hover:bg-muted/60" title="Italic">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><Italic size={15} /></button>
-                </BubbleItem>
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleItalic().run())} className="rounded p-1 hover:bg-muted/60" title="Italic">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <Italic size={15} />
+                </button>
+              </BubbleItem>
 
-                <BubbleItem onSelect={(editor: any) => editor.chain().focus().toggleStrike().run()} className="p-1 rounded hover:bg-muted/60" title="Strikethrough">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm">S</button>
-                </BubbleItem>
-              </div>
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleBulletList().run())} className="rounded p-1 hover:bg-muted/60" title="Bulleted list">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <ListIcon size={15} />
+                </button>
+              </BubbleItem>
 
-              <div className="mx-1 h-5 w-px bg-muted/40" />
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleOrderedList().run())} className="rounded p-1 hover:bg-muted/60" title="Numbered list">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <ListOrderedIcon size={15} />
+                </button>
+              </BubbleItem>
 
-              <div className="flex items-center gap-1">
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().setNode('heading',{level:1}).run()} className="p-1 rounded hover:bg-muted/60" title="Heading 1">
-                  <button className="text-xs font-medium">H1</button>
-                </BubbleItem>
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().setNode('heading',{level:2}).run()} className="p-1 rounded hover:bg-muted/60" title="Heading 2">
-                  <button className="text-xs font-medium">H2</button>
-                </BubbleItem>
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().setNode('heading',{level:3}).run()} className="p-1 rounded hover:bg-muted/60" title="Heading 3">
-                  <button className="text-xs font-medium">H3</button>
-                </BubbleItem>
-              </div>
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleBlockquote().run())} className="rounded p-1 hover:bg-muted/60" title="Quote">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <QuoteIcon size={15} />
+                </button>
+              </BubbleItem>
 
-              <div className="h-6 w-px bg-muted/40 mx-1" />
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().toggleCodeBlock().run())} className="rounded p-1 hover:bg-muted/60" title="Code block">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <CodeIcon size={15} />
+                </button>
+              </BubbleItem>
 
-              <div className="flex items-center gap-1">
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleBulletList().run()} className="p-1 rounded hover:bg-muted/60" title="Bulleted list">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><ListIcon size={15} /></button>
-                </BubbleItem>
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleOrderedList().run()} className="p-1 rounded hover:bg-muted/60" title="Numbered list">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><ListOrderedIcon size={15} /></button>
-                </BubbleItem>
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleBlockquote().run()} className="p-1 rounded hover:bg-muted/60" title="Quote">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><QuoteIcon size={15} /></button>
-                </BubbleItem>
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().toggleCodeBlock().run()} className="p-1 rounded hover:bg-muted/60" title="Code block">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><CodeIcon size={15} /></button>
-                </BubbleItem>
-              </div>
+              <BubbleItem
+                onSelect={withEditor((editor) => {
+                  const href = prompt("Enter URL");
+                  if (href) editor.chain().focus().setLink({ href }).run();
+                })}
+                className="rounded p-1 hover:bg-muted/60"
+                title="Insert link"
+              >
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <LinkIcon size={15} />
+                </button>
+              </BubbleItem>
 
-              <div className="mx-1 h-5 w-px bg-muted/40" />
-
-              <div className="flex items-center gap-1">
-                <BubbleItem onSelect={(editor: any)=>{
-                    const url = prompt('Enter URL')
-                    if(url) editor.chain().focus().setLink({href:url}).run()
-                  }} className="p-1 rounded hover:bg-muted/60" title="Insert link">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><LinkIcon size={15} /></button>
-                </BubbleItem>
-
-                <BubbleItem onSelect={(editor: any)=>editor.chain().focus().unsetLink().run()} className="p-1 rounded hover:bg-muted/60" title="Remove link">
-                  <button className="flex h-7 w-7 items-center justify-center rounded text-sm"><X size={15} /></button>
-                </BubbleItem>
-              </div>
+              <BubbleItem onSelect={withEditor((editor) => editor.chain().focus().unsetLink().run())} className="rounded p-1 hover:bg-muted/60" title="Remove link">
+                <button type="button" className="flex h-8 w-8 items-center justify-center rounded text-sm">
+                  <X size={15} />
+                </button>
+              </BubbleItem>
             </Bubble>
           )}
         </Content>
       </Root>
     </div>
-  )
+  );
 }

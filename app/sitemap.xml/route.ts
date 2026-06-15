@@ -1,4 +1,3 @@
-import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import Post from '@/models/post';
 import CaseStudy from '@/models/casestudy';
@@ -18,7 +17,6 @@ export async function GET() {
     '',
     '/blog',
     '/case-studies',
-    '/resume',
     "/freelance-web-developer-patna"
   ];
 

@@ -10,6 +10,129 @@ interface PostContentProps {
   content: any
 }
 
+type CodeTokenType =
+  | 'plain'
+  | 'comment'
+  | 'string'
+  | 'keyword'
+  | 'number'
+  | 'function'
+  | 'operator'
+  | 'variable'
+  | 'tag'
+
+type CodeToken = {
+  type: CodeTokenType
+  value: string
+}
+
+const JS_TS_KEYWORDS = new Set([
+  'const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while',
+  'switch', 'case', 'break', 'continue', 'class', 'new', 'import', 'from',
+  'export', 'default', 'async', 'await', 'try', 'catch', 'finally', 'throw',
+  'extends', 'implements', 'interface', 'type', 'enum', 'true', 'false',
+  'null', 'undefined', 'typeof', 'instanceof', 'in', 'of', 'this', 'super'
+])
+
+function tokenClassName(type: CodeTokenType) {
+  switch (type) {
+    case 'comment':
+      return 'text-slate-500 italic'
+    case 'string':
+      return 'text-amber-300'
+    case 'keyword':
+      return 'text-cyan-300'
+    case 'number':
+      return 'text-fuchsia-300'
+    case 'function':
+      return 'text-emerald-300'
+    case 'operator':
+      return 'text-sky-200'
+    case 'variable':
+      return 'text-rose-300'
+    case 'tag':
+      return 'text-violet-300'
+    case 'plain':
+    default:
+      return 'text-slate-100'
+  }
+}
+
+function getLanguageFamily(language: string) {
+  const normalized = language.toLowerCase()
+  if (/(ts|tsx|js|jsx|javascript|typescript|json)/.test(normalized)) return 'js'
+  if (/(html|xml|svg)/.test(normalized)) return 'html'
+  return 'plain'
+}
+
+function highlightCodeLine(line: string, language: string) {
+  const family = getLanguageFamily(language)
+  const tokens: CodeToken[] = []
+  const pattern =
+    family === 'html'
+      ? /<!--.*?$|<\/?[A-Za-z][^>]*>|"[^"]*"|'[^']*'|\b\d+(?:\.\d+)?\b/gm
+      : /\/\/.*$|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`(?:[^`\\]|\\.)*`|\b\d+(?:\.\d+)?\b|=>|===|!==|==|!=|<=|>=|&&|\|\||[{}()[\].,;:+\-*/=<>!&|?]+|\b[A-Za-z_$][\w$]*\b/g
+
+  let lastIndex = 0
+
+  for (const match of line.matchAll(pattern)) {
+    const value = match[0]
+    const start = match.index ?? 0
+
+    if (start > lastIndex) {
+      tokens.push({ type: 'plain', value: line.slice(lastIndex, start) })
+    }
+
+    let type: CodeTokenType = 'plain'
+
+    if (family === 'html') {
+      if (value.startsWith('<!--')) type = 'comment'
+      else if (value.startsWith('"') || value.startsWith("'")) type = 'string'
+      else if (/^\d/.test(value)) type = 'number'
+      else if (value.startsWith('<')) type = 'tag'
+    } else {
+      if (value.startsWith('//')) type = 'comment'
+      else if (value.startsWith('"') || value.startsWith("'") || value.startsWith('`')) type = 'string'
+      else if (/^\d/.test(value)) type = 'number'
+      else if (JS_TS_KEYWORDS.has(value)) type = 'keyword'
+      else if (/^(=>|===|!==|==|!=|<=|>=|&&|\|\||[{}()[\].,;:+\-*/=<>!&|?]+)$/.test(value)) type = 'operator'
+      else {
+        const nextChar = line[(match.index ?? 0) + value.length]
+        type = nextChar === '(' ? 'function' : 'variable'
+      }
+    }
+
+    tokens.push({ type, value })
+    lastIndex = start + value.length
+  }
+
+  if (lastIndex < line.length) {
+    tokens.push({ type: 'plain', value: line.slice(lastIndex) })
+  }
+
+  return tokens
+}
+
+function renderHighlightedCode(codeText: string, language: string) {
+  const lines = codeText.split('\n')
+
+  return lines.map((line, lineIndex) => {
+    const tokens = highlightCodeLine(line, language)
+    return (
+      <div key={`line-${lineIndex}`} className="min-h-6">
+        {tokens.length > 0 ? tokens.map((token, tokenIndex) => (
+          <span
+            key={`token-${lineIndex}-${tokenIndex}`}
+            className={tokenClassName(token.type)}
+          >
+            {token.value}
+          </span>
+        )) : <span>&nbsp;</span>}
+      </div>
+    )
+  })
+}
+
 // Convert Prosemirror/Novel JSON to React elements
 function renderProsemirrorNode(node: any, index: number = 0, depth: number = 0): React.ReactNode {
   if (!node) return null
@@ -226,10 +349,6 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
   const [showScrollHint, setShowScrollHint] = useState(false)
   const preRef = useRef<HTMLPreElement>(null)
   
-  const codeContent = node.content?.map((child: any, i: number) => 
-    renderProsemirrorNode(child, i)
-  ) || ''
-  
   const language = node.attrs?.params || ''
   const codeText = node.content?.map((child: any) => child.text).join('') || ''
   const codeLines = codeText.split('\n').length
@@ -261,141 +380,137 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="group relative my-3 overflow-hidden rounded-lg border border-slate-300 shadow-sm dark:border-slate-700 dark:shadow-lg sm:my-4 md:my-5 sm:rounded-xl bg-slate-100 dark:bg-slate-800/60"
+      className="group relative my-6 overflow-hidden rounded-3xl border border-slate-800/90 bg-[radial-gradient(circle_at_top_left,_rgba(34,211,238,0.08),_transparent_24%),linear-gradient(180deg,#06111f_0%,#020617_100%)] text-slate-100 shadow-[0_34px_80px_-44px_rgba(2,12,27,0.95)]"
     >
-      {/* Code header - RESPONSIVE */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-300 bg-slate-200 px-3 py-2 dark:border-slate-700 dark:bg-slate-800 sm:px-4 sm:py-3">
-        <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
-          <div className="flex gap-1 shrink-0">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-red-500" />
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-yellow-500" />
-            <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500" />
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-900/90 px-4 py-3 sm:px-5">
+        <div className="flex min-w-0 flex-1 items-center gap-2.5">
+          <div className="hidden items-center gap-1.5 sm:flex">
+            <span className="h-2.5 w-2.5 rounded-full bg-rose-400/90" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-300/90" />
+            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/90" />
           </div>
-          
           {language && (
-            <span className="ml-2 truncate font-mono text-xs text-slate-500 dark:text-slate-400 sm:text-sm max-w-30` sm:max-w-50 md:max-w-none">
+            <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-emerald-300">
               {language}
             </span>
           )}
-          
-          {/* Mobile line count */}
+          {!language && (
+            <span className="rounded-full border border-slate-700 bg-slate-800/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.18em] text-slate-300">
+              snippet
+            </span>
+          )}
+
           {shouldExpand && (
-            <span className="ml-auto text-xs text-gray-500 sm:hidden">
+            <span className="text-xs text-slate-400 sm:hidden">
               {codeLines} lines
             </span>
           )}
         </div>
-        
+
         <div className="flex items-center gap-1.5 sm:gap-2">
           {shouldExpand && (
             <button
               onClick={() => setExpanded(!expanded)}
-              className="group/expand flex items-center justify-center rounded-lg bg-slate-300 p-1.5 transition-colors duration-200 hover:bg-slate-400 dark:bg-slate-700 dark:hover:bg-slate-600"
+              className="flex items-center justify-center rounded-lg border border-slate-700 bg-slate-900 p-2 transition-colors duration-200 hover:bg-slate-800"
               aria-label={expanded ? "Collapse code" : "Expand code"}
             >
               {expanded ? (
-                <Minimize2 size={12} className="text-slate-600 dark:text-slate-300 sm:size-4" />
+                <Minimize2 size={13} className="text-slate-300 sm:size-4" />
               ) : (
-                <Maximize2 size={12} className="text-slate-600 dark:text-slate-300 sm:size-4" />
+                <Maximize2 size={13} className="text-slate-300 sm:size-4" />
               )}
             </button>
           )}
-          
-          {/* Copy button */}
+
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1.5 rounded-lg bg-emerald-100 px-2.5 py-1.5 text-xs text-emerald-700 transition-all duration-200 hover:bg-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-800/50 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm"
+            className="flex items-center gap-1.5 rounded-lg bg-emerald-500 px-2.5 py-1.5 text-xs font-medium text-white transition-all duration-200 hover:bg-emerald-400 sm:gap-2 sm:px-3 sm:text-sm"
             aria-label={copied ? "Code copied" : "Copy code"}
           >
             {copied ? (
               <>
-                <Check size={12} className="sm:size-4 shrink-0" />
+                <Check size={12} className="shrink-0 sm:size-4" />
                 <span className="hidden sm:inline">Copied</span>
               </>
             ) : (
               <>
-                <Copy size={12} className="sm:size-4 shrink-0" />
+                <Copy size={12} className="shrink-0 sm:size-4" />
                 <span className="hidden sm:inline">Copy</span>
               </>
             )}
           </button>
         </div>
       </div>
-      
-      {/* Code content - FULLY RESPONSIVE */}
+
       <div className={`
         relative overflow-auto
         ${shouldExpand && !expanded ? 'max-h-64 sm:max-h-80 md:max-h-96' : ''}
         ${shouldExpand ? 'transition-all duration-300 ease-out' : ''}
-        scrollbar-thin scrollbar-thumb-slate-400 dark:scrollbar-thumb-slate-600 scrollbar-track-slate-200 dark:scrollbar-track-slate-800
+        scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900
       `}>
-        {/* Horizontal scroll indicator */}
         {showScrollHint && (
-          <div className="pointer-events-none sticky left-0 top-0 z-10 h-1 w-full bg-linear-to-r from-transparent via-slate-400/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:via-slate-600/60" />
+          <div className="pointer-events-none sticky left-0 top-0 z-10 h-px w-full bg-linear-to-r from-transparent via-emerald-400/60 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         )}
-        
+
         <div className="relative">
-          {/* Line numbers - responsive */}
           {codeLines > 1 && (
             <div className="
               absolute left-0 top-0 bottom-0
               hidden sm:block
               select-none
-              py-3 sm:py-4
-              pr-3 sm:pr-4
+              py-4
+              pr-4
               text-right
-              text-slate-500 dark:text-slate-400
+              text-slate-500
               font-mono
-              text-xs sm:text-sm
-              border-r border-slate-300 dark:border-slate-700
-              bg-slate-100 dark:bg-slate-800/60
+              text-xs
+              border-r border-slate-800
+              bg-slate-950
               z-10
             ">
               {Array.from({ length: codeLines }, (_, i) => i + 1).map(line => (
-                <div key={line} className="leading-5 sm:leading-6 md:leading-7 h-5 sm:h-6 md:h-7">
+                <div key={line} className="h-6 leading-6">
                   {line}
                 </div>
               ))}
             </div>
           )}
-          
-          {/* Code content area */}
+
           <div className={`
-            ${codeLines > 1 ? 'sm:pl-12 md:pl-14' : ''}
+            ${codeLines > 1 ? 'sm:pl-14' : ''}
             min-w-0
           `}>
             <pre 
               ref={preRef}
               className="
-                p-3 sm:p-4 md:p-5
+                p-4 sm:p-5
                 overflow-x-auto
                 overflow-y-hidden
-                min-h-15
+                min-h-[72px]
               "
             >
               <code className="
                 font-mono
-                text-xs sm:text-sm md:text-base
-                text-slate-900 dark:text-slate-100
-                leading-5 sm:leading-6 md:leading-7
+                text-[13px] sm:text-[14px]
+                leading-6 sm:leading-7
                 whitespace-pre
                 block
                 min-w-fit
+                antialiased
               ">
-                {codeContent}
+                {renderHighlightedCode(codeText, language)}
               </code>
             </pre>
           </div>
         </div>
         
-        {/* Scroll hint for mobile */}
         {showScrollHint && (
           <div className="
             sm:hidden
             absolute bottom-2 right-2
             px-2 py-1
-            bg-slate-200/95 dark:bg-slate-800/90 backdrop-blur-sm
-            text-slate-600 dark:text-slate-300 text-xs
+            bg-slate-900/90 backdrop-blur-sm
+            text-slate-300 text-xs
             rounded-full
             flex items-center gap-1
             animate-pulse
@@ -406,30 +521,28 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
         )}
       </div>
       
-      {/* Line count badge - desktop */}
       {shouldExpand && (
         <div className="
           hidden sm:flex
           absolute bottom-3 right-3
           px-2 py-1
-            bg-slate-200/85 dark:bg-slate-800/80 backdrop-blur-sm
-            text-slate-600 dark:text-slate-300 text-xs
+          bg-slate-900/85 backdrop-blur-sm
+          text-slate-300 text-xs
           rounded
           items-center gap-1
         ">
           <span>{codeLines} lines</span>
-          {!expanded && <span className="text-slate-500 dark:text-slate-400">•</span>}
+          {!expanded && <span className="text-slate-500">•</span>}
           {!expanded && <span className="text-emerald-400">+</span>}
         </div>
       )}
-      
-      {/* Expand indicator for mobile */}
+
       {shouldExpand && !expanded && (
         <div className="
           sm:hidden
           absolute inset-x-0 bottom-0
           h-16
-          bg-linear-to-t from-slate-100 via-slate-100/90 to-transparent dark:from-slate-800/60 dark:via-slate-800/50
+          bg-linear-to-t from-slate-950 via-slate-950/90 to-transparent
           flex items-end justify-center
           pb-3
           pointer-events-none
@@ -439,14 +552,14 @@ function CodeBlock({ node, index }: { node: any; index: number }) {
             className="
               pointer-events-auto
               text-xs
-              text-emerald-400
-              bg-slate-200/95 dark:bg-slate-800/90 backdrop-blur-sm
+              text-emerald-300
+              bg-slate-900/95 backdrop-blur-sm
               px-4 py-2
               rounded-full
               flex items-center gap-2
-              hover:bg-slate-300/90 dark:hover:bg-slate-700/90
+              hover:bg-slate-800/90
               transition-colors duration-200
-              border border-slate-300 dark:border-slate-700
+              border border-slate-700
               shadow-lg
             "
           >

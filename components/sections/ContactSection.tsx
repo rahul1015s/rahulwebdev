@@ -56,7 +56,6 @@ const navLinks = [
   { label: "Skills", href: "#skills" },
   { label: "About", href: "#about" },
   { label: "Blog", href: "/blog" },
-  { label: "Resume", href: "/resume" },
   { label: "Contact", href: "#contact" },
 ];
 

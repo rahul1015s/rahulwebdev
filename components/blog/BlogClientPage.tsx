@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { BlogControls } from "@/components/blog/BlogControls";
 import { BlogListRow } from "@/components/blog/BlogListRow";
 import { BlogPostCard } from "@/components/blog/BlogPostCard";
@@ -11,40 +11,32 @@ type BlogPostItem = {
   _id: string;
   title: string;
   slug?: string;
-  content?: string;
+  excerpt?: string;
+  coverImage?: string;
+  category?: {
+    name: string;
+    slug?: string;
+  } | null;
   tags?: string[];
   readTime?: string;
   createdAt?: string | Date;
 };
 
-function extractExcerpt(content: unknown): string {
-  if (typeof content !== "string") return "Read the full article...";
-
-  try {
-    const parsed = JSON.parse(content);
-    return (
-      parsed?.content?.[1]?.content?.[0]?.text ??
-      content.replace(/<[^>]+>/g, "").slice(0, 120)
-    );
-  } catch {
-    return content.replace(/<[^>]+>/g, "").slice(0, 120);
-  }
-}
-
 export default function BlogClientPage({ initialPosts }: { initialPosts: BlogPostItem[] }) {
   const [query, setQuery] = useState("");
-  const [tag, setTag] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
   const [sort, setSort] = useState<"newest" | "oldest" | "title-asc" | "title-desc">("newest");
-  const [view, setView] = useState<"list" | "card">("card");
+  const [view, setView] = useState<"list" | "card">("list");
 
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const desktop = window.matchMedia("(min-width: 1024px)").matches;
-    setView(desktop ? "card" : "list");
-  }, []);
-
-  const allTags = useMemo(
-    () => Array.from(new Set((initialPosts || []).flatMap((p) => p.tags || []))),
+  const allCategories = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          (initialPosts || [])
+            .map((post) => post.category?.name)
+            .filter((value): value is string => Boolean(value))
+        )
+      ),
     [initialPosts]
   );
 
@@ -53,43 +45,48 @@ export default function BlogClientPage({ initialPosts }: { initialPosts: BlogPos
       processPosts({
         posts: initialPosts,
         query,
-        tag,
+        tag: category,
         sort,
       }),
-    [initialPosts, query, tag, sort]
+    [initialPosts, query, category, sort]
   ) as BlogPostItem[];
 
   return (
-    <main className="min-h-screen">
-      <section className="mx-auto max-w-4xl px-3 pb-8 pt-14 sm:px-5 sm:pb-10 sm:pt-16 lg:px-8 lg:pt-20">
-        <div className="mb-5">
-          <h1 className="text-xl font-semibold tracking-tight sm:text-2xl">Blog</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Notes on engineering, product, and practical web development.
-          </p>
+    <main className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.12),_transparent_38%),linear-gradient(180deg,rgba(248,250,252,0.92),rgba(255,255,255,1))] dark:bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16),_transparent_28%),linear-gradient(180deg,rgba(3,7,18,1),rgba(2,6,23,1))]">
+      <section className="mx-auto max-w-6xl px-4 pb-12 pt-14 sm:px-6 sm:pb-14 sm:pt-16 lg:px-8 lg:pt-20">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <h1 className="text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
+            Blog
+          </h1>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>{initialPosts.length} posts</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground/50" />
+            <span>{allCategories.length} categories</span>
+          </div>
         </div>
 
         <BlogControls
           query={query}
           setQuery={setQuery}
-          tag={tag}
-          setTag={setTag}
+          category={category}
+          setCategory={setCategory}
           sort={sort}
           setSort={setSort}
-          tags={allTags}
+          categories={allCategories}
           view={view}
           setView={setView}
         />
 
         {visiblePosts.length > 0 ? (
           view === "list" ? (
-            <div className="space-y-2">
+            <div className="space-y-3">
               {visiblePosts.map((p) => (
                 <BlogListRow
                   key={p._id.toString()}
                   href={`/blog/${p.slug || p._id}`}
                   title={p.title}
-                  excerpt={extractExcerpt(p.content)}
+                  excerpt={p.excerpt || "Read the full article..."}
+                  category={p.category?.name}
                   tags={p.tags || ["Article"]}
                   readTime={p.readTime || "5 min"}
                   date={
@@ -105,13 +102,15 @@ export default function BlogClientPage({ initialPosts }: { initialPosts: BlogPos
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
               {visiblePosts.map((p) => (
                 <BlogPostCard
                   key={p._id.toString()}
                   href={`/blog/${p.slug || p._id}`}
                   title={p.title}
-                  excerpt={extractExcerpt(p.content)}
+                  excerpt={p.excerpt || "Read the full article..."}
+                  image={p.coverImage}
+                  category={p.category?.name}
                   tags={p.tags || ["Article"]}
                   readTime={p.readTime || "5 min"}
                   date={
@@ -128,10 +127,30 @@ export default function BlogClientPage({ initialPosts }: { initialPosts: BlogPos
             </div>
           )
         ) : (
-          <div className="py-16 text-center text-sm text-muted-foreground">No posts found.</div>
+          <div className="rounded-3xl border border-dashed border-border/80 py-16 text-center text-sm text-muted-foreground">
+            No posts found for this filter.
+          </div>
         )}
 
-        <div className="mt-8">
+        <div className="mt-10 border-t border-border/60 pt-8">
+          <div className="mb-4 max-w-2xl">
+            <h2 className="text-lg font-semibold">Stay in the loop</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Fresh articles on search visibility, UI craft, and practical frontend systems.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              For readers improving their frontend basics, explore{" "}
+              <a
+                href="https://html5andcss3.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-emerald-600 underline decoration-emerald-500/40 underline-offset-4 transition hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200"
+              >
+                HTML5 and CSS3 tutorials
+              </a>
+              .
+            </p>
+          </div>
           <NewsletterForm variant="default" location="blog" />
         </div>
       </section>

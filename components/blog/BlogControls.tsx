@@ -6,11 +6,11 @@ import { SortOption } from "@/lib/blog-utils";
 type Props = {
   query: string;
   setQuery: (v: string) => void;
-  tag: string | null;
-  setTag: (v: string | null) => void;
+  category: string | null;
+  setCategory: (v: string | null) => void;
   sort: SortOption;
   setSort: (v: SortOption) => void;
-  tags: string[];
+  categories: string[];
   view: "list" | "card";
   setView: (v: "list" | "card") => void;
 };
@@ -18,45 +18,43 @@ type Props = {
 export function BlogControls({
   query,
   setQuery,
-  tag,
-  setTag,
+  category,
+  setCategory,
   sort,
   setSort,
-  tags,
+  categories,
   view,
   setView,
 }: Props) {
   return (
-    <div className="mb-4 rounded-lg border border-border/60 bg-card/40 p-2 sm:p-2.5">
-      {/* Search */}
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-center">
+    <div className="mb-5 rounded-[1.2rem] border border-border/70 bg-card/75 p-3 shadow-[0_16px_36px_-30px_rgba(15,23,42,0.3)] backdrop-blur">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-center">
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search posts..."
+          placeholder="Search articles, topics, or keywords"
           className="
-            h-9 w-full min-w-0 rounded-md border border-border/70
-            bg-background pl-9 pr-3 text-sm
-            focus:outline-none focus:ring-1 focus:ring-ring
+            h-10 w-full min-w-0 rounded-lg border border-border/70
+            bg-background/90 pl-10 pr-4 text-sm
+            focus:outline-none focus:ring-2 focus:ring-emerald-500/30
           "
         />
       </div>
 
-      {/* Tag Filter */}
       <select
-        value={tag ?? ""}
-        onChange={(e) => setTag(e.target.value || null)}
+        value={category ?? ""}
+        onChange={(e) => setCategory(e.target.value || null)}
         className="
-          h-9 w-full rounded-md border border-border/70
-          bg-background px-3 text-sm
+          h-10 w-full rounded-lg border border-border/70
+          bg-background/90 px-3 text-sm
         "
       >
-        <option value="">All topics</option>
-        {tags.map((t) => (
-          <option key={t} value={t}>
-            {t}
+        <option value="">All categories</option>
+        {categories.map((item) => (
+          <option key={item} value={item}>
+            {item}
           </option>
         ))}
       </select>
@@ -66,8 +64,8 @@ export function BlogControls({
         value={sort}
         onChange={(e) => setSort(e.target.value as SortOption)}
         className="
-          h-9 w-full rounded-md border border-border/70
-          bg-background px-3 text-sm
+          h-10 w-full rounded-lg border border-border/70
+          bg-background/90 px-3 text-sm
         "
       >
         <option value="newest">Newest first</option>
@@ -76,12 +74,12 @@ export function BlogControls({
         <option value="title-desc">Title Z–A</option>
       </select>
 
-      <div className="inline-flex h-9 items-center rounded-md border border-border/70 bg-background p-0.5">
+      <div className="inline-flex h-10 items-center rounded-lg border border-border/70 bg-background/90 p-1">
         <button
           type="button"
           onClick={() => setView("list")}
-          className={`inline-flex h-7 items-center gap-1.5 rounded px-2 text-xs transition ${
-            view === "list" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+          className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition ${
+            view === "list" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
           }`}
           aria-label="List view"
         >
@@ -91,8 +89,8 @@ export function BlogControls({
         <button
           type="button"
           onClick={() => setView("card")}
-          className={`inline-flex h-7 items-center gap-1.5 rounded px-2 text-xs transition ${
-            view === "card" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+          className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition ${
+            view === "card" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
           }`}
           aria-label="Card view"
         >

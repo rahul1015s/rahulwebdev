@@ -7,7 +7,21 @@ import { BlogPostCard } from "@/components/blog/BlogPostCard";
 import { processPosts } from "@/lib/blog-utils";
 import NewsletterForm from "@/components/newsletter/NewsletterForm";
 
-function extractExcerpt(content: any): string {
+type LegacyBlogPost = {
+  _id?: string;
+  title: string;
+  slug?: string;
+  content?: unknown;
+  tags?: string[];
+  readTime?: string;
+  createdAt?: string | Date;
+  category?: {
+    name: string;
+    slug?: string;
+  } | null;
+};
+
+function extractExcerpt(content: unknown): string {
   if (!content) return "Read the full article…";
 
   try {
@@ -22,27 +36,27 @@ function extractExcerpt(content: any): string {
 }
 
 type Props = {
-  posts?: any[];
+  posts?: LegacyBlogPost[];
 };
 
 export default function BlogClient({ posts = [] }: Props) {
   /* ---------------- STATE ---------------- */
   const [query, setQuery] = useState("");
-  const [tag, setTag] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(null);
   const [sort, setSort] = useState<
     "newest" | "oldest" | "title-asc" | "title-desc"
   >("newest");
   const [view, setView] = useState<"list" | "card">("list");
 
-  /* ---------------- TAGS ---------------- */
-  const allTags = useMemo(() => {
+  /* ---------------- CATEGORIES ---------------- */
+  const allCategories = useMemo(() => {
     if (!Array.isArray(posts)) return [];
 
     return Array.from(
       new Set(
-        posts.flatMap((p) =>
-          Array.isArray(p?.tags) ? p.tags : []
-        )
+        posts
+          .map((p) => p?.category?.name)
+          .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
       )
     );
   }, [posts]);
@@ -54,10 +68,10 @@ export default function BlogClient({ posts = [] }: Props) {
     return processPosts({
       posts,
       query,
-      tag,
+      tag: category,
       sort,
     });
-  }, [posts, query, tag, sort]);
+  }, [posts, query, category, sort]);
 
   return (
     <>
@@ -65,11 +79,11 @@ export default function BlogClient({ posts = [] }: Props) {
       <BlogControls
         query={query}
         setQuery={setQuery}
-        tag={tag}
-        setTag={setTag}
+        category={category}
+        setCategory={setCategory}
         sort={sort}
         setSort={setSort}
-        tags={allTags}
+        categories={allCategories}
         view={view}
         setView={setView}
       />
@@ -78,7 +92,7 @@ export default function BlogClient({ posts = [] }: Props) {
       {visiblePosts.length > 0 ? (
         view === "list" ? (
           <div className="space-y-3">
-            {visiblePosts.map((p: any) => (
+            {visiblePosts.map((p) => (
               <BlogListRow
                 key={p._id?.toString()}
                 href={`/blog/${p.slug || p._id}`}
@@ -100,7 +114,7 @@ export default function BlogClient({ posts = [] }: Props) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
-            {visiblePosts.map((p: any) => (
+            {visiblePosts.map((p) => (
               <BlogPostCard
                 key={p._id?.toString()}
                 href={`/blog/${p.slug || p._id}`}
