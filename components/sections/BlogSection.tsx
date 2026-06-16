@@ -5,10 +5,31 @@ import Post from "@/models/post";
 import { normalizeImageUrl } from "@/utils/url-utils";
 import { unstable_cache } from "next/cache";
 
+type ContentNode = {
+  type?: string;
+  attrs?: {
+    src?: string;
+  };
+  content?: Array<{
+    text?: string;
+  }>;
+};
+
+type BlogDoc = {
+  _id: unknown;
+  slug?: string;
+  title?: string;
+  image?: string;
+  content?: string | { content?: ContentNode[] };
+  tags?: string[];
+  readTime?: string;
+  createdAt?: string | Date;
+};
+
 /* ---------------------------------------------
    Helpers
 --------------------------------------------- */
-function extractFirstImage(content: any): string | null {
+function extractFirstImage(content: string | { content?: ContentNode[] } | undefined): string | null {
   try {
     const json = typeof content === "string" ? JSON.parse(content) : content;
     for (const node of json?.content ?? []) {
@@ -44,9 +65,9 @@ const getCachedBlogPosts = unstable_cache(
 );
 
 /* Transform posts to display format */
-function transformPosts(docs: any[]) {
-  return docs.map((p: any, index: number) => {
-    let coverImage = p.image
+function transformPosts(docs: BlogDoc[]) {
+  return docs.map((p, index: number) => {
+    const coverImage = p.image
       ? normalizeImageUrl(p.image)
       : extractFirstImage(p.content);
 
@@ -86,7 +107,7 @@ function transformPosts(docs: any[]) {
 /* Blog Section Component */
 export default async function BlogSection() {
   const { docs } = await getCachedBlogPosts();
-  const posts = transformPosts(docs);
+  const posts = transformPosts(docs as BlogDoc[]);
 
   return (
     <section id="blog" className="py-20">
@@ -100,7 +121,7 @@ export default async function BlogSection() {
             Latest Articles
           </h2>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Thoughts, tutorials, and insights on modern web development.
+            Thoughts, tutorials, and insights on modern web development for business owners, students, and working developers.
           </p>
         </div>
 

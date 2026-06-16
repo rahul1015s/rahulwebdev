@@ -60,7 +60,6 @@ export default function HeroSection() {
 
         {/* CTAs */}
         <div className="mt-8 flex flex-wrap gap-3">
-          {/* Primary */}
           <Button
             asChild
             className="
@@ -77,7 +76,6 @@ export default function HeroSection() {
             </a>
           </Button>
 
-          {/* WhatsApp */}
           <Button
             asChild
             variant="outline"
@@ -85,23 +83,21 @@ export default function HeroSection() {
               gap-2
               transition-all duration-200
               hover:-translate-y-[1px]
-              hover:shadow-sm
               active:scale-[0.97]
             "
           >
-            <a href="https://wa.me/919135271562" target="_blank">
+            <a href="https://wa.me/919135271562" target="_blank" rel="noopener noreferrer">
               <MessageCircle className="h-4 w-4" />
               WhatsApp
             </a>
           </Button>
 
-          {/* Social Icons */}
           <Button
             asChild
             variant="ghost"
             className="transition-transform hover:scale-110"
           >
-            <a href="https://github.com/rahul1015s" target="_blank">
+            <a href="https://github.com/rahul1015s" target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4" />
             </a>
           </Button>
@@ -111,7 +107,7 @@ export default function HeroSection() {
             variant="ghost"
             className="transition-transform hover:scale-110"
           >
-            <a href="https://linkedin.com/in/rahul1015s" target="_blank">
+            <a href="https://linkedin.com/in/rahul1015s" target="_blank" rel="noopener noreferrer">
               <Linkedin className="h-4 w-4" />
             </a>
           </Button>

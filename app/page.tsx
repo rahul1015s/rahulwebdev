@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic'
-// import BlogSection from '@/components/sections/BlogSection'
 import { Metadata } from 'next'
 
 // Lazy load interactive sections to reduce main-thread blocking
@@ -101,6 +100,36 @@ const page = () => {
       "query-input": "required name=search_term_string"
     }
   };
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can business owners hire Rahul Verma for websites and web applications?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Rahul Verma builds business websites, web applications, dashboards, and SEO-focused digital products for startups, local businesses, and growing teams."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can students and developers learn from this website?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The website includes blogs and case studies that explain real build decisions, architecture choices, frontend engineering patterns, and project outcomes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where should I start if I want to study real project work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Start with the case studies for end-to-end project breakdowns, then read the blog for tutorials, technical insights, and implementation guidance."
+        }
+      }
+    ]
+  };
 
   return (
     <>
@@ -110,6 +139,12 @@ const page = () => {
           __html: JSON.stringify(portfolioStructuredData),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqStructuredData),
+        }}
+      />
       
       <HeroSection />
       <ExperienceSection />
@@ -117,7 +152,6 @@ const page = () => {
       <ProjectsSection />
       <SkillsSection />
       <AboutSection />
-      {/* <BlogSection /> */}
       <ContactSection />
     </>
   )

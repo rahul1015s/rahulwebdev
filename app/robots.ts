@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/blog", "/case-studies", "/freelance-web-developer-patna"],
+        allow: ["/", "/blog", "/case-studies", "/freelance-web-developer-patna", "/services-patna"],
         disallow: [
           "/admin/",
           "/api/admin/",
@@ -28,10 +28,15 @@ export default function robots(): MetadataRoute.Robots {
       },
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },
+      { userAgent: "OAI-SearchBot", allow: "/" },
       { userAgent: "OpenAI", allow: "/" },
       { userAgent: "Googlebot-Extended", allow: "/" },
       { userAgent: "anthropic-ai", allow: "/" },
+      { userAgent: "ClaudeBot", allow: "/" },
+      { userAgent: "PerplexityBot", allow: "/" },
       { userAgent: "Perplexity", allow: "/" },
+      { userAgent: "Amazonbot", allow: "/" },
+      { userAgent: "Bytespider", allow: "/" },
       { userAgent: "CCBot", allow: "/" },
     ],
 

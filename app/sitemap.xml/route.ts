@@ -1,24 +1,19 @@
 import { connectDB } from '@/lib/mongodb';
 import Post from '@/models/post';
 import CaseStudy from '@/models/casestudy';
+import { extractExcerpt } from '@/lib/blog-content';
+import { discoverPublicPages } from '@/lib/public-pages';
 
 interface SitemapEntry {
   url: string;
   lastModified: string;
-  changeFrequency: 'weekly' | 'monthly';
+  changeFrequency: 'daily' | 'weekly' | 'monthly';
   priority: number;
 }
 
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rahulwebdev.in';
-
-  // Static pages
-  const staticPages = [
-    '',
-    '/blog',
-    '/case-studies',
-    "/freelance-web-developer-patna"
-  ];
+  const publicPages = await discoverPublicPages();
 
   // Dynamic pages from database
   await connectDB();
@@ -26,45 +21,47 @@ export async function GET() {
   const sitemap: SitemapEntry[] = [];
 
   // Add static pages
-  staticPages.forEach(page => {
+  publicPages.forEach(({ path, changeFrequency, priority }) => {
     sitemap.push({
-      url: `${baseUrl}${page}`,
+      url: path === '/' ? baseUrl : `${baseUrl}${path}`,
       lastModified: new Date().toISOString(),
-      changeFrequency: 'weekly' as const,
-      priority: page === '' ? 1.0 : 0.8,
+      changeFrequency,
+      priority,
     });
   });
 
   try {
     // Add blog posts
     const posts = await Post.find({ published: true })
-      .select('slug updatedAt createdAt')
-      .sort({ createdAt: -1 })
+      .select('slug updatedAt createdAt content metaDescription')
+      .sort({ updatedAt: -1, createdAt: -1 })
       .lean();
 
     posts.forEach(post => {
       const lastModified = post.updatedAt || post.createdAt;
+      const excerpt = post.metaDescription?.trim() || extractExcerpt(post.content, 160);
       sitemap.push({
         url: `${baseUrl}/blog/${post.slug}`,
         lastModified: lastModified!.toISOString(),
         changeFrequency: 'monthly' as const,
-        priority: 0.6,
+        priority: excerpt ? 0.75 : 0.7,
       });
     });
 
     // Add case studies
     const caseStudies = await CaseStudy.find({ published: true })
-      .select('slug updatedAt createdAt')
-      .sort({ createdAt: -1 })
+      .select('slug updatedAt createdAt content description tagline')
+      .sort({ updatedAt: -1, createdAt: -1 })
       .lean();
 
     caseStudies.forEach(study => {
       const lastModified = study.updatedAt || study.createdAt;
+      const summary = study.description?.trim() || study.tagline?.trim() || extractExcerpt(study.content, 180);
       sitemap.push({
         url: `${baseUrl}/case-studies/${study.slug}`,
         lastModified: lastModified!.toISOString(),
         changeFrequency: 'monthly' as const,
-        priority: 0.6,
+        priority: summary ? 0.8 : 0.75,
       });
     });
   } catch (error) {

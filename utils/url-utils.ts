@@ -108,6 +108,10 @@ export function normalizeImageUrl(url: string): string {
     // Skip normalization for data URLs
     if (trimmedUrl.startsWith('data:')) return trimmedUrl;
 
+    // Keep root-relative and same-page-relative asset paths intact
+    if (trimmedUrl.startsWith('/')) return trimmedUrl;
+    if (trimmedUrl.startsWith('./') || trimmedUrl.startsWith('../')) return trimmedUrl;
+
     // Skip normalization for already proxied URLs
     if (trimmedUrl.includes('/api/proxy/image')) return trimmedUrl;
 
