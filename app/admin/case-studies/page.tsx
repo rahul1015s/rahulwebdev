@@ -9,6 +9,7 @@ import CaseStudy from '@/models/casestudy'
 import DeleteCaseStudyButton from './delete-button'
 
 export const metadata = { title: 'Case Studies — Admin' }
+export const dynamic = "force-dynamic";
 
 export default async function CaseStudiesAdminPage() {
   await connectDB()

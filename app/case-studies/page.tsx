@@ -6,6 +6,8 @@ import CaseStudy from "@/models/casestudy"
 import { Metadata } from 'next';
 import { estimateReadTime, extractCoverImage, extractExcerpt } from "@/lib/blog-content";
 
+export const dynamic = "force-dynamic";
+
 type CaseStudyCard = {
   slug: string;
   name: string;

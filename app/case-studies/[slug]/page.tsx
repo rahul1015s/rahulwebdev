@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { generateBreadcrumbStructuredData } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 type CaseStudyPageProps = { params: Promise<{ slug: string }> };

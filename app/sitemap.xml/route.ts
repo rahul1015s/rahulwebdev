@@ -4,6 +4,8 @@ import CaseStudy from '@/models/casestudy';
 import { extractExcerpt } from '@/lib/blog-content';
 import { discoverPublicPages } from '@/lib/public-pages';
 
+export const dynamic = "force-dynamic";
+
 interface SitemapEntry {
   url: string;
   lastModified: string;

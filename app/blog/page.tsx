@@ -4,6 +4,7 @@ import "@/models/tag";
 import BlogClientPage from "@/components/blog/BlogClientPage";
 import { extractCoverImage, extractExcerpt, normalizeCategory, normalizeTagNames } from "@/lib/blog-content";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 300;
 
 type LeanTag = string | { name?: string | null } | null | undefined;

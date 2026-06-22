@@ -5,6 +5,7 @@ import { extractExcerpt } from "@/lib/blog-content";
 import { discoverPublicPages } from "@/lib/public-pages";
 
 const siteUrl = "https://rahulwebdev.in";
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const publicPages = await discoverPublicPages();

@@ -17,6 +17,8 @@ import {
 } from "@/lib/blog-content";
 import { generateBreadcrumbStructuredData, convertReadTimeToISO8601 } from "@/lib/seo";
 
+export const dynamic = "force-dynamic";
+
 interface PostPageProps {
   params: Promise<{ slug: string }> | { slug: string };
 }

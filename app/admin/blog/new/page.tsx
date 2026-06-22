@@ -4,6 +4,7 @@ import Tag from "@/models/tag";
 import NewPostForm from "@/components/admin/NewPostForm";
 
 export const metadata = { title: "New Post — Rahul Verma" };
+export const dynamic = "force-dynamic";
 
 export default async function NewPostPage() {
   await connectDB();

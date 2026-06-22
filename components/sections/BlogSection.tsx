@@ -87,7 +87,7 @@ function transformPosts(docs: BlogDoc[]) {
 
     return {
       href: `/blog/${p.slug || p._id}`,
-      title: p.title,
+      title: p.title?.trim() || "Untitled article",
       excerpt,
       image: safeImage,
       tags: p.tags || ["Article"],
