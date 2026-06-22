@@ -97,7 +97,12 @@ export default function HeroSection() {
             variant="ghost"
             className="transition-transform hover:scale-110"
           >
-            <a href="https://github.com/rahul1015s" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://github.com/rahul1015s"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open Rahul Verma GitHub profile"
+            >
               <Github className="h-4 w-4" />
             </a>
           </Button>
@@ -107,7 +112,12 @@ export default function HeroSection() {
             variant="ghost"
             className="transition-transform hover:scale-110"
           >
-            <a href="https://linkedin.com/in/rahul1015s" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://linkedin.com/in/rahul1015s"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open Rahul Verma LinkedIn profile"
+            >
               <Linkedin className="h-4 w-4" />
             </a>
           </Button>

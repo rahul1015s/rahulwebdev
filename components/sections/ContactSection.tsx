@@ -147,6 +147,7 @@ export default function ContactFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-icon"
+                aria-label="Open Rahul Verma GitHub profile"
               >
                 <Github className="h-4 w-4" />
               </a>
@@ -156,6 +157,7 @@ export default function ContactFooter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-icon"
+                aria-label="Open Rahul Verma LinkedIn profile"
               >
                 <Linkedin className="h-4 w-4" />
               </a>
@@ -163,6 +165,7 @@ export default function ContactFooter() {
               <a
                 href="mailto:hello@rahulwebdev.in"
                 className="footer-icon"
+                aria-label="Email Rahul Verma"
               >
                 <Mail className="h-4 w-4" />
               </a>
