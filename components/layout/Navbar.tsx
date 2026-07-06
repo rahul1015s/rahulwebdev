@@ -4,34 +4,27 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ThemeToggle } from "@/providers/ThemeProvider";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
-  Home,
-  FileText,
-  Folder,
-  Wrench,
-  User,
-  Mail,
+  ArrowUpRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { NavAccentSVG } from "@/components/nav/NavAccentSVG";
 
 type NavItem = {
   label: string;
   href: string;
-  icon: ReactNode;
+  icon?: ReactNode;
 };  
 
 const navItems: NavItem[] = [
-  { label: "Home", href: "/", icon: <Home size={18} /> },
-  { label: "Blog", href: "/blog", icon: <FileText size={18} /> },
-  { label: "Projects", href: "#projects", icon: <Folder size={18} /> },
-  { label: "Skills", href: "#skills", icon: <Wrench size={18} /> },
-  { label: "About", href: "#about", icon: <User size={18} /> },
-  { label: "Contact", href: "#contact", icon: <Mail size={18} /> },
+  { label: "Home", href: "/" },
+  { label: "Case Studies", href: "/case-studies" },
+  { label: "Projects", href: "#projects" },
+  { label: "Skills", href: "#skills" },
+  { label: "Experience", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -75,72 +68,50 @@ export default function Navbar() {
     <motion.nav
       animate={hidden ? { y: -80 } : { y: 0 }}
       transition={{ duration: 0.25 }}
-      className="
-        fixed top-0 left-0 z-50 w-full
-        border-b border-border
-        bg-background/80 backdrop-blur
-      "
+      className="archive-nav"
     >
-      <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
-        {/* Brand */}
+      <div className="archive-nav-inner">
         <Link
           href="/"
-          className="font-semibold text-foreground hover:text-primary transition"
+          className="archive-nav-brand"
         >
-          Rahul Verma
+          <span className="archive-nav-kicker">Rahul Verma</span>
+          <span className="archive-nav-title">Full Stack Developer</span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-1">
+        <div className="hidden md:flex items-center gap-2">
           {navItems.map((item) => {
             const isHash = item.href.startsWith("#");
-            const isActive =
-              !isHash && pathname === item.href;
+            const isActive = !isHash && pathname === item.href;
 
             return (
               <button
                 key={item.href}
                 onClick={() => navigateTo(item.href)}
-                className={`
-                  relative flex items-center gap-2 px-3 py-2
-                  text-sm font-medium rounded-lg
-                  transition-colors
-                  ${
-                    isActive
-                      ? "text-primary"
-                      : "text-muted-foreground hover:text-primary"
-                  }
-                `}
+                className={`archive-nav-link ${isActive ? "archive-nav-link-active" : ""}`}
               >
-                {item.icon}
                 {item.label}
-
-                {isActive && <NavAccentSVG />}
               </button>
             );
           })}
-
-          <ThemeToggle />
         </div>
 
-        {/* Mobile */}
         <div className="md:hidden flex items-center gap-2">
-          <ThemeToggle />
-
           <Sheet>
             <SheetTrigger asChild>
-              <Button size="icon" variant="ghost">
+              <Button size="icon" variant="ghost" className="archive-nav-menu">
                 <Menu size={22} />
               </Button>
             </SheetTrigger>
 
             <SheetContent
               side="right"
-              className="bg-background border-l border-border"
+              className="archive-nav-sheet"
             >
               <div className="flex flex-col h-full">
-                <div className="p-4 border-b border-border font-semibold">
-                  Rahul Verma
+                <div className="archive-nav-sheet-header">
+                  <div className="archive-nav-kicker">Rahul Verma</div>
+                  <div className="archive-nav-title">Navigation</div>
                 </div>
 
                 <div className="flex-1 p-2 space-y-1">
@@ -148,30 +119,20 @@ export default function Navbar() {
                     <button
                       key={item.href}
                       onClick={() => navigateTo(item.href)}
-                      className="
-                        w-full flex items-center gap-3
-                        px-3 py-2 rounded-lg
-                        text-sm font-medium
-                        text-foreground
-                        hover:bg-muted
-                      "
+                      className="archive-nav-mobile-link"
                     >
-                      {item.icon}
                       {item.label}
                     </button>
                   ))}
                 </div>
 
-                <div className="p-4 border-t border-border">
+                <div className="archive-nav-sheet-footer">
                   <button
                     onClick={() => navigateTo("#contact")}
-                    className="
-                      w-full rounded-lg
-                      bg-primary text-primary-foreground
-                      py-2 text-sm font-medium
-                    "
+                    className="archive-nav-mobile-cta"
                   >
-                    Get in touch
+                    Contact Rahul
+                    <ArrowUpRight className="h-4 w-4" />
                   </button>
                 </div>
               </div>

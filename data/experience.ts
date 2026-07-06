@@ -2,21 +2,37 @@ export const experiences = [
   {
     id: 1,
     company: "Oplus Cowork",
-    position: "Full-stack Developer Intern",
-    period: "September 2025 - Present",
-    location: "Remote",
-    description: "Built and deployed opluscowork.com, a coworking platform website. Handled both frontend and backend development, troubleshooting deployment configurations, and preparing client demos.",
-    technologies: ["React.js", "Next.js", "Node.js", "Tailwind CSS", "TypeScript"],
-    type: "Internship",
+    position: "Full-Stack Developer",
+    period: "Jan 2026 - Present",
+    location: "Patna, Bihar, India (On-site)",
+    description:
+      "Led product architecture and shipped a workspace management platform using Next.js, React, MongoDB, and Tailwind CSS.",
+    technologies: ["Next.js", "React", "MongoDB", "Tailwind CSS", "Node.js"],
+    type: "Full-time",
     achievements: [
-      "Developed complete coworking platform from scratch",
-      "Managed deployment and server configuration",
-      "Implemented responsive design across all devices",
-      "Created interactive components and user flows"
+      "Owned end-to-end development from schema design to deployment",
+      "Built admin workflows and operational dashboards",
+      "Focused on fast, maintainable UI and API performance"
     ]
   },
   {
     id: 2,
+    company: "Oplus Cowork",
+    position: "Full-Stack Developer Intern",
+    period: "Sep 2025 - Dec 2025",
+    location: "Patna, Bihar, India",
+    description:
+      "Built reusable frontend modules and backend endpoints for authentication, content workflows, and internal tools.",
+    technologies: ["Next.js", "React", "Node.js", "Authentication", "Internal Tools"],
+    type: "Internship",
+    achievements: [
+      "Implemented production-ready API routes",
+      "Contributed to reusable UI component patterns",
+      "Improved app stability and response times"
+    ]
+  },
+  {
+    id: 3,
     company: "Carryzo Logistics",
     position: "Frontend Developer",
     period: "October 2024 - January 2025",

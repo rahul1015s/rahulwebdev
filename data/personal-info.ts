@@ -1,6 +1,6 @@
 export const personalInfo = {
   name: "Rahul Verma",
-  title: "Full-stack Developer Intern",
+  title: "Full-stack Developer",
   tagline: "Turning coffee into code, one component at a time!",
   email: "hello@rahulwebdev.in",
   location: "India",

@@ -13,6 +13,15 @@ interface SitemapEntry {
   priority: number;
 }
 
+function toSitemapDate(value: unknown) {
+  if (!value) {
+    return new Date().toISOString();
+  }
+
+  const date = value instanceof Date ? value : new Date(String(value));
+  return Number.isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
+}
+
 export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rahulwebdev.in';
   const publicPages = await discoverPublicPages();
@@ -44,7 +53,7 @@ export async function GET() {
       const excerpt = post.metaDescription?.trim() || extractExcerpt(post.content, 160);
       sitemap.push({
         url: `${baseUrl}/blog/${post.slug}`,
-        lastModified: lastModified!.toISOString(),
+        lastModified: toSitemapDate(lastModified),
         changeFrequency: 'monthly' as const,
         priority: excerpt ? 0.75 : 0.7,
       });
@@ -61,7 +70,7 @@ export async function GET() {
       const summary = study.description?.trim() || study.tagline?.trim() || extractExcerpt(study.content, 180);
       sitemap.push({
         url: `${baseUrl}/case-studies/${study.slug}`,
-        lastModified: lastModified!.toISOString(),
+        lastModified: toSitemapDate(lastModified),
         changeFrequency: 'monthly' as const,
         priority: summary ? 0.8 : 0.75,
       });

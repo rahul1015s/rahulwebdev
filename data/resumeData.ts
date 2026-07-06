@@ -49,36 +49,48 @@ export const resumeData = {
   },
 
   about: {
-    summary: `Full-stack developer with hands-on experience building enterprise-grade SaaS applications. Currently interning at Oplus Cowork, contributing to systems used across multiple workspaces in India. Brings a strong analytical mindset and a thoughtful, problem-first approach to development.`,
+    summary: `Full-stack developer with hands-on experience building enterprise-grade SaaS applications. Working at Oplus Cowork on systems used across multiple workspaces in India. Brings a strong analytical mindset and a thoughtful, problem-first approach to development.`,
     values: ['Clarity over cleverness', 'Robustness over speed', 'Maintainability over shortcuts', 'User-first thinking'],
     focus: ['Enterprise SaaS development', 'System design & architecture', 'Production deployment', 'Technical mentoring'],
   },
 
   experience: [
     {
-      title: 'Full Stack Developer Intern',
+      title: 'Full Stack Developer',
       company: 'Oplus Cowork',
-      period: 'Sept 2025 - Present',
+      period: 'Jan 2026 - Present',
       status: 'Active',
       description: [
-        'Building enterprise workspace management SaaS serving many locations across India',
-        'Implementing core features for production systems handling thousands of users',
-        'Designing and developing scalable APIs and admin dashboards',
+        'Led product architecture and shipped a workspace management platform using Next.js, React, MongoDB, and Tailwind CSS',
+        'Owned end-to-end development from schema design to deployment',
+        'Built admin workflows and operational dashboards',
       ],
       highlights: [
-        'Role-Based Access Control (RBAC) & Multi-tenant Architecture',
-        '40+ RESTful APIs for workspace management',
-        'Admin Dashboards with Real-time Analytics',
-        'OTP Authentication & JWT Security',
-        'AI Chatbot Integration for customer support',
-        'Progressive Web App (PWA) with Offline Support',
-        'Advanced caching strategies and optimization',
-        'Production deployment and DevOps',
+        'Focused on fast, maintainable UI and API performance',
+        'Workspace management platform delivery',
+        'Schema design to deployment ownership',
       ],
       technologies: ['Next.js', 'TypeScript', 'MongoDB', 'Node.js', 'Express', 'PWA', 'AI'],
     },
     {
       title: 'Full Stack Developer Intern',
+      company: 'Oplus Cowork',
+      period: 'Sep 2025 - Dec 2025',
+      status: 'Completed',
+      description: [
+        'Built reusable frontend modules and backend endpoints for authentication, content workflows, and internal tools',
+        'Implemented production-ready API routes',
+        'Contributed to reusable UI component patterns',
+      ],
+      highlights: [
+        'Improved app stability and response times',
+        'Authentication and content workflow support',
+        'Internal tools contribution',
+      ],
+      technologies: ['Next.js', 'React', 'Node.js', 'TypeScript', 'Authentication'],
+    },
+    {
+      title: 'Full Stack Developer',
       company: 'SDRF India - CSR & Donation Platform',
       period: '2025',
       status: 'In Development',
