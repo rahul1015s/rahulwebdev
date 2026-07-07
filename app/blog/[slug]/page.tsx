@@ -312,6 +312,9 @@ export default async function PostPage({ params }: PostPageProps) {
             <Link href="/case-studies" className="case-next-link">
               View case studies
             </Link>
+            <Link href="/services-patna" className="case-next-link">
+              Explore Patna services
+            </Link>
           </div>
         </section>
       </main>

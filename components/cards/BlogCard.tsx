@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock } from "lucide-react";
 
@@ -59,6 +61,8 @@ export function BlogCard({
   date,
   index = 0,
 }: BlogCardProps) {
+  const [src, setSrc] = useState(image);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -83,20 +87,21 @@ export function BlogCard({
       >
         <BlogFrame />
 
-        {/* ✅ Aspect-ratio based image */}
         <div className="relative z-10 w-full aspect-video bg-muted">
-          <img
-            src={image}
+          <Image
+            src={src}
             alt={title}
-            loading="lazy"
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
             className="
-              h-full w-full object-contain
+              object-contain
               bg-muted
               transition-transform duration-300
               group-hover:scale-[1.02]
             "
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "/default-blog.png";
+            unoptimized={src.startsWith("http")}
+            onError={() => {
+              setSrc("/default-blog.png");
             }}
           />
         </div>

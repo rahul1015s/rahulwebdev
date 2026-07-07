@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import dynamic from "next/dynamic";
+import Script from "next/script";
 import { IBM_Plex_Mono, IBM_Plex_Serif, Inter, Space_Grotesk, Special_Elite } from "next/font/google";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { AuthProvider } from "@/providers/AuthProvider";
@@ -232,10 +233,12 @@ export default function RootLayout({
     ],
   };
 
-  return (
+      return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="gtm-init"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

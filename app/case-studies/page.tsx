@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
-import { extractExcerpt } from "@/lib/blog-content";
 import { connectDB } from "@/lib/mongodb";
 import CaseStudy from "@/models/casestudy";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
@@ -20,7 +20,6 @@ type CaseStudyCard = {
   client?: string;
   published?: boolean;
   order?: number;
-  content?: unknown;
 };
 
 export const metadata: Metadata = {
@@ -61,6 +60,7 @@ async function getCaseStudies() {
     await connectDB();
     const studies = await CaseStudy.find({ published: true })
       .sort({ order: 1, createdAt: -1 })
+      .select("slug name description tagline stack category createdAt timeline client published order")
       .lean();
 
     return studies as CaseStudyCard[];
@@ -71,29 +71,15 @@ async function getCaseStudies() {
 }
 
 function getStatus(study: CaseStudyCard) {
-  const createdAt = new Date(study.createdAt);
-  const ageInDays = Math.max(
-    0,
-    Math.floor((Date.now() - createdAt.getTime()) / (1000 * 60 * 60 * 24)),
-  );
-
-  if (study.published && ageInDays < 120) {
-    return "building";
-  }
-
-  return study.published ? "live" : "archived";
+  return study.published ? "published" : "archived";
 }
 
 function getStatusLabel(status: ReturnType<typeof getStatus>) {
-  if (status === "building") {
-    return "BUILDING";
-  }
-
   if (status === "archived") {
     return "ARCHIVED";
   }
 
-  return "LIVE";
+  return "PUBLISHED";
 }
 
 export default async function CaseStudiesPage() {
@@ -111,12 +97,12 @@ export default async function CaseStudiesPage() {
       itemListElement: studies.map((study, index) => ({
         "@type": "ListItem",
         position: index + 1,
-        url: `https://rahulwebdev.in/case-studies/${study.slug}`,
+        url: `${SITE_URL}/case-studies/${study.slug}`,
         name: study.name,
         description:
           study.description ||
           study.tagline ||
-          extractExcerpt(study.content, 180),
+          `Case study detailing the build, stack, and outcome for ${study.name}.`,
       })),
     },
   };
@@ -163,7 +149,7 @@ export default async function CaseStudiesPage() {
                 const summary =
                   study.description ||
                   study.tagline ||
-                  extractExcerpt(study.content, 210);
+                  `Read how ${study.name} was planned, built, and shipped.`;
                 const year = new Date(study.createdAt).getFullYear();
                 const tags = [...(study.category || []), ...(study.stack || [])].slice(
                   0,
@@ -200,7 +186,7 @@ export default async function CaseStudiesPage() {
                     </div>
 
                     <div className="case-file-meta">
-                      <span className={`case-stamp case-stamp-${status}`}>
+                      <span className={`case-stamp ${status === "published" ? "case-stamp-live" : "case-stamp-archived"}`}>
                         {getStatusLabel(status)}
                       </span>
                       <span className="case-file-year">{year}</span>
@@ -217,6 +203,9 @@ export default async function CaseStudiesPage() {
             </Link>
             <Link href="/blog" className="case-nav-link">
               Browse blog notes
+            </Link>
+            <Link href="/freelance-web-developer-patna" className="case-nav-link">
+              Patna web developer page
             </Link>
           </div>
         </section>

@@ -673,6 +673,19 @@ body {
   max-width: 700px;
   font-size: 15.5px;
   line-height: 1.75;
+  color: #55503f;
+}
+
+.case-files-shell .case-section-body :where(p, li, td) {
+  color: #55503f;
+}
+
+.case-files-shell .case-section-body :where(strong, em, th, h1, h2, h3, h4) {
+  color: #211e1a;
+}
+
+.case-files-shell .case-section-body blockquote {
+  color: #55503f;
 }
 
 .case-section-body p + p {

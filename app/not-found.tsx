@@ -1,100 +1,202 @@
 import Link from "next/link";
-import { ArrowRight, BriefcaseBusiness, Home, Mail, Search, SquarePen } from "lucide-react";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Home,
+  Mail,
+  MessageCircleMore,
+  Phone,
+  ScanSearch,
+} from "lucide-react";
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_E164 } from "@/lib/site";
 
-const quickLinks = [
+const recoveryLinks = [
   {
     href: "/",
     title: "Back to homepage",
-    description: "See portfolio highlights, services, and recent work.",
+    description: "Return to the main field office and browse services, projects, and contact paths.",
     icon: Home,
-  },
-  {
-    href: "/blog",
-    title: "Read the blog",
-    description: "Explore articles on SEO, frontend engineering, and web performance.",
-    icon: SquarePen,
+    external: false,
   },
   {
     href: "/case-studies",
     title: "View case studies",
-    description: "Check how projects were planned, built, and improved.",
+    description: "Open shipped work, implementation notes, and real project breakdowns.",
     icon: BriefcaseBusiness,
+    external: false,
   },
   {
-    href: "/#contact",
-    title: "Contact Rahul",
-    description: "Reach out for freelance work, collaboration, or questions.",
+    href: "/blog",
+    title: "Read technical notes",
+    description: "Browse articles on SEO, frontend systems, and web product decisions.",
+    icon: ScanSearch,
+    external: false,
+  },
+  {
+    href: `mailto:${CONTACT_EMAIL}`,
+    title: "Email Rahul",
+    description: "Report a broken link or reach out directly about a project.",
     icon: Mail,
+    external: true,
   },
 ];
 
+const quickContact = [
+  {
+    href: `mailto:${CONTACT_EMAIL}`,
+    label: CONTACT_EMAIL,
+    icon: Mail,
+    external: true,
+  },
+  {
+    href: `tel:${CONTACT_PHONE_E164}`,
+    label: CONTACT_PHONE,
+    icon: Phone,
+    external: true,
+  },
+  {
+    href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
+    label: "WhatsApp",
+    icon: MessageCircleMore,
+    external: true,
+  },
+] as const;
+
 export default function NotFound() {
   return (
-    <section className="relative overflow-hidden bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.16),_transparent_34%),linear-gradient(180deg,rgba(248,250,252,0.96),rgba(255,255,255,1))] py-20 dark:bg-[radial-gradient(circle_at_top,_rgba(16,185,129,0.18),_transparent_28%),linear-gradient(180deg,rgba(2,6,23,1),rgba(3,7,18,1))]">
-      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-emerald-500/40 to-transparent" />
-
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:px-8">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.22em] text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
-            <Search className="h-3.5 w-3.5" />
-            404 page not found
+    <main className="case-files-shell min-h-screen pt-24 pb-10">
+      <section className="case-stage pb-24">
+        <div className="case-masthead">
+          <div>
+            <span className="case-kicker">Archive Exception</span>
+            <h1 className="case-title">404 / File Not Found</h1>
           </div>
 
-          <h1 className="mt-6 max-w-xl font-[family-name:var(--font-space-grotesk)] text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
-            This page drifted away, but the good work is still here.
-          </h1>
-
-          <p className="mt-5 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
-            You might have hit an old portfolio link, a moved blog URL, or a page that no longer
-            exists. Use the shortcuts below to jump back into projects, writing, or contact.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-medium text-white transition hover:bg-emerald-500"
-            >
-              Go to homepage
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 rounded-xl border border-border/70 bg-background/80 px-5 py-3 text-sm font-medium text-foreground transition hover:bg-muted"
-            >
-              Browse blog articles
-            </Link>
+          <div className="case-masthead-meta">
+            <div>Route record missing</div>
+            <div>Fallback navigation active</div>
           </div>
         </div>
 
-        <div className="grid gap-3">
-          {quickLinks.map((item) => {
-            const Icon = item.icon;
+        <div className="case-subrule">
+          <span>This page moved, expired, or never existed</span>
+          <span>Use the recovery links below</span>
+        </div>
 
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="group rounded-[1.5rem] border border-border/70 bg-background/75 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.32)] backdrop-blur transition hover:-translate-y-0.5 hover:border-emerald-500/30 hover:bg-background"
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1.15fr)_280px] md:items-start">
+          <div>
+            <p className="case-kicker">Missing Record</p>
+            <h2 className="case-detail-title">
+              The link you opened is no longer on file, but the rest of the site is still intact.
+            </h2>
+            <p className="case-detail-tagline">
+              You may have hit an outdated portfolio URL, an old shared link, or a path that was
+              never published. Jump back into case studies, technical writing, or direct contact
+              without hunting around.
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              {quickContact.map((item) => {
+                const Icon = item.icon;
+
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="case-nav-link group inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+                    <span>{item.label}</span>
+                    <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="case-index-card">
+            <div className="case-index-row">
+              <span className="case-index-label">Status</span>
+              <span className="case-index-value">404 Not Found</span>
+            </div>
+            <div className="case-index-row">
+              <span className="case-index-label">Fast path</span>
+              <span className="case-index-value">Home, blog, case studies, or contact</span>
+            </div>
+            <div className="case-index-row">
+              <span className="case-index-label">Email</span>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                className="case-index-value underline-offset-4 hover:underline"
               >
-                <div className="flex items-start gap-4">
-                  <div className="mt-0.5 rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-2.5 text-emerald-700 dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-200">
-                    <Icon className="h-4 w-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center justify-between gap-3">
-                      <h2 className="text-base font-semibold text-foreground">{item.title}</h2>
-                      <ArrowRight className="h-4 w-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-300" />
-                    </div>
-                    <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+                {CONTACT_EMAIL}
+              </a>
+            </div>
+            <div className="case-index-row">
+              <span className="case-index-label">Mobile</span>
+              <a
+                href={`tel:${CONTACT_PHONE_E164}`}
+                className="case-index-value underline-offset-4 hover:underline"
+              >
+                {CONTACT_PHONE}
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+
+        <hr className="case-divider case-divider-thin" />
+
+        <section>
+          <div className="case-section-label">Recovery Links</div>
+          <div className="space-y-0">
+            {recoveryLinks.map((item, index) => {
+              const Icon = item.icon;
+
+              const content = (
+                <>
+                  <div className="case-file-number">
+                    No.{String(index + 1).padStart(2, "0")}
+                  </div>
+
+                  <div>
+                    <h2 className="case-file-heading flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {item.title}
+                    </h2>
+                    <p className="case-file-copy">{item.description}</p>
+                  </div>
+
+                  <div className="case-file-meta">
+                    <span className="case-stamp case-stamp-building">OPEN</span>
+                  </div>
+                </>
+              );
+
+              if (item.external) {
+                return (
+                  <a
+                    key={item.title}
+                    href={item.href}
+                    target={item.href.startsWith("http") ? "_blank" : undefined}
+                    rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                    className="case-file-row"
+                  >
+                    {content}
+                  </a>
+                );
+              }
+
+              return (
+                <Link key={item.title} href={item.href} className="case-file-row">
+                  {content}
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      </section>
+    </main>
   );
 }

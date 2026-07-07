@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,20 +16,34 @@ type NavItem = {
   label: string;
   href: string;
   icon?: ReactNode;
-};  
+};
+
+function isActivePath(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  if (href.startsWith("/#")) {
+    return pathname === "/";
+  }
+
+  return pathname === href;
+}
 
 const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Case Studies", href: "/case-studies" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Blog", href: "/blog" },
+  { label: "Services", href: "/services-patna" },
+  { label: "Patna SEO", href: "/freelance-web-developer-patna" },
+  { label: "Projects", href: "/#projects" },
+  { label: "Skills", href: "/#skills" },
+  { label: "Experience", href: "/#about" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const [hidden, setHidden] = useState(false);
   const [lastY, setLastY] = useState(0);
   const hideForFocusMode = pathname.startsWith("/dashboard/focus");
@@ -48,22 +62,6 @@ export default function Navbar() {
     return null;
   }
 
-  /** 🔑 Handles section navigation from ANY page */
-  const navigateTo = (href: string) => {
-    if (!href.startsWith("#")) {
-      router.push(href);
-      return;
-    }
-
-    if (pathname !== "/") {
-      router.push(`/${href}`);
-      return;
-    }
-
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
     <motion.nav
       animate={hidden ? { y: -80 } : { y: 0 }}
@@ -71,27 +69,26 @@ export default function Navbar() {
       className="archive-nav"
     >
       <div className="archive-nav-inner">
-        <Link
-          href="/"
-          className="archive-nav-brand"
+        <div
+          aria-hidden="true"
+          className="archive-nav-brand invisible pointer-events-none select-none"
         >
           <span className="archive-nav-kicker">Rahul Verma</span>
           <span className="archive-nav-title">Full Stack Developer</span>
-        </Link>
+        </div>
 
         <div className="hidden md:flex items-center gap-2">
           {navItems.map((item) => {
-            const isHash = item.href.startsWith("#");
-            const isActive = !isHash && pathname === item.href;
+            const isActive = isActivePath(pathname, item.href);
 
             return (
-              <button
+              <Link
                 key={item.href}
-                onClick={() => navigateTo(item.href)}
+                href={item.href}
                 className={`archive-nav-link ${isActive ? "archive-nav-link-active" : ""}`}
               >
                 {item.label}
-              </button>
+              </Link>
             );
           })}
         </div>
@@ -116,24 +113,24 @@ export default function Navbar() {
 
                 <div className="flex-1 p-2 space-y-1">
                   {navItems.map((item) => (
-                    <button
+                    <Link
                       key={item.href}
-                      onClick={() => navigateTo(item.href)}
+                      href={item.href}
                       className="archive-nav-mobile-link"
                     >
                       {item.label}
-                    </button>
+                    </Link>
                   ))}
                 </div>
 
                 <div className="archive-nav-sheet-footer">
-                  <button
-                    onClick={() => navigateTo("#contact")}
+                  <Link
+                    href="/#contact"
                     className="archive-nav-mobile-cta"
                   >
                     Contact Rahul
                     <ArrowUpRight className="h-4 w-4" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             </SheetContent>

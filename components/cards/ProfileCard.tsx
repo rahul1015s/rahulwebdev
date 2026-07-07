@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 /* ---------------------------------------------
@@ -70,6 +72,8 @@ export function ProfileCard({
   image: string;
   label?: string;
 }) {
+  const [src, setSrc] = useState(image);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -81,15 +85,16 @@ export function ProfileCard({
       {/* SVG frame */}
       <ProfileFrame />
 
-      {/* Image */}
       <div className="relative z-10 h-full w-full overflow-hidden rounded-full border border-border bg-muted">
-        <img
-          src={image}
-          alt="Profile"
-          className="h-full w-full object-cover"
-          onError={(e) => {
-            const t = e.currentTarget as HTMLImageElement;
-            t.src = "/default-blog.png";
+        <Image
+          src={src}
+          alt="Portrait of Rahul Verma, full-stack developer"
+          fill
+          sizes="(max-width: 768px) 256px, 320px"
+          className="object-cover"
+          unoptimized={src.startsWith("http")}
+          onError={() => {
+            setSrc("/default-blog.png");
           }}
         />
       </div>

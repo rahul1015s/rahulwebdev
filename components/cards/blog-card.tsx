@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, Clock, ArrowUpRight, Eye, BookOpen } from "lucide-react";
+import { Calendar, Clock, ArrowUpRight, Eye } from "lucide-react";
 
 export function BlogCard({
   href,
@@ -87,10 +87,13 @@ export function BlogCard({
               transition={{ duration: 0.7, ease: "easeOut" }}
               className="relative w-full h-full"
             >
-              <img
+              <Image
                 src={src}
                 alt={title}
-                className="w-full h-full object-contain"
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                className="object-contain"
+                unoptimized={src.startsWith("http")}
                 onError={() => setSrc('/default-blog.png')}
                 onLoad={() => setIsImageLoaded(true)}
               />

@@ -28,7 +28,7 @@ export default function NewCaseStudyPage() {
   const [challenges, setChallenges] = useState<string[]>([]);
   const [solutions, setSolutions] = useState<string[]>([]);
   const [results, setResults] = useState<string[]>([]);
-  const [published, setPublished] = useState(false);
+  const [published, setPublished] = useState(true);
   const [order, setOrder] = useState(0);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -86,7 +86,7 @@ export default function NewCaseStudyPage() {
         setChallenges([]);
         setSolutions([]);
         setResults([]);
-        setPublished(false);
+        setPublished(true);
         setOrder(0);
         setResetKey((key) => key + 1);
         setTimeout(() => setMessage(null), 3000);

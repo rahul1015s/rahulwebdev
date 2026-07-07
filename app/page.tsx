@@ -1,11 +1,22 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Mail, MessageCircle } from "lucide-react";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Github,
+  Linkedin,
+  Mail,
+  MapPinned,
+  MessageCircleMore,
+  Phone,
+  ScanSearch,
+} from "lucide-react";
 
 import { experiences } from "@/data/experience";
 import { personalInfo } from "@/data/personal-info";
 import { projects } from "@/data/projects";
 import { skills } from "@/data/skills";
+import { CONTACT_PHONE, CONTACT_PHONE_E164 } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Rahul Verma - Freelance Full Stack Developer in Patna, Bihar",
@@ -49,6 +60,45 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
+  const primaryLinks = [
+    {
+      href: "/case-studies",
+      label: "View case studies",
+      icon: BriefcaseBusiness,
+      external: false,
+    },
+    {
+      href: "/blog",
+      label: "Read blog",
+      icon: ScanSearch,
+      external: false,
+    },
+    {
+      href: "/services-patna",
+      label: "Patna web services",
+      icon: MapPinned,
+      external: false,
+    },
+    {
+      href: "/freelance-web-developer-patna",
+      label: "Patna SEO landing page",
+      icon: MapPinned,
+      external: false,
+    },
+    {
+      href: "https://wa.me/919135271562",
+      label: "WhatsApp",
+      icon: MessageCircleMore,
+      external: true,
+    },
+    {
+      href: `mailto:${personalInfo.email}`,
+      label: "Contact Rahul",
+      icon: Mail,
+      external: true,
+    },
+  ] as const;
+
   const portfolioStructuredData = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -103,6 +153,39 @@ export default function HomePage() {
     ],
   };
 
+  const quickContactLinks = [
+    {
+      href: `mailto:${personalInfo.email}`,
+      label: personalInfo.email,
+      icon: Mail,
+      external: true,
+    },
+    {
+      href: `tel:${CONTACT_PHONE_E164}`,
+      label: CONTACT_PHONE,
+      icon: Phone,
+      external: true,
+    },
+    {
+      href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
+      label: "WhatsApp",
+      icon: MessageCircleMore,
+      external: true,
+    },
+    {
+      href: "https://linkedin.com/in/rahul1015s",
+      label: "LinkedIn",
+      icon: Linkedin,
+      external: true,
+    },
+    {
+      href: "https://github.com/rahul1015s",
+      label: "GitHub",
+      icon: Github,
+      external: true,
+    },
+  ] as const;
+
   return (
     <>
       <script
@@ -145,28 +228,35 @@ export default function HomePage() {
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <Link href="/case-studies" className="case-nav-link">
-                    View case studies
-                  </Link>
-                  <Link href="/blog" className="case-nav-link">
-                    Read blog
-                  </Link>
-                  <a
-                    href="https://wa.me/919135271562"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="case-nav-link inline-flex items-center gap-2"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    WhatsApp
-                  </a>
-                  <a
-                    href={`mailto:${personalInfo.email}`}
-                    className="case-nav-link inline-flex items-center gap-2"
-                  >
-                    <Mail className="h-4 w-4" />
-                    Contact Rahul
-                  </a>
+                  {primaryLinks.map((item) => {
+                    const Icon = item.icon;
+                    const sharedClassName =
+                      "case-nav-link group inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-y-0.5";
+
+                    if (item.external) {
+                      return (
+                        <a
+                          key={item.label}
+                          href={item.href}
+                          target={item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                          className={sharedClassName}
+                        >
+                          <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+                          <span>{item.label}</span>
+                          <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                        </a>
+                      );
+                    }
+
+                    return (
+                      <Link key={item.label} href={item.href} className={sharedClassName}>
+                        <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+                        <span>{item.label}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -313,41 +403,55 @@ export default function HomePage() {
                   dashboards, and full-stack builds that need both clean frontend
                   execution and practical backend decisions.
                 </p>
+                <p className="mt-4 case-file-copy">
+                  If you already know what you need, call or message directly and I can reply faster
+                  than a long back-and-forth.
+                </p>
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <a href={`mailto:${personalInfo.email}`} className="case-nav-link">
-                    {personalInfo.email}
-                  </a>
-                  <a
-                    href="https://wa.me/919135271562"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="case-nav-link"
-                  >
-                    WhatsApp
-                  </a>
-                  <a
-                    href="https://linkedin.com/in/rahul1015s"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="case-nav-link"
-                  >
-                    LinkedIn
-                  </a>
-                  <a
-                    href="https://github.com/rahul1015s"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="case-nav-link"
-                  >
-                    GitHub
-                  </a>
+                  {quickContactLinks.map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        target={item.href.startsWith("http") ? "_blank" : undefined}
+                        rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        className="case-nav-link group inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-y-0.5"
+                      >
+                        <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+                        <span>{item.label}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </a>
+                    );
+                  })}
+                  <Link href="/services-patna" className="case-nav-link">
+                    Services in Patna
+                  </Link>
+                  <Link href="/freelance-web-developer-patna" className="case-nav-link">
+                    Local SEO page
+                  </Link>
                 </div>
               </div>
 
               <div className="case-index-card">
                 <div className="case-index-row">
                   <span className="case-index-label">Email</span>
-                  <span className="case-index-value">{personalInfo.email}</span>
+                  <a
+                    href={`mailto:${personalInfo.email}`}
+                    className="case-index-value underline-offset-4 hover:underline"
+                  >
+                    {personalInfo.email}
+                  </a>
+                </div>
+                <div className="case-index-row">
+                  <span className="case-index-label">Mobile</span>
+                  <a
+                    href={`tel:${CONTACT_PHONE_E164}`}
+                    className="case-index-value underline-offset-4 hover:underline"
+                  >
+                    {CONTACT_PHONE}
+                  </a>
                 </div>
                 <div className="case-index-row">
                   <span className="case-index-label">Timezone</span>

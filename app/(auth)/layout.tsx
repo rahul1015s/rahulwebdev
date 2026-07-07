@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import VerifyEmailForm from "./VerifyEmailForm";
 
 export const metadata: Metadata = {
-  title: "Verify Email",
   robots: {
     index: false,
     follow: true,
@@ -17,10 +14,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function VerifyEmailPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <VerifyEmailForm />
-    </Suspense>
-  );
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }

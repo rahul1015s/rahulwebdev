@@ -205,16 +205,7 @@ function getStatus(study: CaseStudyRecord) {
     return "ARCHIVED";
   }
 
-  if (!study.createdAt) {
-    return "LIVE";
-  }
-
-  const ageInDays = Math.max(
-    0,
-    Math.floor((Date.now() - new Date(study.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-  );
-
-  return ageInDays < 120 ? "BUILDING" : "LIVE";
+  return "PUBLISHED";
 }
 
 function buildBrief(study: CaseStudyRecord) {

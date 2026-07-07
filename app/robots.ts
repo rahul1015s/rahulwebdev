@@ -7,24 +7,23 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/blog", "/case-studies", "/freelance-web-developer-patna", "/services-patna"],
+        allow: "/",
         disallow: [
           "/admin/",
           "/api/admin/",
           "/api/auth/",
-          "/verify-email",
-          "/_next/",
+          "/dashboard/",
         ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/", "/api/auth/"],
+        disallow: ["/admin/", "/api/admin/", "/api/auth/", "/dashboard/"],
       },
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/", "/api/auth/"],
+        disallow: ["/admin/", "/api/admin/", "/api/auth/", "/dashboard/"],
       },
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },

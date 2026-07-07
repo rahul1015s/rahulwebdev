@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/mongodb";
 import Post from "@/models/post";
 import "@/models/tag";
 import BlogClientPage from "@/components/blog/BlogClientPage";
-import { extractCoverImage, extractExcerpt, normalizeCategory, normalizeTagNames } from "@/lib/blog-content";
+import { extractCoverImage, normalizeCategory, normalizeTagNames } from "@/lib/blog-content";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
@@ -14,7 +14,6 @@ type LeanPost = {
   _id: unknown;
   title?: string;
   slug?: string;
-  content?: unknown;
   image?: string;
   category?: LeanCategory;
   tags?: LeanTag[];
@@ -29,7 +28,8 @@ export default async function BlogPage() {
 
   const posts = await Post.find({ published: true })
     .sort({ createdAt: -1 })
-    .select("title slug content image category tags tagNames metaDescription readTime createdAt")
+    .select("title slug image category tags tagNames metaDescription readTime createdAt")
+    .setOptions({ _recursed: true })
     .populate({ path: "category", select: "name slug" })
     .populate({ path: "tags", select: "name" })
     .lean();
@@ -38,8 +38,8 @@ export default async function BlogPage() {
     _id: String(post._id),
     title: post.title ?? "",
     slug: post.slug ?? "",
-    excerpt: post.metaDescription?.trim() || extractExcerpt(post.content, 170),
-    coverImage: extractCoverImage(post.image, post.content),
+    excerpt: post.metaDescription?.trim() || `Read ${post.title ?? "this article"}.`,
+    coverImage: extractCoverImage(post.image, null),
     category: normalizeCategory(post.category),
     tags: normalizeTagNames(post.tags, post.tagNames),
     readTime: post.readTime ?? "",

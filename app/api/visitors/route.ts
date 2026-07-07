@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const visitor = await Visitor.findOneAndUpdate(
       {},
       { $inc: { count: 1 } },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
+      { returnDocument: "after", upsert: true, setDefaultsOnInsert: true }
     ).lean();
 
     const count = typeof visitor?.count === "number" ? visitor.count : 1;
