@@ -34,7 +34,7 @@ const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "Case Studies", href: "/case-studies" },
   { label: "Blog", href: "/blog" },
-  { label: "Services", href: "/services-patna" },
+  { label: "Services", href: "/services" },
   { label: "Patna SEO", href: "/freelance-web-developer-patna" },
   { label: "Projects", href: "/#projects" },
   { label: "Skills", href: "/#skills" },
