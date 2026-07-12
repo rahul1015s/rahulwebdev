@@ -36,10 +36,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-home.svg",
+        url: "/og/website/freelancer-in-patna.webp",
         width: 1200,
         height: 630,
-        alt: "Freelance web developer in India by Rahul Verma",
+        alt: "Rahul Verma freelance web development preview for Patna and India",
       },
     ],
   },
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     title: "Freelance Web Developer in India | Rahul Verma",
     description:
       "Hire Rahul Verma for React, Next.js, and Node.js development across India.",
-    images: ["/og-home.svg"],
+    images: ["/og/website/freelancer-in-patna.webp"],
   },
   robots: {
     index: true,

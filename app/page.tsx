@@ -42,10 +42,10 @@ export const metadata: Metadata = {
     siteName: "Rahul Web Development",
     images: [
       {
-        url: "/og-home.svg",
+        url: "/og/website/rahulwebdev.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma Portfolio Preview",
+        alt: "Rahul Verma portfolio preview showing freelance full stack development services in Patna, Bihar",
       },
     ],
     locale: "en_IN",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     title: "Rahul Verma - Freelance Full Stack Developer in Patna, Bihar",
     description:
       "Freelance full stack developer in Patna, Bihar building high-performance web apps with React and Next.js.",
-    images: ["/og-home.svg"],
+    images: ["/og/website/rahulwebdev.webp"],
   },
 };
 

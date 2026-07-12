@@ -191,9 +191,15 @@ export default function ContactFooter() {
         {/*   BOTTOM */}
         <div className="mt-10 pt-5 border-t border-border/30 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
 
-          <p>
-            © {currentYear} Rahul Verma. All rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-muted-foreground">
+            <p>© {currentYear} Rahul Verma. All rights reserved.</p>
+            <a href="/privacy-policy" className="hover:text-foreground transition">
+              Privacy Policy
+            </a>
+            <a href="/terms-and-conditions" className="hover:text-foreground transition">
+              Terms & Conditions
+            </a>
+          </div>
 
           <p suppressHydrationWarning>
             {visitors !== null

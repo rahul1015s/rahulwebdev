@@ -48,7 +48,7 @@ export default function PostVisitorCount({ slug }: PostVisitorCountProps) {
   }, [slug]);
 
   return (
-    <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1">
+    <div className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-muted-foreground">
       <Eye size={13} />
       <span>{count !== null ? `${count.toLocaleString()} views` : "Counting views..."}</span>
     </div>

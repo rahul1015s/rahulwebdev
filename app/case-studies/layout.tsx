@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-case-studies.svg",
+        url: "/og/website/casestudies.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma Case Studies",
+        alt: "Rahul Verma case studies preview showing shipped web development projects",
       },
     ],
   },
@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Case Studies | Rahul Verma",
     description: "Detailed case studies of successful projects built by Rahul Verma.",
+    images: ["/og/website/casestudies.webp"],
   },
   alternates: {
     canonical: "https://rahulwebdev.in/case-studies",

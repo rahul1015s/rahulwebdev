@@ -21,10 +21,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-blog.svg",
+        url: "/og/website/blog.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma Blog",
+        alt: "Rahul Verma blog preview with web development articles and technical insights",
       },
     ],
   },
@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Blog | Rahul Verma",
     description: "Explore articles and insights on web development, React, Next.js, Node.js, and modern technologies.",
+    images: ["/og/website/blog.webp"],
   },
   alternates: {
     canonical: "https://rahulwebdev.in/blog",

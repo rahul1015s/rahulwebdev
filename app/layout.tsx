@@ -99,10 +99,10 @@ export const metadata: Metadata = {
     siteName: "Rahul Web Development",
     images: [
       {
-        url: "/rahul.jpg",
+        url: "/og/website/rahulwebdev.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma - Freelance Full Stack Developer in Patna, Bihar",
+        alt: "Rahul Verma portfolio preview showing freelance full stack development services in Patna, Bihar",
       },
     ],
   },
@@ -111,7 +111,7 @@ export const metadata: Metadata = {
     title: "Rahul Verma | Freelance Full Stack Developer in Patna, Bihar",
     description:
       "Rahul Verma (rahul1015s) builds SEO-friendly React and Next.js web apps for businesses in Patna, Bihar, and India.",
-    images: ["/rahul.jpg"],
+    images: ["/og/website/rahulwebdev.webp"],
     creator: "@rahul1015s",
   },
   verification: {
