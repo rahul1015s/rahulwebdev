@@ -4,6 +4,7 @@ export const projects = [
     name: "Oplus Cowork Platform",
     description: "Workspace management product built for Oplus Cowork",
     longDescription: "A full-featured coworking space platform with booking system, member management, and community features built with a full-stack product approach.",
+    previewImage: "/og/clients/opluscowork.webp",
     technologies: ["React.js", "Next.js", "Node.js", "Tailwind CSS", "TypeScript"],
     githubUrl: "#",
     liveUrl: "https://opluscowork.com",
@@ -21,6 +22,7 @@ export const projects = [
     name: "Premex Power Systems",
     description: "Business website for lithium batteries and power systems company",
     longDescription: "Corporate website for Premex Power Systems showcasing lithium battery products, industrial power solutions, service information, and quote-driven customer journeys.",
+    previewImage: "/og/clients/premexpowersystem.webp",
     technologies: ["Next.js", "TypeScript", "Business Website", "SEO"],
     githubUrl: "#",
     liveUrl: "https://www.premexpowersystems.com/",
@@ -38,6 +40,7 @@ export const projects = [
     name: "ReallSkill LMS",
     description: "Learning management system for course delivery and student access",
     longDescription: "LMS platform for structured learning, course access, and student-facing educational workflows under the ReallSkill brand.",
+    previewImage: "/og/clients/realskill.webp",
     technologies: ["Next.js", "React", "LMS", "Education Platform"],
     githubUrl: "#",
     liveUrl: "https://reallskill.in/",
@@ -51,9 +54,33 @@ export const projects = [
   },
   {
     id: 4,
+    name: "Carryzo CRM",
+    description: "Role-based logistics operations CRM for unified fleet and trip management",
+    longDescription: "CarryZo CRM is a Next.js logistics operations platform built to manage trips, customers, drivers, vehicles, transporters, analytics, notifications, and exports from a single dashboard. A role-based operations platform that brings trips, customers, fleet, and revenue into one command center.",
+    previewImage: "/og/clients/carryzologistics-crm.webp",
+    technologies: ["Next.js", "React.js", "Node.js", "MongoDB", "Role-Based Auth"],
+    githubUrl: "#",
+    liveUrl: "https://crm.carryzo.in/",
+    features: [
+      "Centralized trip and customer management",
+      "Role-based dashboards for admins and managers",
+      "Revenue analytics and operational KPIs",
+      "Alerting system for inactive customers and declining demand",
+      "CSV and PDF export tooling",
+      "Proof-of-delivery with GPS and photo capture",
+      "Driver and vehicle fleet management",
+      "Transporter coordination workflows",
+      "Real-time notification system",
+      "Analytics endpoints with caching for dashboard responsiveness"
+    ],
+    status: "Live"
+  },
+  {
+    id: 5,
     name: "Carryzo Logistics Website",
     description: "Business website for Carryzo Logistics",
     longDescription: "Marketing website for Carryzo Logistics, focused on clear service presentation, business trust, contact flow, and fast responsive delivery for logistics customers.",
+    previewImage: "/og/clients/carryzologistic-website.webp",
     technologies: ["React.js", "Tailwind CSS", "JavaScript", "Framer Motion"],
     githubUrl: "#",
     liveUrl: "https://www.carryzo.in/",
@@ -63,22 +90,6 @@ export const projects = [
       "Performance-optimized responsive frontend",
       "Mobile-first business presentation",
       "Trust-building service and support sections"
-    ],
-    status: "Live"
-  },
-  {
-    id: 5,
-    name: "Carryzo CRM",
-    description: "Internal CRM for Carryzo operations and workflow management",
-    longDescription: "CRM system for Carryzo business operations, built to support internal workflows, process visibility, and day-to-day management through a dedicated subdomain.",
-    technologies: ["React.js", "Next.js", "CRM", "Operations Dashboard"],
-    githubUrl: "#",
-    liveUrl: "https://crm.carryzo.in/",
-    features: [
-      "Internal workflow management",
-      "Operations-focused dashboard experience",
-      "Business process support tools",
-      "Dedicated CRM subdomain deployment"
     ],
     status: "Live"
   },
