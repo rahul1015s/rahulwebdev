@@ -37,10 +37,10 @@ export const metadata: Metadata = {
     siteName: "Rahul Web Development",
     images: [
       {
-        url: "/og-case-studies.svg",
+        url: "/og/website/casestudies.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma Case Studies",
+        alt: "Rahul Verma case studies preview showing shipped web development projects",
       },
     ],
     locale: "en_IN",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     title: "Case Studies - Rahul Verma",
     description:
       "An archive of shipped builds, technical decisions, and case-study writeups from Rahul Verma's work.",
-    images: ["/og-case-studies.svg"],
+    images: ["/og/website/casestudies.webp"],
   },
 };
 

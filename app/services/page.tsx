@@ -33,10 +33,10 @@ export const metadata: Metadata = {
     siteName: "Rahul Web Development",
     images: [
       {
-        url: "/og-home.svg",
+        url: "/og/website/services.webp",
         width: 1200,
         height: 630,
-        alt: "Web development services across India by Rahul Verma",
+        alt: "Rahul Verma web development services preview for businesses in Patna and India",
       },
     ],
   },
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     title: "Web Developer in India | Patna-Based Websites, Apps, SEO",
     description:
       "Custom websites, web apps, and technical SEO for businesses across India by Rahul Verma.",
-    images: ["/og-home.svg"],
+    images: ["/og/website/services.webp"],
   },
   alternates: {
     canonical: `${SITE_URL}/services-patna`,

@@ -155,7 +155,7 @@ export default function ActionButtons({ title, slug }: ActionButtonsProps) {
   };
 
   return (
-    <div ref={wrapperRef} className="relative flex items-center gap-2">
+    <div ref={wrapperRef} className="relative flex items-center gap-2 text-muted-foreground">
       <motion.button
         type="button"
         onClick={() => setShowShareMenu((open) => !open)}
