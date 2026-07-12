@@ -75,7 +75,7 @@ export default function HomePage() {
       external: false,
     },
     {
-      href: "/services-patna",
+      href: "/services",
       label: "Patna web services",
       icon: MapPinned,
       external: false,
@@ -454,7 +454,7 @@ export default function HomePage() {
                       </a>
                     );
                   })}
-                  <Link href="/services-patna" className="case-nav-link">
+                  <Link href="/services" className="case-nav-link">
                     Services in Patna
                   </Link>
                   <Link href="/freelance-web-developer-patna" className="case-nav-link">

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
       "Custom websites, web apps, and technical SEO for businesses across India by Rahul Verma.",
     type: "website",
     locale: "en_IN",
-    url: `${SITE_URL}/services-patna`,
+    url: `${SITE_URL}/services`,
     siteName: "Rahul Web Development",
     images: [
       {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     images: ["/og/website/services.webp"],
   },
   alternates: {
-    canonical: `${SITE_URL}/services-patna`,
+    canonical: `${SITE_URL}/services`,
   },
 };
 
@@ -135,7 +135,7 @@ export default function ServicesPatnaPage() {
     },
     telephone: CONTACT_PHONE,
     email: CONTACT_EMAIL,
-    url: `${SITE_URL}/services-patna`,
+    url: `${SITE_URL}/services`,
     areaServed: ["India"],
     serviceType: ["Web Development", "App Development", "E-commerce", "Web Design"],
     knowsAbout: [
@@ -166,7 +166,7 @@ export default function ServicesPatnaPage() {
     },
     areaServed: ["India"],
     availableLanguage: "en-IN",
-    url: `${SITE_URL}/services-patna`,
+    url: `${SITE_URL}/services`,
   };
 
   const breadcrumbSchema = {
@@ -183,7 +183,7 @@ export default function ServicesPatnaPage() {
         "@type": "ListItem",
         position: 2,
         name: "Services India",
-        item: `${SITE_URL}/services-patna`,
+        item: `${SITE_URL}/services`,
       },
     ],
   };

@@ -43,7 +43,7 @@ const FALLBACK_PAGES: PublicPage[] = [
   },
   {
     name: "Services Patna",
-    path: "/services-patna",
+    path: "/services",
     changeFrequency: "monthly",
     priority: 0.8,
     summary: "Local service page for website and app development for Patna businesses, startups, and professionals.",
@@ -73,7 +73,7 @@ function buildPageMetadata(routePath: string): PublicPage {
     return FALLBACK_PAGES[3];
   }
 
-  if (routePath === "/services-patna") {
+  if (routePath === "/services") {
     return FALLBACK_PAGES[4];
   }
 

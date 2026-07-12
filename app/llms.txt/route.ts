@@ -94,7 +94,7 @@ ${caseStudyLines.length ? caseStudyLines.join("\n") : "- No published case studi
 - [Portfolio Home](${siteUrl}/): Full-stack developer portfolio and field office
 - [Blog](${siteUrl}/blog): Technical articles and engineering insights
 - [Case Studies](${siteUrl}/case-studies): Real project breakdowns and outcomes
-- [Services](${siteUrl}/services-patna): Web development services in Patna
+- [Services](${siteUrl}/services): Web development services in Patna
 
 ## Metadata
 Public pages may be indexed, summarized, and cited.

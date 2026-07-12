@@ -89,7 +89,7 @@
       "name": "Explore Development Services",
       "short_name": "Services",
       "description": "Explore business website, custom web app, e-commerce, and technical SEO services",
-      "url": "/services-patna?utm_source=pwa&utm_medium=shortcut&utm_campaign=services",
+      "url": "/services?utm_source=pwa&utm_medium=shortcut&utm_campaign=services",
       "icons": [
         {
           "src": "/icons/shortcut-services.png",
