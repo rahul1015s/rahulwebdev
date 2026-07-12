@@ -1,0 +1,104 @@
+/* TEAM */
+
+Developer: Rahul Verma
+Role: Full Stack Developer & Product Builder
+Website: https://rahulwebdev.in
+Email: rahulwebjs@gmail.com
+
+/* RAHUL WEBDEV */
+
+Rahul Webdev helps startups, founders, and businesses build
+fast, scalable, and SEO-focused digital products.
+
+Core Services:
+- Business Websites
+- Custom Web Applications
+- SaaS Products
+- CRM & ERP Systems
+- Admin Dashboards
+- Progressive Web Apps (PWA)
+- API Development
+- Technical SEO
+- Performance Optimization
+- Accessibility Improvements
+
+/* FEATURED WORK */
+
+- Oplus Cowork Platform
+- Premex Power Systems
+- ReallSkill LMS
+- Carryzo Logistics
+
+Explore more:
+https://rahulwebdev.in/case-studies
+
+/* TECHNOLOGY */
+
+Frontend
+- React
+- Next.js
+- TypeScript
+- Tailwind CSS
+- JavaScript
+
+Backend
+- Node.js
+- Express.js
+- MongoDB
+- REST APIs
+
+Infrastructure
+- Vercel
+- Linux
+- Git
+- GitHub
+- ImageKit
+
+Development
+- VS Code
+- IntelliJ IDEA
+- Figma
+
+/* DEVELOPMENT PHILOSOPHY */
+
+✓ Business First
+✓ Performance Matters
+✓ SEO by Default
+✓ Accessibility Included
+✓ Mobile First
+✓ Secure by Design
+✓ Clean & Maintainable Code
+✓ Long-Term Scalability
+
+/* WEBSITE */
+
+Framework: Next.js (App Router)
+Language: TypeScript
+Hosting: Vercel
+Architecture: Server Components + Edge Optimized
+SEO: Technical SEO, Structured Data, Open Graph, Sitemap, Robots
+PWA: Web App Manifest, Offline Ready
+
+/* CONTACT */
+
+Website:
+https://rahulwebdev.in
+
+Email:
+rahulwebjs@gmail.com
+
+LinkedIn:
+https://www.linkedin.com/in/rahul1015s
+
+GitHub:
+https://github.com/rahul1015s
+
+/* THANK YOU */
+
+Thanks for viewing the source.
+
+Whether you need a business website, a custom web application,
+or a complete digital product, let's build something that delivers
+real business value.
+
+© Rahul Webdev(Rahul Verma)

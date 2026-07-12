@@ -16,6 +16,7 @@ import { experiences } from "@/data/experience";
 import { personalInfo } from "@/data/personal-info";
 import { projects } from "@/data/projects";
 import { skills } from "@/data/skills";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { CONTACT_PHONE, CONTACT_PHONE_E164 } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -289,23 +290,51 @@ export default function HomePage() {
             <div className="space-y-0">
               {projects
                 .filter((project) => project.name !== "AuthEdge")
-                .slice(0, 4)
+                .slice(0, 5)
                 .map((project, index) => (
                 <div key={project.id} className="case-file-row">
                   <div className="case-file-number">
                     No.{String(index + 1).padStart(2, "0")}
                   </div>
 
-                  <div>
-                    <h3 className="case-file-heading">{project.name}</h3>
-                    <p className="case-file-copy">{project.longDescription}</p>
-                    <div className="case-tag-list">
-                      {project.technologies.slice(0, 5).map((tech) => (
-                        <span key={tech} className="case-tag">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="min-w-0 flex-1">
+                    <HoverCard>
+                      <HoverCardTrigger asChild>
+                        <div className="cursor-pointer">
+                          <h3 className="case-file-heading">{project.name}</h3>
+                          <p className="case-file-copy">{project.longDescription}</p>
+                          <div className="case-tag-list">
+                            {project.technologies.slice(0, 5).map((tech) => (
+                              <span key={tech} className="case-tag">
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        side="bottom"
+                        align="start"
+                        avoidCollisions={true}
+                        className="w-[22rem] max-w-[90vw] overflow-hidden border border-border/60 bg-background p-0 shadow-lg sm:w-[26rem]"
+                      >
+                        {project.previewImage ? (
+                          <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                            <img
+                              src={project.previewImage}
+                              alt={`${project.name} preview`}
+                              loading="eager"
+                              decoding="async"
+                              className="h-full w-full object-cover object-center"
+                            />
+                          </div>
+                        ) : null}
+                        <div className="p-4">
+                          <p className="text-sm font-semibold text-foreground">{project.name}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">{project.description}</p>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
                   </div>
 
                   <div className="case-file-meta">

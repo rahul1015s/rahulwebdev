@@ -31,6 +31,14 @@ export async function GET() {
 
   const sitemap: SitemapEntry[] = [];
 
+  // Add llms.txt
+  sitemap.push({
+    url: `${baseUrl}/llms.txt`,
+    lastModified: new Date().toISOString(),
+    changeFrequency: 'daily' as const,
+    priority: 0.9,
+  });
+
   // Add static pages
   publicPages.forEach(({ path, changeFrequency, priority }) => {
     sitemap.push({

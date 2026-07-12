@@ -96,7 +96,12 @@ export default function Navbar() {
         <div className="md:hidden flex items-center gap-2">
           <Sheet>
             <SheetTrigger asChild>
-              <Button size="icon" variant="ghost" className="archive-nav-menu">
+              <Button 
+                size="icon" 
+                variant="ghost" 
+                className="archive-nav-menu"
+                aria-label="Toggle navigation menu"
+              >
                 <Menu size={22} />
               </Button>
             </SheetTrigger>
