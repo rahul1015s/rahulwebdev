@@ -201,38 +201,26 @@ export default function HomePage() {
       <main className="case-files-shell min-h-screen pt-24 pb-10">
         <div className="case-stage pb-24">
           <section>
-            <div className="case-masthead">
-              <div>
-                <span className="case-kicker">Rahul Verma · Full-Stack Developer</span>
-                <h1 className="case-title">Field Office</h1>
-              </div>
+            <div className="px-0 py-4 sm:py-6 lg:py-8">
+              <div className="max-w-3xl">
+                <div className="inline-flex items-center gap-2 rounded-full border border-[#211e1a]/15 bg-white/70 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#2b4363]">
+                  <BriefcaseBusiness className="h-3.5 w-3.5" />
+                  <span>Available for product and web work</span>
+                </div>
 
-              <div className="case-masthead-meta">
-                <div>Patna, Bihar - IN</div>
-                <div>Available for product and web work</div>
-              </div>
-            </div>
+                <h1 className="mt-5 text-4xl font-semibold leading-[0.95] tracking-[-0.03em] text-[#211e1a] sm:text-5xl lg:text-6xl">
+                  I build polished digital products that feel as sharp as the business behind them.
+                </h1>
 
-            <div className="case-subrule">
-              <span>Full stack web developer</span>
-              <span>React, Next.js, Node.js, MongoDB</span>
-            </div>
-
-            <div className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_280px] md:items-start">
-              <div>
-                <p className="case-kicker">What I Do</p>
-                <h2 className="case-detail-title">
-                  I build business websites, web apps, and full-stack products.
-                </h2>
-                <p className="case-detail-tagline">
-                  Built with React, Next.js, Node.js, and MongoDB.
+                <p className="mt-5 max-w-2xl text-base leading-7 text-[#4b4338] sm:text-lg">
+                  From fast-moving marketing sites to full-stack web apps, I turn ideas into thoughtful interfaces, reliable systems, and launch-ready experiences.
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-3">
-                  {primaryLinks.map((item) => {
+                  {primaryLinks.slice(0, 2).map((item) => {
                     const Icon = item.icon;
                     const sharedClassName =
-                      "case-nav-link group inline-flex items-center gap-2 transition-transform duration-200 hover:-translate-y-0.5";
+                      "case-nav-link group inline-flex items-center gap-2 rounded-full border border-[#211e1a]/15 bg-[#fcf7eb] px-4 py-2.5 transition-transform duration-200 hover:-translate-y-0.5";
 
                     if (item.external) {
                       return (
@@ -258,29 +246,13 @@ export default function HomePage() {
                       </Link>
                     );
                   })}
-                </div>
-              </div>
-
-              <div className="case-index-card">
-                <div className="case-index-row">
-                  <span className="case-index-label">Role</span>
-                  <span className="case-index-value">{personalInfo.title}</span>
-                </div>
-                <div className="case-index-row">
-                  <span className="case-index-label">Base</span>
-                  <span className="case-index-value">{personalInfo.location}</span>
-                </div>
-                <div className="case-index-row">
-                  <span className="case-index-label">Projects</span>
-                  <span className="case-index-value">{projects.length} selected projects</span>
-                </div>
-                <div className="case-index-row">
-                  <span className="case-index-label">Experience</span>
-                  <span className="case-index-value">Professional experience</span>
+                  <Link href="/services" className="case-nav-link inline-flex items-center gap-2 rounded-full border border-[#211e1a]/15 bg-transparent px-4 py-2.5">
+                    <ScanSearch className="h-4 w-4" />
+                    <span>Services in Patna</span>
+                  </Link>
                 </div>
               </div>
             </div>
-
           </section>
 
           <hr className="case-divider case-divider-thin" />
