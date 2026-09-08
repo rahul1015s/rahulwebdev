@@ -9,7 +9,14 @@ export type PublicPage = {
   summary: string;
 };
 
-const EXCLUDED_SEGMENTS = new Set(["admin", "api", "dashboard", "verify-email"]);
+const EXCLUDED_SEGMENTS = new Set([
+  "admin",
+  "api",
+  "dashboard",
+  "verify-email",
+  "privacy-policy",
+  "terms-and-conditions",
+]);
 const EXCLUDED_PREFIXES = ["(", "[", "_"];
 
 const FALLBACK_PAGES: PublicPage[] = [
@@ -35,20 +42,48 @@ const FALLBACK_PAGES: PublicPage[] = [
     summary: "Index of published case studies documenting project context, implementation choices, stack, and outcomes.",
   },
   {
-    name: "Freelance Web Developer Patna",
+    name: "Freelance Web Developer in Patna",
     path: "/freelance-web-developer-patna",
     changeFrequency: "monthly",
-    priority: 0.85,
-    summary: "Local landing page focused on freelance full-stack web development services in Patna, Bihar.",
+    priority: 0.9,
+    summary: "Page for hiring Rahul Verma as a freelance web developer based in Patna, covering what he builds, selected client work, how a project runs, and how to get in touch.",
   },
   {
-    name: "Services Patna",
+    name: "Web Development Services",
     path: "/services",
     changeFrequency: "monthly",
     priority: 0.8,
-    summary: "Local service page for website and app development for Patna businesses, startups, and professionals.",
+    summary: "What Rahul Verma builds: business websites, web applications, dashboards, CRM and internal tools, and booking or workflow systems, with links to the projects behind each.",
+  },
+  {
+    name: "Contact",
+    path: "/contact",
+    changeFrequency: "monthly",
+    priority: 0.7,
+    summary: "How to start a project with Rahul Verma: what to include in a first message, which projects are a good fit, and the direct ways to reach him.",
   },
 ];
+
+const STATIC_PAGE_META: Record<string, Omit<PublicPage, "path">> = {
+  "/contact": {
+    name: "Contact",
+    changeFrequency: "monthly",
+    priority: 0.7,
+    summary: "How to start a project with Rahul Verma: what to include in a first message, which projects are a good fit, and the direct ways to reach him.",
+  },
+  "/blog/website-cost-in-india": {
+    name: "How much does a website cost in India?",
+    changeFrequency: "monthly",
+    priority: 0.7,
+    summary: "A developer's breakdown of what actually drives website cost in India, from a simple marketing site to a web app with a backend, so you can estimate the scope of your own project.",
+  },
+  "/blog/how-to-choose-a-web-developer": {
+    name: "How to choose a web developer",
+    changeFrequency: "monthly",
+    priority: 0.7,
+    summary: "Practical criteria for evaluating a freelancer, agency, or marketplace hire: portfolio and shipped work, technical fit, scope and communication, code ownership, deployment, and maintenance.",
+  },
+};
 
 function prettifySegment(segment: string) {
   return segment
@@ -75,6 +110,11 @@ function buildPageMetadata(routePath: string): PublicPage {
 
   if (routePath === "/services") {
     return FALLBACK_PAGES[4];
+  }
+
+  const known = STATIC_PAGE_META[routePath];
+  if (known) {
+    return { ...known, path: routePath };
   }
 
   const parts = routePath.split("/").filter(Boolean);

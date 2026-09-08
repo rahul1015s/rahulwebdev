@@ -25,9 +25,9 @@ export const SEO_CONFIG = {
   AUTHOR_TITLE: 'Full Stack Developer',
   
   // Social media
-  TWITTER_HANDLE: '@rahulwebdev',
-  GITHUB_URL: 'https://github.com/rahulwebdev',
-  LINKEDIN_URL: 'https://linkedin.com/in/rahulwebdev',
+  TWITTER_HANDLE: '@rahul1015s',
+  GITHUB_URL: 'https://github.com/rahul1015s',
+  LINKEDIN_URL: 'https://linkedin.com/in/rahul1015s',
   
   // Content preferences
   DEFAULT_DESCRIPTION: 'Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies.',

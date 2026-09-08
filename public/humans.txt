@@ -3,7 +3,7 @@
 Developer: Rahul Verma
 Role: Full Stack Developer & Product Builder
 Website: https://rahulwebdev.in
-Email: rahulwebjs@gmail.com
+Email: hello@rahulwebdev.in
 
 /* RAHUL WEBDEV */
 
@@ -85,7 +85,7 @@ Website:
 https://rahulwebdev.in
 
 Email:
-rahulwebjs@gmail.com
+hello@rahulwebdev.in
 
 LinkedIn:
 https://www.linkedin.com/in/rahul1015s

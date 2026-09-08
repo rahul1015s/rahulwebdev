@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
   { label: "Projects", href: "/#projects" },
   { label: "Skills", href: "/#skills" },
   { label: "Experience", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default function Navbar() {
@@ -130,7 +130,7 @@ export default function Navbar() {
 
                 <div className="archive-nav-sheet-footer">
                   <Link
-                    href="/#contact"
+                    href="/contact"
                     className="archive-nav-mobile-cta"
                   >
                     Contact Rahul

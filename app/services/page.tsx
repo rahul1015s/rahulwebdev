@@ -1,32 +1,31 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, BriefcaseBusiness, Mail, MessageCircleMore, ScanSearch } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, Mail, MapPinned, MessageCircleMore } from "lucide-react";
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE,
   CONTACT_PHONE_E164,
-  PROFILE_IMAGE_PATH,
   SITE_URL,
 } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Web Developer in India | Patna-Based Websites, Apps, SEO",
+  title: "Web Development Services",
   description:
-    "Website and app development for businesses across India by Rahul Verma, a Patna-based developer. Custom builds, technical SEO, and fast delivery.",
+    "What Rahul Verma builds for businesses and teams across India: business websites, web applications, dashboards, CRM and internal tools, and booking or workflow systems, with the real projects behind each.",
   keywords: [
-    "web developer in Patna",
-    "website developer Patna Bihar",
-    "web development Patna",
-    "app development Patna",
-    "freelance web developer Bihar",
-    "business website Patna",
-    "e-commerce website Patna",
-    "booking system Patna",
+    "web development services",
+    "custom website development",
+    "web application development",
+    "dashboard development",
+    "CRM development",
+    "booking system development",
+    "Next.js development",
+    "full stack developer India",
   ],
   openGraph: {
-    title: "Web Developer in India | Patna-Based Websites, Apps, SEO",
+    title: "Web Development Services — Rahul Verma",
     description:
-      "Custom websites, web apps, and technical SEO for businesses across India by Rahul Verma.",
+      "Business websites, web applications, dashboards, CRM and internal tools, and booking systems, built with Next.js, React, and Node.js.",
     type: "website",
     locale: "en_IN",
     url: `${SITE_URL}/services`,
@@ -36,15 +35,15 @@ export const metadata: Metadata = {
         url: "/og/website/services.webp",
         width: 1200,
         height: 630,
-        alt: "Rahul Verma web development services preview for businesses in Patna and India",
+        alt: "Web development services by Rahul Verma",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Developer in India | Patna-Based Websites, Apps, SEO",
+    title: "Web Development Services — Rahul Verma",
     description:
-      "Custom websites, web apps, and technical SEO for businesses across India by Rahul Verma.",
+      "Business websites, web applications, dashboards, CRM and internal tools, and booking systems.",
     images: ["/og/website/services.webp"],
   },
   alternates: {
@@ -52,54 +51,81 @@ export const metadata: Metadata = {
   },
 };
 
-const serviceLines = [
+type ServiceLine = {
+  name: string;
+  summary: string;
+  proof: { label: string; href: string; external?: boolean };
+  tags: string[];
+};
+
+const serviceLines: ServiceLine[] = [
   {
-    name: "Business Websites",
+    name: "Business websites",
     summary:
-      "Fast brochure sites and conversion-focused company websites for shops, clinics, agencies, and local brands.",
-    tags: ["Launch pages", "Lead forms", "Local SEO"],
+      "A site that explains what a business does and makes it easy to get in touch. Content structure first, then a fast front end and clean metadata.",
+    proof: { label: "Carryzo Logistics site", href: "https://www.carryzo.in/", external: true },
+    tags: ["Content structure", "Lead capture", "Performance"],
   },
   {
-    name: "Custom Web Apps",
+    name: "Web applications",
     summary:
-      "Dashboards, internal tools, portals, and product-style applications for teams that need more than a template site.",
-    tags: ["Admin panels", "Authentication", "Data flows"],
+      "Product-style interfaces with real screens and state: member areas, portals, course access, and tools that go past what a template can do.",
+    proof: { label: "Oplus Cowork platform", href: "https://opluscowork.com", external: true },
+    tags: ["Auth", "Member dashboards", "App UI"],
   },
   {
-    name: "E-commerce & Catalogues",
+    name: "Dashboards and internal tools",
     summary:
-      "Product catalogues, order systems, and commerce experiences that are easy to manage and ready to scale.",
-    tags: ["Catalogues", "Payments", "Inventory logic"],
+      "Admin panels and operational views for the people running the business: filtered lists, record management, analytics, and CSV or PDF exports.",
+    proof: { label: "Carryzo CRM", href: "https://crm.carryzo.in/", external: true },
+    tags: ["Admin panels", "Reporting", "Exports"],
   },
   {
-    name: "Technical SEO",
+    name: "CRM and operations systems",
     summary:
-      "Metadata, internal linking, schema, crawl hygiene, and page-speed improvements for city pages, service pages, and national search visibility.",
-    tags: ["Schema", "Core Web Vitals", "Search visibility"],
+      "Role-based systems that put the moving parts of an operation in one place. Carryzo CRM handles trips, customers, drivers, vehicles, and revenue with separate views for admins and managers.",
+    proof: { label: "Read the case studies", href: "/case-studies" },
+    tags: ["Role-based access", "Operational KPIs", "Notifications"],
+  },
+  {
+    name: "Booking and workflow systems",
+    summary:
+      "Scheduling, availability, and approval flows. The Oplus Cowork build covers space booking and a member-facing calendar alongside an admin panel.",
+    proof: { label: "Oplus Cowork platform", href: "https://opluscowork.com", external: true },
+    tags: ["Scheduling", "Availability", "Admin control"],
+  },
+  {
+    name: "Technical SEO and performance",
+    summary:
+      "Metadata, canonical URLs, structured data, internal linking, and Core Web Vitals work, usually built into a project rather than added later. The Premex build includes structured SEO systems and dynamic sitemap and robots output.",
+    proof: { label: "Premex Power Systems", href: "https://www.premexpowersystems.com/", external: true },
+    tags: ["Structured data", "Internal linking", "Core Web Vitals"],
   },
 ];
 
 const buildWorkflow = [
-  "Audit the business, offer, and local search intent before touching layout.",
-  "Shape the content structure around services, trust signals, and conversion paths.",
-  "Build the frontend and backend with clean performance, crawlability, and maintainability.",
-  "Launch with analytics, metadata, schema, and a handoff that is easy to operate.",
+  "Get specific about what the site or app has to do, who uses it, and what counts as finished.",
+  "Map the pages, data, and screens before building, so scope is visible early instead of halfway through.",
+  "Build in small, reviewable pieces, front end and back end together, deployed as it goes.",
+  "Test the real paths, then hand over something you can run: analytics, metadata, and notes on the moving parts.",
 ];
 
-const idealFits = [
-  "Businesses anywhere in India that need a trustworthy first web presence",
-  "Service brands that want more leads from local search",
-  "Startups that need a product-style interface, not a generic template",
-  "Teams replacing slow WordPress or patchwork admin workflows",
+const goodFit = [
+  "A business that needs a first web presence people actually trust",
+  "A team replacing spreadsheets or a patchwork of admin screens with one tool",
+  "A startup that needs a product-style interface, not a theme",
+  "An existing site that is slow, hard to edit, or invisible in search",
 ];
 
-export default function ServicesPatnaPage() {
+export default function ServicesPage() {
   const primaryLinks = [
+    { href: "/contact", label: "Start a project", icon: Mail, external: false },
+    { href: "/case-studies", label: "Case studies", icon: BriefcaseBusiness, external: false },
     {
-      href: `mailto:${CONTACT_EMAIL}`,
-      label: "Email Rahul",
-      icon: Mail,
-      external: true,
+      href: "/freelance-web-developer-patna",
+      label: "Hiring in Patna",
+      icon: MapPinned,
+      external: false,
     },
     {
       href: `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
@@ -107,64 +133,29 @@ export default function ServicesPatnaPage() {
       icon: MessageCircleMore,
       external: true,
     },
-    {
-      href: "/case-studies",
-      label: "View case studies",
-      icon: BriefcaseBusiness,
-      external: false,
-    },
-    {
-      href: "/blog",
-      label: "Read technical notes",
-      icon: ScanSearch,
-      external: false,
-    },
   ] as const;
-
-  const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: "Rahul Verma - Web Developer",
-    image: `${SITE_URL}${PROFILE_IMAGE_PATH}`,
-    description: "Professional website and app development for businesses across India",
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "Patna",
-      addressRegion: "Bihar",
-      addressCountry: "IN",
-    },
-    telephone: CONTACT_PHONE,
-    email: CONTACT_EMAIL,
-    url: `${SITE_URL}/services`,
-    areaServed: ["India"],
-    serviceType: ["Web Development", "App Development", "E-commerce", "Web Design"],
-    knowsAbout: [
-      "React",
-      "Next.js",
-      "Node.js",
-      "Tailwind CSS",
-      "Web Development",
-      "App Development",
-      "SEO",
-      "E-commerce",
-    ],
-    sameAs: [
-      "https://github.com/rahul1015s",
-      "https://linkedin.com/in/rahul1015s",
-      `https://wa.me/${CONTACT_PHONE_E164.replace("+", "")}`,
-    ],
-  };
 
   const serviceSchema = {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: "Web and App Development Services",
+    name: "Web Development Services",
+    serviceType: [
+      "Website development",
+      "Web application development",
+      "Dashboard and internal tools",
+      "CRM and operations systems",
+      "Booking and workflow systems",
+      "Technical SEO",
+    ],
     provider: {
-      "@type": "LocalBusiness",
+      "@type": "Person",
       name: "Rahul Verma",
-      areaServed: ["India"],
+      url: SITE_URL,
     },
-    areaServed: ["India"],
+    areaServed: [
+      { "@type": "Country", name: "India" },
+      { "@type": "City", name: "Patna" },
+    ],
     availableLanguage: "en-IN",
     url: `${SITE_URL}/services`,
   };
@@ -173,18 +164,8 @@ export default function ServicesPatnaPage() {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: SITE_URL,
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Services India",
-        item: `${SITE_URL}/services`,
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${SITE_URL}/services` },
     ],
   };
 
@@ -192,51 +173,42 @@ export default function ServicesPatnaPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(localBusinessSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(serviceSchema),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
-        }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      <main className="case-files-shell min-h-screen pt-24 pb-10">
+      <div className="case-files-shell min-h-screen pt-24 pb-10">
         <section className="case-stage pb-24">
           <div className="case-masthead">
             <div>
-              <span className="case-kicker">India Service Desk</span>
-              <h1 className="case-title">Web Services Across India</h1>
+              <span className="case-kicker">Service Desk</span>
+              <h1 className="case-title">Web development services</h1>
             </div>
 
             <div className="case-masthead-meta">
-              <div>Patna based · India wide</div>
-              <div>Sites, apps, SEO systems</div>
+              <div>Remote across India</div>
+              <div>Websites, web apps, internal systems</div>
             </div>
           </div>
 
           <div className="case-subrule">
-            <span>Freelance full-stack support</span>
-            <span>Built for speed, trust, and national reach</span>
+            <span>Built with Next.js, React, Node.js</span>
+            <span>Scoped around what the business needs</span>
           </div>
 
           <div className="grid gap-10 md:grid-cols-[minmax(0,1.2fr)_280px] md:items-start">
             <div>
-              <p className="case-kicker">Service Focus</p>
+              <p className="case-kicker">Overview</p>
               <h2 className="case-detail-title">
-                Clean websites, web apps, and technical SEO work shaped for real businesses across India.
+                Websites, web apps, dashboards, and the systems that run behind them.
               </h2>
               <p className="case-detail-tagline">
-                I help businesses launch credible digital fronts, tighter admin workflows, and
-                better search visibility without the visual noise of a generic agency page.
+                Most projects are one of the things listed below, or a combination. If you already
+                know roughly what you need, the fastest path is to send the details and I will tell
+                you what is involved.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
@@ -250,8 +222,8 @@ export default function ServicesPatnaPage() {
                       <a
                         key={item.label}
                         href={item.href}
-                        target={item.href.startsWith("http") ? "_blank" : undefined}
-                        rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={sharedClassName}
                       >
                         <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
@@ -274,20 +246,25 @@ export default function ServicesPatnaPage() {
 
             <div className="case-index-card">
               <div className="case-index-row">
-                <span className="case-index-label">Best for</span>
-                <span className="case-index-value">Businesses, startups, and service teams across India</span>
-              </div>
-              <div className="case-index-row">
-                <span className="case-index-label">Build stack</span>
+                <span className="case-index-label">Stack</span>
                 <span className="case-index-value">Next.js, React, Node.js, MongoDB</span>
               </div>
               <div className="case-index-row">
-                <span className="case-index-label">Coverage</span>
-                <span className="case-index-value">Patna based, remote-friendly across India</span>
+                <span className="case-index-label">Base</span>
+                <span className="case-index-value">Patna, working remotely across India</span>
               </div>
               <div className="case-index-row">
-                <span className="case-index-label">Response</span>
-                <span className="case-index-value">Same timezone, practical communication</span>
+                <span className="case-index-label">Timezone</span>
+                <span className="case-index-value">IST</span>
+              </div>
+              <div className="case-index-row">
+                <span className="case-index-label">Contact</span>
+                <a
+                  href={`tel:${CONTACT_PHONE_E164}`}
+                  className="case-index-value underline-offset-4 hover:underline"
+                >
+                  {CONTACT_PHONE}
+                </a>
               </div>
             </div>
           </div>
@@ -295,7 +272,7 @@ export default function ServicesPatnaPage() {
           <hr className="case-divider case-divider-thin" />
 
           <section>
-            <div className="case-section-label">Service Lines</div>
+            <div className="case-section-label">What I build</div>
             <div className="space-y-0">
               {serviceLines.map((service, index) => (
                 <div key={service.name} className="case-file-row">
@@ -313,6 +290,23 @@ export default function ServicesPatnaPage() {
                         </span>
                       ))}
                     </div>
+                    <p className="case-file-copy mt-3">
+                      Example:{" "}
+                      {service.proof.external ? (
+                        <a
+                          href={service.proof.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline underline-offset-4"
+                        >
+                          {service.proof.label}
+                        </a>
+                      ) : (
+                        <Link href={service.proof.href} className="underline underline-offset-4">
+                          {service.proof.label}
+                        </Link>
+                      )}
+                    </p>
                   </div>
 
                   <div className="case-file-meta">
@@ -326,7 +320,7 @@ export default function ServicesPatnaPage() {
           <hr className="case-divider case-divider-thin" />
 
           <section>
-            <div className="case-section-label">Build Method</div>
+            <div className="case-section-label">How a project runs</div>
             <div className="space-y-6">
               {buildWorkflow.map((step, index) => (
                 <div
@@ -335,7 +329,6 @@ export default function ServicesPatnaPage() {
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <h3 className="case-file-heading">Step {index + 1}</h3>
-                    <span className="case-stamp case-stamp-building">IN PROCESS</span>
                   </div>
                   <p className="case-section-body mt-4 max-w-none">{step}</p>
                 </div>
@@ -346,9 +339,9 @@ export default function ServicesPatnaPage() {
           <hr className="case-divider case-divider-thin" />
 
           <section>
-            <div className="case-section-label">Best Fit</div>
+            <div className="case-section-label">Usually a good fit</div>
             <div className="grid gap-6 md:grid-cols-2">
-              {idealFits.map((item) => (
+              {goodFit.map((item) => (
                 <div key={item} className="case-index-card">
                   <div className="case-index-value text-left">{item}</div>
                 </div>
@@ -359,41 +352,45 @@ export default function ServicesPatnaPage() {
           <hr className="case-divider case-divider-thin" />
 
           <section>
-            <div className="case-section-label">Contact Desk</div>
+            <div className="case-section-label">Next step</div>
             <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_280px]">
               <div>
                 <p className="case-section-body">
-                  If you run a business anywhere in India and need a website, customer-facing app, or
-                  technical SEO cleanup, I can help shape the structure, build the system, and
-                  keep it grounded in actual business use.
+                  Send what you are trying to build, what exists today, and any deadline. I will
+                  reply with what the work involves and whether I am the right person for it. If you
+                  are hiring locally, the{" "}
+                  <Link href="/freelance-web-developer-patna" className="underline underline-offset-4">
+                    Patna page
+                  </Link>{" "}
+                  has more on working together directly.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
+                  <Link href="/contact" className="case-nav-link">
+                    Contact page
+                  </Link>
                   <a href={`mailto:${CONTACT_EMAIL}`} className="case-nav-link">
                     {CONTACT_EMAIL}
                   </a>
                   <a href={`tel:${CONTACT_PHONE_E164}`} className="case-nav-link">
                     {CONTACT_PHONE}
                   </a>
-                  <Link href="/freelance-web-developer-patna" className="case-nav-link">
-                    Patna developer page
-                  </Link>
                 </div>
               </div>
 
               <div className="case-index-card">
                 <div className="case-index-row">
-                  <span className="case-index-label">Operating base</span>
-                  <span className="case-index-value">Patna based, working remotely across India</span>
+                  <span className="case-index-label">Good briefs include</span>
+                  <span className="case-index-value">Goal, current state, timeline</span>
                 </div>
                 <div className="case-index-row">
-                  <span className="case-index-label">SEO angle</span>
-                  <span className="case-index-value">Metadata, schema, internal linking, speed</span>
+                  <span className="case-index-label">Also useful</span>
+                  <span className="case-index-value">A site you like, and one you do not</span>
                 </div>
               </div>
             </div>
           </section>
         </section>
-      </main>
+      </div>
     </>
   );
 }

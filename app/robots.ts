@@ -3,27 +3,34 @@ import type { MetadataRoute } from "next";
 export default function robots(): MetadataRoute.Robots {
   const siteUrl = "https://rahulwebdev.in";
 
+  const disallow = [
+    "/admin/",
+    "/api/admin/",
+    "/api/auth/",
+    "/dashboard/",
+    "/verify-email",
+    "/*?preview=",
+    "/*?draft=",
+    "/*?token=",
+    "/*?secret=",
+  ];
+
   return {
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        disallow: [
-          "/admin/",
-          "/api/admin/",
-          "/api/auth/",
-          "/dashboard/",
-        ],
+        disallow,
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/", "/api/auth/", "/dashboard/"],
+        disallow,
       },
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: ["/admin/", "/api/admin/", "/api/auth/", "/dashboard/"],
+        disallow,
       },
       { userAgent: "GPTBot", allow: "/" },
       { userAgent: "ChatGPT-User", allow: "/" },

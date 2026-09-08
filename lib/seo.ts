@@ -18,7 +18,7 @@ const DEFAULT_IMAGE = '/og-home.svg';
 const SITE_NAME = 'Rahul Verma Portfolio';
 const SITE_URL = 'https://rahulwebdev.in';
 const AUTHOR_NAME = 'Rahul Verma';
-const TWITTER_HANDLE = '@rahulwebdev';
+const TWITTER_HANDLE = '@rahul1015s';
 
 /**
  * Generate comprehensive metadata for any page
@@ -199,9 +199,8 @@ export function generateOrganizationStructuredData() {
     logo: `${SITE_URL}/logo.png`,
     description: 'Full Stack Web Developer portfolio showcasing projects and expertise',
     sameAs: [
-      'https://github.com/rahulwebdev',
-      'https://linkedin.com/in/rahulwebdev',
-      'https://twitter.com/rahulwebdev',
+      'https://github.com/rahul1015s',
+      'https://linkedin.com/in/rahul1015s',
     ],
     contact: {
       '@type': 'ContactPoint',
@@ -230,9 +229,8 @@ export function generatePersonStructuredData(config?: {
     image: config?.image || `${SITE_URL}/profile.jpg`,
     description: config?.bio || 'Self-taught Full Stack Developer specializing in React, Next.js, Node.js, and modern web technologies',
     sameAs: [
-      'https://github.com/rahulwebdev',
-      'https://linkedin.com/in/rahulwebdev',
-      'https://twitter.com/rahulwebdev',
+      'https://github.com/rahul1015s',
+      'https://linkedin.com/in/rahul1015s',
     ],
     knowsAbout: [
       'JavaScript',

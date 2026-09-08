@@ -1,4 +1,3 @@
-import { connectDB } from '@/lib/mongodb';
 import Post from '@/models/post';
 import CaseStudy from '@/models/casestudy';
 import { extractExcerpt } from '@/lib/blog-content';
@@ -26,9 +25,6 @@ export async function GET() {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://rahulwebdev.in';
   const publicPages = await discoverPublicPages();
 
-  // Dynamic pages from database
-  await connectDB();
-
   const sitemap: SitemapEntry[] = [];
 
   // Add llms.txt
@@ -50,6 +46,11 @@ export async function GET() {
   });
 
   try {
+    // Database-backed URLs. If the database is unavailable the sitemap still
+    // returns every static public route collected above.
+    const { connectDB } = await import('@/lib/mongodb');
+    await connectDB();
+
     // Add blog posts
     const posts = await Post.find({ published: true })
       .select('slug updatedAt createdAt content metaDescription')
@@ -84,7 +85,7 @@ export async function GET() {
       });
     });
   } catch (error) {
-    console.error('Error generating sitemap:', error);
+    console.error('Sitemap: database unavailable, returning static routes only.', error);
   }
 
   // Generate XML

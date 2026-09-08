@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, FileText, ShieldCheck } from "lucide-react";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Terms and Conditions",
   description:
     "Terms and conditions for using Rahul Verma's portfolio website and contacting the owner about services.",
+  alternates: {
+    canonical: `${SITE_URL}/terms-and-conditions`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const sections = [

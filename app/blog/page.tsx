@@ -24,15 +24,20 @@ type LeanPost = {
 };
 
 export default async function BlogPage() {
-  await connectDB();
+  let posts: unknown[] = [];
 
-  const posts = await Post.find({ published: true })
-    .sort({ createdAt: -1 })
-    .select("title slug image category tags tagNames metaDescription readTime createdAt")
-    .setOptions({ _recursed: true })
-    .populate({ path: "category", select: "name slug" })
-    .populate({ path: "tags", select: "name" })
-    .lean();
+  try {
+    await connectDB();
+    posts = await Post.find({ published: true })
+      .sort({ createdAt: -1 })
+      .select("title slug image category tags tagNames metaDescription readTime createdAt")
+      .setOptions({ _recursed: true })
+      .populate({ path: "category", select: "name slug" })
+      .populate({ path: "tags", select: "name" })
+      .lean();
+  } catch (error) {
+    console.error("Blog index: database unavailable, rendering empty list.", error);
+  }
 
   const normalizedPosts = (posts as LeanPost[]).map((post) => ({
     _id: String(post._id),

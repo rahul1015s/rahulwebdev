@@ -1,12 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, Lock, ShieldCheck } from "lucide-react";
-import { CONTACT_EMAIL } from "@/lib/site";
+import { CONTACT_EMAIL, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description:
     "Privacy policy for Rahul Verma's portfolio website, contact forms, newsletter, and analytics practices.",
+  alternates: {
+    canonical: `${SITE_URL}/privacy-policy`,
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 const sections = [

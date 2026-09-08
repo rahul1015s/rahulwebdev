@@ -76,13 +76,13 @@ export default function HomePage() {
     },
     {
       href: "/services",
-      label: "Patna web services",
+      label: "Services",
       icon: MapPinned,
       external: false,
     },
     {
       href: "/freelance-web-developer-patna",
-      label: "Patna SEO landing page",
+      label: "Freelance in Patna",
       icon: MapPinned,
       external: false,
     },
@@ -248,7 +248,7 @@ export default function HomePage() {
                   })}
                   <Link href="/services" className="case-nav-link inline-flex items-center gap-2 rounded-full border border-[#211e1a]/15 bg-transparent px-4 py-2.5">
                     <ScanSearch className="h-4 w-4" />
-                    <span>Services in Patna</span>
+                    <span>Services</span>
                   </Link>
                 </div>
               </div>
@@ -426,11 +426,14 @@ export default function HomePage() {
                       </a>
                     );
                   })}
+                  <Link href="/contact" className="case-nav-link">
+                    Contact page
+                  </Link>
                   <Link href="/services" className="case-nav-link">
-                    Services in Patna
+                    Services
                   </Link>
                   <Link href="/freelance-web-developer-patna" className="case-nav-link">
-                    Local SEO page
+                    Freelance in Patna
                   </Link>
                 </div>
               </div>
